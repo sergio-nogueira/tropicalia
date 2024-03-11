@@ -1,0 +1,312 @@
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.map {
+    height: 100%;
+    width: 100%;
+    background-color: #0b1438;
+}
+
+/* Estilos personalizados para a logo */
+.navbar-brand img.center-img {
+    max-height: 35px; /* Limita a altura da logo a 40 pixels */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilos personalizados para a barra de navegação */
+.navbar {
+    background-color: rgba(50, 54, 53, 0.9) ;  
+    position: absolute; 
+    width: 100%; 
+    z-index: 99999; 
+}
+
+/* Estilos personalizados para a div .container-fluid */
+.mapa-div {
+    height: 100vh; /* 100% da altura da janela (viewport height) */
+    margin-top: -61px
+}
+
+/* Estilos personalizados para a barra lateral (sidebar) */
+.sidebar-left {            
+    background-color: rgba(179, 189, 180, 0.6);
+    overflow-y: auto;
+    width: 350px;
+    position: fixed;
+    height: 100%;
+    top: 61px;
+    left: -350px;
+    z-index: 998;
+    transition: left 0.3s;           
+}
+
+.camadas {
+    border-radius: 5px;
+    margin: 10px; /* Adicione margem a todos os parágrafos dentro da .minha-div */
+    background-color: rgba(255, 255, 255, 0.9);
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-size: 14px;
+    color:#4b4d4b
+  }
+
+  .busca {
+    border-radius: 5px;
+    margin: 10px; /* Adicione margem a todos os parágrafos dentro da .minha-div */
+    background-color: rgba(255, 255, 255, 0.8);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 14px;
+    color:#4b4d4b            
+  }
+
+.relatorios {
+    border-radius: 5px;
+    width: 430px;
+    margin: 10px;
+    margin-left: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 1px;
+    font-size: 14px; 
+    color:#4b4d4b
+}
+
+.legenda {
+  border-radius: 5px;
+  width: 430px;
+  margin: 10px;
+  margin-left: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding-left: 15px;
+  padding-top: 10px;
+  padding-bottom: 1px;
+  font-size: 14px; 
+  color:#4b4d4b
+}
+
+.camadas_titulo {
+    border-radius: 5px;
+    width: 330px;
+    margin: 10px;
+    background-color: rgba(255, 255, 255, 0.8);            
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px; 
+    color:#4b4d4b
+}
+
+.relatorios_titulo {
+    border-radius: 5px;
+    width: 430px;
+    margin: 10px;
+    margin-left: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px; 
+    color:#4b4d4b
+}
+
+.custom-input {
+    font-size: 12px; 
+    width: 150px;
+    height: 27px;
+    margin-top: 5px;
+    margin-bottom: 2px; 
+    margin-left: 20px;
+}
+
+.custom-dropdown {
+    font-size: 12px; 
+    width: 150px;
+    height: 27px;
+    margin-top: 5px;
+    margin-bottom: 2px; 
+    margin-left: 20px;
+}        
+
+/* Classe de estilo personalizado para botões */
+.custom-button-send {
+    width: 100px; 
+    height: 30px; 
+    background-color: #e0e0e0; 
+    color: #000000; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 13px; 
+    margin-top: 5px;
+    margin-bottom: 2px; 
+    margin-left: 20px;
+}
+
+/* Estilo hover (quando o mouse está sobre o botão) */
+.custom-button-send:hover {
+    background-color: #afb1b0; 
+}       
+
+/* Classe de estilo personalizado para botões */
+.custom-button-draw {
+  width: 100px; /* Largura personalizada em pixels */
+  height: 30px; /* Altura personalizada em pixels */
+  background-color: #e0e0e0; /* Cor de fundo personalizada */
+  color: #000000; /* Cor do texto personalizada */
+  border: none; /* Remove a borda padrão */
+  border-radius: 5px; /* Bordas arredondadas */
+  font-size: 13px; /* Tamanho da fonte personalizado */
+  margin-top: 5px;
+  margin-bottom: 2px; 
+  margin-left: 20px;
+}
+
+/* Estilo hover (quando o mouse está sobre o botão) */
+.custom-button-draw:hover {
+  background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
+}   
+
+.custom-button-clear {
+width: 100px; /* Largura personalizada em pixels */
+height: 30px; /* Altura personalizada em pixels */
+background-color: #e0e0e0; /* Cor de fundo personalizada */
+color: #000000; /* Cor do texto personalizada */
+border: none; /* Remove a borda padrão */
+border-radius: 5px; /* Bordas arredondadas */
+font-size: 13px; /* Tamanho da fonte personalizado */
+margin-top: 5px;
+margin-bottom: 2px; 
+margin-left: 10px;
+}
+
+/* Estilo hover (quando o mouse está sobre o botão) */
+.custom-button-clear:hover {
+background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
+}   
+
+/* Estilos da Nova Barra Lateral (à direita) */
+.sidebar-right {
+    background-color: rgba(179, 189, 180, 0.6);
+    overflow-y: auto;
+    width: 450px;
+    position: fixed;
+    height: 100%;
+    top: 61px;
+    right: -450px;
+    z-index: 998;
+    transition: right 0.3s;
+}
+
+/* Estilos para os itens da barra lateral */
+.sidebar-item {
+    padding: 10px 20px;
+    color: #fff;
+}
+
+/* Adiciona uma margem direita de 20 pixels à logo */
+.navbar-brand {
+    margin-left: auto; 
+    margin-right: 20px; 
+}
+
+/* Estilos para os itens da barra lateral */
+.sidebar-item {
+    padding: 10px 20px;
+    color: #fff;
+}
+.page-content {
+    margin-left: 0; 
+    margin-right: 0; 
+    transition: margin-left 0.3s; 
+}
+.webmap-text {
+    color: white; 
+    font-size: large;
+    font-weight: bold;
+    margin-left: 20px;
+    margin-top: 2px; 
+    font-family: 'Montserrat', sans-serif; 
+}
+
+/* Botões de revelação personalizados */
+.custom-toggler {
+    background-color: #4b4d4b;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    position: fixed;
+    z-index: 999;
+    transition: left 0.3s, right 0.3s; 
+}
+
+/* Estilos para o botão de revelação da sidebar esquerda */
+.custom-toggler-left {
+    left: 10px; /* Posição inicial para exibir o botão da esquerda */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Estilos para o botão de revelação da sidebar direita */
+.custom-toggler-right {
+    right: 10px; /* Posição inicial para exibir o botão da direita */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.custom-table-width {
+    width: 410px; 
+}
+
+.paginacao {
+    margin-bottom: 20px;
+}
+
+.custom-dropdown-pag {
+  font-size: 12px; 
+  height: 27px;
+  margin-bottom: 20px;
+  
+}          
+
+.small-font {
+    font-size: 13px; 
+}
+
+.small-table {
+    line-height:1; 
+}
+
+.link-text:hover {
+    cursor: pointer;
+}         
+
+.custom-switch {
+  margin-top: 10px;
+}
+
+.custom-switch .form-check-input {
+  background-color: #ffffff; 
+  border-color: #707070;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.custom-switch .form-check-input:checked {
+  background-color: #707070; 
+  border-color: #707070;              
+}
+
