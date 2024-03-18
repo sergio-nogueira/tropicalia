@@ -16,22 +16,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const port = 3000;
 
 
-
-// Configurações do mapa
-const mapConfig = {
-  center: [-40, -14],
-  zoom: 2,
-  // ... outras configurações do mapa
-};
-
 // Rota para obter as configurações do mapa
 app.get('/map-config', (req, res) => {
   res.json(mapConfig);
 });
-
-
-
-
 
 // Restante do código
 

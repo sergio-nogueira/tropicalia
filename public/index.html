@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/static/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/ol/ol.css">
 
-    <title>Webmap SOL IoP</title>
+    <title>Webmap LT Tropicalia</title>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
     <script src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -25,10 +25,9 @@
   <nav class="navbar">
       <div class="container-fluid">
           <!-- Texto "webmap" com margem e cor branca -->
-          <span class="webmap-text"><img src="images/tracos.png" height="20px">&nbsp;&nbsp;&nbsp;&nbsp;W E B M A P</span>
-          <!-- Logo -->
-          <a class="navbar-brand" href="https://sol-iop.com.br/" target="_blank">
-              <img src="/images/tropicalia_fundo_branco.png" alt="Logo" class="center-img">
+          <span class="webmap-text">&nbsp;&nbsp;&nbsp;&nbsp;WEBMAP</span>
+          <!-- Logo -->          
+            <span class="webmap-text">&nbsp;&nbsp;&nbsp;&nbsp;T R O P I C A L I A</span>
           </a>
       </div>
   </nav>
@@ -51,30 +50,59 @@
           </div>
         </div>
       </div>        
-      <div id="camadas_torres" class="camadas">
-        <h6><b>&nbsp;&nbsp;<span class="link-text" id="torres-toggle"> > Torres</span></b></h6>
-        <div class="expand-content" style="display: yes;" id="torres-content">
-          <div id="torres">
-            <input type="checkbox" class="camada-checkbox" id="torresativadas-checkbox" value='torresativadas' checked>&nbsp;&nbsp;Ativadas<br>
-            <input type="checkbox" class="camada-checkbox" id="torresemimplantacao-checkbox" value='torresemimplantacao' checked>&nbsp;&nbsp;Em implantação<br>
-            <input type="checkbox" class="camada-checkbox" id="torresprojeto-checkbox" value='torresprojeto' checked>&nbsp;&nbsp;Projetos<br>
-            <div class="form-check form-switch custom-switch">
-              <input class="form-check-input" type="checkbox" id="torresraio10km-checkbox" value="MostrarRaio">
-              <label class="form-check-label" for="torresraio10km-checkbox">Mostrar raio de cobertura</label>
-            </div>
+      <div id="camadas_lt_tropicalia" class="camadas">
+        <h6><b>&nbsp;&nbsp;<span class="link-text" id="lt_tropicalia-toggle"> > Linha de transmissão</span></b></h6>
+        <div class="expand-content" style="display: yes;" id="lt_tropicalia-content">
+          <div id="lt_tropicalia">
+            <input type="checkbox" class="camada-checkbox" id="faixa_servidao_cadastro-checkbox" value='faixa_servidao_cadastro' checked>&nbsp;&nbsp;Cadastro<br>
+            <input type="checkbox" class="camada-checkbox" id="eixo-checkbox" value='eixo' >&nbsp;&nbsp;Eixo<br>
+            <input type="checkbox" class="camada-checkbox" id="torres-checkbox" value='torres' >&nbsp;&nbsp;Torres<br>
+            <input type="checkbox" class="camada-checkbox" id="acessos-checkbox" value='acessos' >&nbsp;&nbsp;Acessos<br>
+            <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Edificações<br>
+            <input type="checkbox" class="camada-checkbox" id="ps_map_rf_2021-checkbox" value='ps_map_rf_2021' checked>&nbsp;&nbsp;Uso do solo (2021)<br>
+            <input type="checkbox" class="camada-checkbox" id="ps_map_rf_2023-checkbox" value='ps_map_rf_2023' checked>&nbsp;&nbsp;Uso do solo (2023)<br>
           </div>
         </div>
       </div>
+      <div id="camadas_alertas" class="camadas">
+        <h6><b>&nbsp;&nbsp;<span class="link-text" id="alertas-toggle"> > Alertas</span></b></h6>  
+        <div class="expand-content" style="display: none;" id="alertas-content">
+          <div id="fluxos">
+            <input type="checkbox" id="domicilio_particular-checkbox" value='domicilio_particular' >&nbsp;&nbsp;Focos de calor (INPE)<br>
+            <input type="checkbox" id="domicilio_coletivo-checkbox" value='domicilio_coletivo' >&nbsp;&nbsp;Desmatamento (INPE)<br>
+          </div>
+          </div>
+      </div>
+      <div id="camadas_ambiental" class="camadas">
+        <h6><b>&nbsp;&nbsp;<span class="link-text" id="ambiental-toggle"> > Ambiental</span></b></h6>  
+        <div class="expand-content" style="display: none;" id="ambiental-content">
+          <div id="fluxos">
+            <input type="checkbox" id="domicilio_particular-checkbox" value='domicilio_particular' >&nbsp;&nbsp;Hidrografia<br>
+            <input type="checkbox" id="domicilio_coletivo-checkbox" value='domicilio_coletivo' >&nbsp;&nbsp;Altitude<br>
+            <input type="checkbox" id="domicilio_coletivo-checkbox" value='domicilio_coletivo' >&nbsp;&nbsp;Declividade<br>
+          </div>
+          </div>
+      </div>
       <div id="camadas_estabelecimentos" class="camadas">
-        <h6><b>&nbsp;&nbsp;<span class="link-text" id="infraestrutura-toggle"> > Estabelecimentos</span></b></h6>  
+        <h6><b>&nbsp;&nbsp;<span class="link-text" id="infraestrutura-toggle"> > Social</span></b></h6>  
         <div class="expand-content" style="display: none;" id="infraestrutura-content">
           <div id="fluxos">
-            <input type="checkbox" id="armazens-checkbox" value='armazens' >&nbsp;&nbsp;Silos e armazens (Conab)<br>
-            <input type="checkbox" id="frigorificos-checkbox" value='frigorificos' >&nbsp;&nbsp;Frigoríficos-SIF (MAPA)<br>
-            <input type="checkbox" id="usinas-checkbox" value='usinas' >&nbsp;&nbsp;Usinas (cana)<br>
-            <input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Imóveis rurais (CAR)<br>
-            <input type="checkbox" id="imoveis_rurais_sigef-checkbox" value='imoveis_rurais_sigef' >&nbsp;&nbsp;Imóveis rurais (SIGEF)<br>
-            <input type="checkbox" id="imoveis_rurais_snci-checkbox" value='imoveis_rurais_snci' >&nbsp;&nbsp;Imóveis certificados (SNCI)<br>
+            <b>Infraestrutura</b><br>
+            <input type="checkbox" id="domicilio_particular-checkbox" value='domicilio_particular' >&nbsp;&nbsp;Estradas<br>
+            <input type="checkbox" id="domicilio_particular-checkbox" value='domicilio_particular' >&nbsp;&nbsp;Linhas de transmissão<br>
+            <b>Censo 2022</b><br>
+            <input type="checkbox" id="domicilio_particular-checkbox" value='domicilio_particular' >&nbsp;&nbsp;Domicílio particular<br>
+            <input type="checkbox" id="domicilio_coletivo-checkbox" value='domicilio_coletivo' >&nbsp;&nbsp;Domicílio coletivo<br>
+            <input type="checkbox" id="estab_agropecuario-checkbox" value='estab_agropecuario' >&nbsp;&nbsp;Estab. agropecuário<br>
+            <input type="checkbox" id="estab_religioso-checkbox" value='estab_religioso' >&nbsp;&nbsp;Estab. religioso<br>
+            <input type="checkbox" id="estab_ensino-checkbox" value='estab_ensino' >&nbsp;&nbsp;Estab. de ensino<br>
+            <input type="checkbox" id="estab_saude-checkbox" value='estab_saude' >&nbsp;&nbsp;Estab. de saúde<br>
+            <input type="checkbox" id="estab_outrasfin-checkbox" value='estab_outrasfin' >&nbsp;&nbsp;Estab. de outras finalidades<br>
+            <input type="checkbox" id="edificacao_construcao-checkbox" value='edificacao_construcao' >&nbsp;&nbsp;Edificação em construção<br>
+            <b>Imóveis rurais</b><br>
+            <input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Cadastro Ambiental Rural (CAR)<br>
+            <input type="checkbox" id="imoveis_rurais_sigef-checkbox" value='imoveis_rurais_sigef' >&nbsp;&nbsp;Sistema de Gestão Fundiária (SIGEF)<br>
+            <input type="checkbox" id="imoveis_rurais_snci-checkbox" value='imoveis_rurais_snci' >&nbsp;&nbsp;Sistema Nacional de Cadastro Rural (SNCI)<br>
           </div>
           </div>
       </div>
@@ -82,15 +110,14 @@
         <h6><b>&nbsp;&nbsp;<span class="link-text" id="limites-toggle"> > Divisão territorial</span></b></h6>  
         <div class="expand-content" style="display: none;" id="limites-content">
           <div id="limites">
-            <input type="checkbox" id="assentamentos-checkbox" value='assentamentos'  >&nbsp;&nbsp;Cidades<br>
-            <input type="checkbox" id="assentamentos-checkbox" value='assentamentos'  >&nbsp;&nbsp;Vilas/povoados<br>
-            <input type="checkbox" id="assentamentos-checkbox" value='assentamentos'  >&nbsp;&nbsp;Assentamentos<br>
-            <input type="checkbox" id="terras_indigenas-checkbox" value='terras_indigenas' >&nbsp;&nbsp;Terras indigenas<br>
+            <input type="checkbox" id="assentamentos-checkbox" value='cidades'  >&nbsp;&nbsp;Cidades<br>
+            <input type="checkbox" id="assentamentos-checkbox" value='povoados'  >&nbsp;&nbsp;Vilas/povoados<br>
+            <input type="checkbox" id="terras_indigenas-checkbox" value='terras_indigenas' >&nbsp;&nbsp;Biomas<br>
             <input type="checkbox" id="ucs_pi-checkbox" value='ucs_pi'  >&nbsp;&nbsp;Unidade de conservação (PI)<br>
             <input type="checkbox" id="ucs_us-checkbox" value='ucs_us'  >&nbsp;&nbsp;Unidade de conservação (US)<br>
-            <input type="checkbox" id="municipios-checkbox" value='municipios' >&nbsp;&nbsp;Setores censitários<br>
+            <input type="checkbox" id="municipios-checkbox" value='setorescensitarios' >&nbsp;&nbsp;Setores censitários<br>
             <input type="checkbox" id="municipios-checkbox" value='municipios' >&nbsp;&nbsp;Municípios<br>
-            <input type="checkbox" id="uf-checkbox" value='uf'  >&nbsp;&nbsp;Unidade da federação<br>
+            <input type="checkbox" id="uf-checkbox" value='uf' >&nbsp;&nbsp;Unidade da federação<br>
           </div>
         </div>
       </div>      
@@ -99,27 +126,28 @@
         <div class="expand-content" style="display: none;" id="basemaps-content">
           <div id="basemaps">
             <input type="radio" id="osm-basemap-radio" name='baseLayerRadioButton' value='osm_basemap' checked>&nbsp;&nbsp;Open Street Maps<br>
-            <input type="radio" id="lulc-2022-radio" name='baseLayerRadioButton' value='br_lulc_2022' >&nbsp;&nbsp;Uso e cobertura do solo (2022)<br>
-            <input type="radio" id="satellite-2023-radio" name='baseLayerRadioButton' value='satellite_planet' >&nbsp;&nbsp;Satélite (ago/2023)<br>
+            <input type="radio" id="lulc-2022-radio" name='baseLayerRadioButton' value='br_lulc_2022' >&nbsp;&nbsp;Satélite (Planet ago/2021)<br>
+            <input type="radio" id="lulc-2022-radio" name='baseLayerRadioButton' value='br_lulc_2022' >&nbsp;&nbsp;Satélite (Planet ago/2023)<br>
+            <input type="radio" id="satellite-2023-radio" name='baseLayerRadioButton' value='satellite_planet' >&nbsp;&nbsp;Satélite (INPE)<br>
           </div>
         </div>                 
       </div>
       <div id="camadas_busca" class="camadas_titulo"><b>Busca</b></div>
       <div id="busca" class="busca">
-        <h6><b>&nbsp;&nbsp;<span class="link-text" id="buscatorres-toggle"> > Torres</span></b></h6>
+        <h6><b>&nbsp;&nbsp;<span class="link-text" id="buscatorres-toggle"> > Cadastro</span></b></h6>
         <div class="expand-content" style="display: yes;" id="buscatorres-content">
         <div class="form-group">
             <form id="search-form">
               <b>&nbsp;&nbsp;Atributo:</b><br>
                 <select class="custom-dropdown" name="atributo" id="atributo">
-                    <option value="idsol">ID SOL</option>
-                    <option value="cliente">Cliente</option>
-                    <option value="status">Status</option>
+                    <option value="referencia">Referência</option>
                     <option value="projeto">Projeto</option>
-                    <option value="fazenda">Fazenda</option>
-                    <option value="dealer">Dealer</option>                        
-                    <option value="municipio">Município</option>
-                    <option value="uf">UF</option>
+                    <option value="torres">Torres</option>
+                    <option value="statusnegociacao">Status da negociação</option>
+                    <option value="proprietario">Proprietario</option>
+                    <option value="telefone">Telefone</option>                        
+                    <option value="vilapovoado">Vila ou povoado</option>
+                    <option value="municipio">Municipio</option>
                 </select>
                 <input type="text" class="custom-input" name="valor" id="valor" list="auto-preenchimento">
                 <datalist id="auto-preenchimento"></datalist>                
@@ -146,41 +174,35 @@
   <div class="sidebar-right" id="sidebarRight">
       <div id="relatorios_titulo" class="relatorios_titulo"><b>Relatório</b></div>
       <div id="rel_torre" class="relatorios">
-          <h6><b>&nbsp;&nbsp;<span class="link-text"> > Torre</span></b></h6>
+          <h6><b>&nbsp;&nbsp;<span class="link-text"> > Cadastro</span></b></h6>
           <div class="expand-content" style="display: yes;">
           <div id="rel_torre_tab">            
           <div id="resultados">
               <table class="table custom-table-width rounded-table small-table">                
               <tbody>
-                  <tr id="idsolRow">
-                      <td class="small-font"><b>ID SOL:</b> </td>
-                  </tr>
-                  <tr id="clienteRow">
-                      <td class="small-font"><b>Cliente:</b> </td>
-                  </tr>   
-                  <tr id="municipioRow">
-                      <td class="small-font"><b>Município:</b> </td>
-                  </tr>  
-                  <tr id="ufRow">
-                      <td class="small-font"><b>UF:</b> </td>
-                  </tr>  
-                  <tr id="faseRow">
-                    <td class="small-font"><b>Fase:</b> </td>
-                </tr>
-                  <tr id="statusRow">
-                      <td class="small-font"><b>Status:</b> </td>
+                  <tr id="referenciaRow">
+                      <td class="small-font"><b>Referência:</b> </td>
                   </tr>
                   <tr id="projetoRow">
                       <td class="small-font"><b>Projeto:</b> </td>
+                  </tr>   
+                  <tr id="torresRow">
+                      <td class="small-font"><b>Torres:</b> </td>
+                  </tr>  
+                  <tr id="statusnegociacaoRow">
+                      <td class="small-font"><b>Status de Negociação:</b> </td>
+                  </tr>  
+                  <tr id="proprietarioRow">
+                    <td class="small-font"><b>Proprietário:</b> </td>
+                </tr>
+                  <tr id="telefoneRow">
+                      <td class="small-font"><b>Telefone:</b> </td>
                   </tr>
-                  <tr id="fazendaRow">
-                      <td class="small-font"><b>Fazenda:</b> </td>
+                  <tr id="vilapovoadoRow">
+                      <td class="small-font"><b>Vila/Povoado:</b> </td>
                   </tr>
-                  <tr id="dealerRow">
-                      <td class="small-font"><b>Dealer:</b> </td>
-                  </tr>
-                  <tr id="ativacaoRow">
-                      <td class="small-font"><b>Data de ativação:</b> </td>
+                  <tr id="municipioRow">
+                      <td class="small-font"><b>Município:</b> </td>
                   </tr>
               </tbody>
           </table>
@@ -191,7 +213,7 @@
       </div>
       </div>
       <div id="rel_raio10km" class="relatorios">
-          <h6><b>&nbsp;&nbsp; <span class="link-text">> Caracterização do raio de cobertura (10km)</span></b></h6>                   
+          <h6><b>&nbsp;&nbsp; <span class="link-text">> Caracterização (até 450 metros do eixo)</span></b></h6>                   
           <div class="expand-content" style="display: none;">
               <div id="resultados_10km">  
               <table class="table custom-table-width rounded-table small-table">
@@ -223,19 +245,19 @@
           <table class="table custom-table-width rounded-table small-table">
               <tbody>
                   <tr>
-                      <td class="small-font"><b>Silos/armazens (qtd):</b></td>
+                      <td class="small-font"><b>Área total (raio 450 m):</b></td>
                       <td id="qto_armzs_7km_tab" class="small-font"></td>
                   </tr>
                   <tr>
-                      <td class="small-font"><b>Capacidade de armazenamento (ton): </b></td>
+                      <td class="small-font"><b>Qtd edificações (raio 450 m): </b></td>
                       <td id="cap_ton_7km_tab" class="small-font"></td>
                   </tr>   
                   <tr>
-                      <td class="small-font"><b>Usinas sucroalcooleiras (qtd):</b></td>
+                      <td class="small-font"><b>Qtd edificações (faixa de servidão):</b></td>
                       <td id="usinas_qtd_7km_tab" class="small-font"></td>
                   </tr>
                   <tr>
-                      <td class="small-font"><b>Frigoríficos-SIF (qtd): </b></td>
+                      <td class="small-font"><b>Torres (qtd): </b></td>
                       <td id="frigorificos_qtd_7km_tab" class="small-font"></td>
                   </tr>
               </tbody>
@@ -243,45 +265,55 @@
           <table class="table custom-table-width rounded-table small-table">
               <thead>
                   <tr>
-                      <th class="small-font">Uso/cobertura do solo (2022)</th>
-                      <th class="small-font">Área (ha)</th>
+                      <th class="small-font">Uso/cobertura do solo</th>
+                      <th class="small-font">Área (2021)</th>
+                      <th class="small-font">Área (2023)</th>
                     </tr>
               </thead>
               <tbody>
                   <tr>
-                      <td class="small-font">Soja</td>
+                      <td class="small-font">Formação campestre</td>
+                      <td id="lulc_soja_tab" class="small-font" ></td>
                       <td id="lulc_soja_tab" class="small-font" ></td>
                   </tr>
                   <tr>
-                      <td class="small-font">Outras lavouras temporárias</td>
+                      <td class="small-font">Pastagem</td>
+                      <td id="outras_lav_temporarias_tab" class="small-font"></td>
                       <td id="outras_lav_temporarias_tab" class="small-font"></td>
                   </tr>   
                   <tr>
-                      <td class="small-font">Cana</td>
+                      <td class="small-font">Mosaico de usos</td>
+                      <td id="lulc_cana_tab" class="small-font"></td>
                       <td id="lulc_cana_tab" class="small-font"></td>
                   </tr>
                   <tr>
-                      <td class="small-font">Lavouras perenes</td>
+                      <td class="small-font">Área urbanizada</td>
+                      <td id="lav_perenes_tab" class="small-font"></td>
                       <td id="lav_perenes_tab" class="small-font"></td>
                   </tr>
                   <tr>
-                      <td class="small-font">Pastagem</td>
+                      <td class="small-font">Outras áreas não vegetadas</td>
+                      <td id="lulc_pastagem_tab" class="small-font"></td>
                       <td id="lulc_pastagem_tab" class="small-font"></td>
                   </tr>
                   <tr>
-                      <td class="small-font">Silvicultura</td>
+                      <td class="small-font">Formação florestal</td>
+                      <td id="lulc_silvicultura_tab" class="small-font"></td>
                       <td id="lulc_silvicultura_tab" class="small-font"></td>
                   </tr>
                   <tr>
-                      <td class="small-font">Área urbanizada</td>
+                      <td class="small-font">Água</td>
+                      <td id="lulc_areaurbanizada_tab" class="small-font"></td>
                       <td id="lulc_areaurbanizada_tab" class="small-font"></td>
                   </tr>
                   <tr>
-                      <td class="small-font">Água</td>
+                      <td class="small-font">Formação savânica</td>
+                      <td id="lulc_riolagoeoceano_tab" class="small-font"></td>
                       <td id="lulc_riolagoeoceano_tab" class="small-font"></td>
                   </tr>
                   <tr>
-                      <td class="small-font">Vegetação nativa</td>
+                      <td class="small-font">Campo alagado e área pantanosa</td>
+                      <td id="veg_nativa_tab" class="small-font"></td>
                       <td id="veg_nativa_tab" class="small-font"></td>
                   </tr>
               </tbody>
@@ -289,34 +321,65 @@
           <table class="table custom-table-width rounded-table small-table">
               <thead>
                   <tr>
-                      <th class="small-font">Categoria territorial</th>
+                      <th class="small-font">Unidades de conservação</th>
                       <th class="small-font">Quantidade</th>
                       <th class="small-font">Área (ha)</th>
                     </tr>
               </thead>
               <tbody>
                   <tr>
-                      <td class="small-font">Assentamento</td>
-                      <td id="assent_qtd_7km_tab" class="small-font text-center"></td>
-                      <td id="assent_area_7km_tab" class="small-font"></td>
-                  </tr>
-                  <tr>
-                      <td class="small-font">Terra indígena</td>
-                      <td id="ti_qtd_7km_tab" class="small-font text-center"></td>
-                      <td id="ti_area_7km_tab" class="small-font"></td>
-                      
-                  </tr>   
-                  <tr>
-                      <td class="small-font">Unidade de conservação (PI)</td>
+                      <td class="small-font">Proteção Integral</td>
                       <td id="ucpi_qtd_7km_tab" class="small-font text-center"></td>
                       <td id="ucpi_area_7km_tab" class="small-font"></td>
                   </tr>
                   <tr>
-                      <td class="small-font">Unidade de conservação (US)</td>
+                      <td class="small-font">Uso Sustentável</td>
                       <td id="ucus_qtd_7km_tab" class="small-font text-center"></td>
                       <td id="ucus_area_7km_tab" class="small-font"></td>
                   </tr>
               </tbody>
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                    <tr>
+                        <th class="small-font">Tipos de estabelecimentos (Censo 2022)</th>
+                        <th class="small-font">Quantidade</th>
+                      </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="small-font">Domicílio particular</td>
+                        <td id="assent_qtd_7km_tab" class="small-font text-center"></td>
+                    </tr>
+                    <tr>
+                        <td class="small-font">Domicílio coletivo</td>
+                        <td id="ti_qtd_7km_tab" class="small-font text-center"></td>
+                        
+                    </tr>   
+                    <tr>
+                        <td class="small-font">Estabelecimento agropecuário</td>
+                        <td id="ucpi_qtd_7km_tab" class="small-font text-center"></td>
+                    </tr>
+                    <tr>
+                        <td class="small-font">Estabelecimento de saúde</td>
+                        <td id="ucus_qtd_7km_tab" class="small-font text-center"></td>
+                    </tr>
+                    <tr>
+                      <td class="small-font">Estabelecimento de ensino</td>
+                      <td id="ucus_qtd_7km_tab" class="small-font text-center"></td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Estabelecimento religioso</td>
+                    <td id="ucus_qtd_7km_tab" class="small-font text-center"></td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Estabelecimento de outras finalidades</td>
+                    <td id="ucus_qtd_7km_tab" class="small-font text-center"></td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Edificação em construção</td>
+                    <td id="ucus_qtd_7km_tab" class="small-font text-center"></td>
+                  </tr>
+                </tbody>
           </table>
           </div>  
           </div>
@@ -324,7 +387,7 @@
       
       <div id="relatorios_titulo" class="relatorios_titulo"><b>Legenda</b></div>
       <div id="legenda" class="legenda">
-          <img src="images/legenda_v4.png" max-width: 180px>
+          <img src="images/" max-width: 180px>
           <br>
           <br>
           <br>
@@ -373,8 +436,8 @@
     });  
   
     const view = new ol.View({
-      center: [-49, -15],
-      zoom: 5.5,
+      center: [-39.8, -13.55],
+      zoom: 9.5,
       projection: 'EPSG:4326',
     });
 
@@ -393,10 +456,10 @@
 
     const info_torres = new ol.source.TileWMS({
       ratio: 1,
-      url: 'http://localhost:8080/geoserver/torres/wms',
+      url: 'http://localhost:8080/geoserver/tropicalia/wms',
       params: {'VERSION': '1.1.0',  
             "STYLES": '',
-            "LAYERS": 'torres:pa_br_sol_torres ',
+            "LAYERS": 'tropicalia:faixa_servidao_cadastro ',
             "exceptions": 'application/vnd.ogc.se_inimage',
       }
     })
@@ -411,61 +474,60 @@
       }
     })
 
-    const torres_ativadas = new ol.layer.Tile({
+    const faixa_servidao_cadastro = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'http://localhost:8080/geoserver/torres/wms?service=WMS&version=1.1.0&request=GetMap&layers=torres%3Apa_br_sol_torres_ativadas',
+        url: 'http://localhost:8080/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Afaixa_servidao_cadastro',
       }),
       visible: true,
-      title: 'torres_ativadas'
+      title: 'faixa_servidao_cadastro'
     });
 
-    const torres_emimplantacao = new ol.layer.Tile({
+    const eixo = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'http://localhost:8080/geoserver/torres/wms?service=WMS&version=1.1.0&request=GetMap&layers=torres%3Apa_br_sol_torres_emimplantacao',
-      }),
-      visible: true,
-      title: 'torres_emimplantacao'
-    });
-
-    const torres_projeto = new ol.layer.Tile({
-      source: new ol.source.TileWMS({
-        url: 'http://localhost:8080/geoserver/torres/wms?service=WMS&version=1.1.0&request=GetMap&layers=torres%3Apa_br_sol_torres_projeto',
-      }),
-      visible: true,
-      title: 'torres_projeto'
-    });
-
-    var torres_raio10km_filtro = new ol.layer.Tile({
-      source: new ol.source.TileWMS({
-        params: {'LAYERS': 'torres:pa_br_sol_torres_raio10km', 'TILED': true},
-        serverType: 'geoserver'
-      }),
-      visible: true,
-      title: 'torres_raio10km_filtro' 
-    });
-
-    const armazens = new ol.layer.Tile({
-      source: new ol.source.TileWMS({
-        url: 'http://localhost:8080/geoserver/infraestrutura/wms?service=WMS&version=1.1.0&request=GetMap&layers=infraestrutura%3Apa_br_conab_armazens_01112021',
+        url: 'http://localhost:8080/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Aeixo',
       }),
       visible: false,
-      title: 'armazens'
+      title: 'eixo'
     });
 
-    const usinas = new ol.layer.Tile({
+    const torres = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'http://localhost:8080/geoserver/infraestrutura/wms?service=WMS&version=1.1.0&request=GetMap&layers=infraestrutura%3Apa_br_conab_usinascana_01112021',
+        url: 'http://localhost:8080/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Atorres',
       }),
       visible: false,
-      title: 'usinas'
+      title: 'torres'
     });
 
-    const frigorificos = new ol.layer.Tile({
+    const edificacoes = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'http://localhost:8080/geoserver/infraestrutura/wms?service=WMS&version=1.1.0&request=GetMap&layers=infraestrutura%3Apa_br_sif_frigorificos_01112021',
+        url: 'http://localhost:8080/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Aedificacoes',
       }),
       visible: false,
-      title: 'frigorificos'
+      title: 'edificacoes'
+    });
+
+    const acessos = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: 'http://localhost:8080/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Aacessos',
+      }),
+      visible: false,
+      title: 'acessos'
+    });
+
+    const ps_map_rf_2021 = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: 'http://localhost:8080/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Aps_map_rf_2021',
+      }),
+      visible: true,
+      title: 'ps_map_rf_2021'
+    });
+
+    const ps_map_rf_2023 = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: 'http://localhost:8080/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Aps_map_rf_2023',
+      }),
+      visible: true,
+      title: 'ps_map_rf_2023'
     });
 
     const imoveis_rurais_car = new ol.layer.Tile({
@@ -564,11 +626,9 @@
 
     const checkboxGroup = new ol.layer.Group({
       layers: [
-        uf, municipios, ucs_pi, ucs_us, terras_indigenas, assentamentos, imoveis_rurais_snci, imoveis_rurais_sigef, imoveis_rurais_car, frigorificos, armazens, usinas, torres_projeto, torres_emimplantacao, torres_ativadas
+      ps_map_rf_2021, ps_map_rf_2023, uf, municipios, ucs_pi, ucs_us, terras_indigenas, assentamentos, imoveis_rurais_snci, imoveis_rurais_sigef, imoveis_rurais_car, torres, edificacoes, faixa_servidao_cadastro, eixo, acessos
       ]
     });
-
-    checkboxGroup.getLayers().push(torres_raio10km_filtro);
 
     const baseLayerGroup = new ol.layer.Group({
       layers: [
@@ -577,12 +637,13 @@
     })
   
     // Adicione um ID único a cada camada  
-    torres_ativadas.set('layerId', 'torresativadasLayer');
-    torres_emimplantacao.set('layerId', 'torresemimplantacaoLayer');
-    torres_projeto.set('layerId', 'torresprojetoLayer');
-    armazens.set('layerId', 'armazensLayer');
-    frigorificos.set('layerId', 'frigorificosLayer');
-    usinas.set('layerId', 'usinasLayer');
+    faixa_servidao_cadastro.set('layerId', 'faixa_servidao_cadastroLayer');
+    eixo.set('layerId', 'eixoLayer');
+    torres.set('layerId', 'torresLayer');
+    acessos.set('layerId', 'acessosLayer');
+    edificacoes.set('layerId', 'edificacoesLayer');
+    ps_map_rf_2021.set('layerId', 'ps_map_rf_2021Layer');
+    ps_map_rf_2023.set('layerId', 'ps_map_rf_2023Layer');
     imoveis_rurais_car.set('layerId', 'imoveis_rurais_carLayer');
     imoveis_rurais_sigef.set('layerId', 'imoveis_rurais_sigefLayer');
     imoveis_rurais_snci.set('layerId', 'imoveis_rurais_snciLayer');
@@ -594,13 +655,13 @@
     uf.set('layerId', 'ufLayer');
   
     // Adicione as camadas ao mapa OpenLayers  
-    map.addLayer(torres_ativadas);
-    map.addLayer(torres_emimplantacao);
-    map.addLayer(torres_projeto);
-    map.addLayer(torres_raio10km_filtro);
-    map.addLayer(armazens);  
-    map.addLayer(frigorificos);
-    map.addLayer(usinas);
+    map.addLayer(faixa_servidao_cadastro);
+    map.addLayer(eixo);
+    map.addLayer(torres);
+    map.addLayer(acessos);
+    map.addLayer(edificacoes);
+    map.addLayer(ps_map_rf_2021);
+    map.addLayer(ps_map_rf_2023);
     map.addLayer(imoveis_rurais_car);
     map.addLayer(imoveis_rurais_sigef);
     map.addLayer(imoveis_rurais_snci);
@@ -648,16 +709,14 @@
 
     // Mapeamento de alias para nomes de colunas    
     const columnAlias = {
-      idsol: 'ID SOL',
-      cliente: 'Cliente',
-      municipio: 'Município',
-      uf: 'UF',
-      status: 'Status',
+      referencia: 'Referência',
       projeto: 'Projeto',
-      fazenda: 'Fazenda',
-      dealer: 'Dealer',
-      dataativacao: 'Data de ativação',
-      // Adicione outros campos e alias aqui
+      torres: 'Torres',
+      statusnegociacao: 'Status da negociação',
+      proprietario: 'Proprietário',
+      telefone: 'telefone',
+      vilapovoado: 'Vila ou Povoado',
+      municipio: 'Município',
     };
   
     // Definição de vegetação nativa
@@ -865,7 +924,7 @@
                 dropdown.append(
                   $('<option>', {
                     value: JSON.stringify(result),
-                    text: result.idsol, // Usar result.idsol como o texto
+                    text: result.referencia, // Usar result.referencia como o texto
                   })
                 );              
               });
@@ -920,7 +979,7 @@
             } else {
 
               // Se não houver resultados, você pode exibir uma mensagem na tabela
-              $('#idsolRow td').html('Nenhum resultado encontrado.');
+              $('#referenciaRow td').html('Nenhum resultado encontrado.');
               $('#paginacao').empty(); // Limpar o menu dropdown
             }
           },
@@ -1069,7 +1128,7 @@
 
                 $('<option>', {
                   value: JSON.stringify(result),
-                  text: result.idsol, // Usar result.idsol como o texto                  
+                  text: result.referencia, // Usar result.referencia como o texto                  
                 })
 
               );
@@ -1128,7 +1187,7 @@
           } else {
 
             // Se não houver resultados, você pode exibir uma mensagem na tabela
-            $('#idsolRow td').html('Nenhum resultado encontrado.');
+            $('#referenciaRow td').html('Nenhum resultado encontrado.');
             $('#paginacao').empty(); // Limpar o menu dropdown
           }
         },
@@ -1272,7 +1331,7 @@
         viewResolution,
           'EPSG:4326',
           {'INFO_FORMAT': 'application/json',
-          'propertyName': 'geom,idsol,fase,cliente,fazenda,dealer,dataativacao,projeto,municipio,uf,status,cap_ton_7km,qto_armzs_7km,assent_area_7km,assent_qtd_7km,ti_area_7km,ti_qtd_7km,ucus_area_7km,ucus_qtd_7km,ucpi_area_7km,ucpi_qtd_7km,car_areamedia,car_qtd_7km,sigef_areamedia,sigef_qtd_7km,snci_areamedia,snci_qtd_7km,usinas_qtd_7km,frigorificos_qtd_7km,lulc_formacaoflorestal,lulc_formacaosavanica,lulc_mangue,lulc_florestaalagavel,lulc_silvicultura,lulc_campoalagadoeareapantanosa,lulc_formacaocampestre,lulc_outrasformacoesnaoflorestais,lulc_pastagem,lulc_cana,lulc_areaurbanizada,lulc_apicum,lulc_riolagoeoceano,lulc_soja,lulc_arroz,lulc_outraslavourastemporarias,lulc_cafe,lulc_citrus,lulc_outraslavourasperenes,lulc_restingaarborea,lulc_restingaherbacea,lulc_algodao',
+          'propertyName': 'geom,referencia,projeto,torres,statusnegociacao,proprietario,telefone,municipio',
           'exclude_nodata_result': 'true'},
         );
         fetch(url)
@@ -1283,44 +1342,14 @@
             const var2 = var1[0];
             const geometria = var2['geometry']; // Acesso à geometria
           const var3 = var2['properties']
-          const IdSol = var3['idsol'] || 0;
-          const Cliente = var3['cliente'] || 0;
+          const Referencia = var3['referencia'] || 0;
           const Projeto = var3['projeto'] || 0;
-          const Fazenda = var3['fazenda'] || 0;   
-          const Dealer = var3['dealer'] || 0;
-          const DataDeAtivacao = var3['dataativacao'] || 0;
-          const Municipio = var3['municipio'] || 0;
-          const UF = var3['uf'] || 0;
-          const Fase = var3['fase'] || 0;
-          const Status = var3['status'] || '-';
-          const cap_ton_7km = var3['cap_ton_7km'] || 0;
-          const qto_armzs_7km = var3['qto_armzs_7km'] || 0;
-          const assent_area_7km = var3['assent_area_7km'] || 0;
-          const assent_qtd_7km = var3['assent_qtd_7km'] || 0;
-          const ti_area_7km = var3['ti_area_7km'] || 0;
-          const ti_qtd_7km = var3['ti_qtd_7km'] || 0;
-          const ucus_area_7km = var3['ucus_area_7km'] || 0;
-          const ucus_qtd_7km = var3['ucus_qtd_7km'] || 0;
-          const ucpi_area_7km = var3['ucpi_area_7km'] || 0;
-          const ucpi_qtd_7km = var3['ucpi_qtd_7km'] || 0;
-          const car_areamedia = var3['car_areamedia'] || 0;
-          const car_qtd_7km = var3['car_qtd_7km'] || 0;
-          const sigef_areamedia = var3['sigef_areamedia'] || 0;
-          const sigef_qtd_7km = var3['sigef_qtd_7km'] || 0;
-          const snci_areamedia = var3['snci_areamedia'] || 0;
-          const snci_qtd_7km = var3['snci_qtd_7km'] || 0;
-          const usinas_qtd_7km = var3['usinas_qtd_7km'] || 0;
-          const frigorificos_qtd_7km = var3['frigorificos_qtd_7km'] || 0;
-          const veg_nativa = var3['lulc_formacaoflorestal']+var3['lulc_formacaosavanica']+var3['lulc_mangue']+var3['lulc_florestaalagavel']+var3['lulc_campoalagadoeareapantanosa']+var3['lulc_formacaocampestre']+var3['lulc_outrasformacoesnaoflorestais']+var3['lulc_restingaarborea']+var3['lulc_restingaherbacea'] || 0;
-          const lulc_silvicultura = var3['lulc_silvicultura'] || 0;
-          const lulc_pastagem = var3['lulc_pastagem'] || 0;
-          const lulc_cana = var3['lulc_cana'] || 0;
-          const lulc_areaurbanizada = var3['lulc_areaurbanizada'] || 0;
-          const lulc_riolagoeoceano = var3['lulc_riolagoeoceano'] || 0;
-          const lulc_soja = var3['lulc_soja'] || 0;
-          const lav_perenes = var3['lulc_outraslavourasperenes']+var3['lulc_cafe']+var3['lulc_citrus'] || 0;
-          const outras_lav_temporarias = var3['lulc_algodao']+var3['lulc_outraslavourastemporarias']+var3['lulc_arroz'] || 0;
-          const div1 = document.getElementById('rel_torre_tab');
+          const Torres = var3['torres'] || 0;
+          const StatusNegociacao = var3['statusnegociacao'] || 0;
+          const Proprietario = var3['proprietario'] || 0;   
+          const Telefone = var3['telefone'] || 0;
+          const VilaPovoado = var3['vilapovoado'] || 0;
+          const Municipio = var3['municipio'] || 0;          
           map.removeLayer(vectorLayer); 
           map.removeLayer(pointLayer); 
           map.removeLayer(pointLayer_sel);
@@ -1361,170 +1390,36 @@
         <div id="resultados">        
         <table class="table custom-table-width rounded-table small-table">                
                 <tbody>
-                    <tr id="idsolRow">
-                        <td class="small-font"><b>ID SOL:</b> ${IdSol}</td>
-                    </tr>
-                    <tr id="clienteRow">
-                        <td class="small-font"><b>Cliente:</b> ${Cliente}</td>
-                    </tr>   
-                    <tr id="municipioRow">
-                        <td class="small-font"><b>Município:</b> ${Municipio}</td>
-                    </tr>  
-                    <tr id="ufRow">
-                        <td class="small-font"><b>UF:</b> ${UF}</td>
-                    </tr>  
-                    <tr id="faseRow">
-                      <td class="small-font"><b>Fase:</b> ${Fase}</td>
-                  </tr>
-                    <tr id="statusRow">
-                        <td class="small-font"><b>Status:</b> ${Status}</td>
+                    <tr id="referenciaRow">
+                        <td class="small-font"><b>Referência:</b> ${Referencia}</td>
                     </tr>
                     <tr id="projetoRow">
                         <td class="small-font"><b>Projeto:</b> ${Projeto}</td>
+                    </tr>   
+                    <tr id="torresRow">
+                        <td class="small-font"><b>Torres:</b> ${Torres}</td>
+                    </tr>  
+                    <tr id="statusnegociacaoRow">
+                        <td class="small-font"><b>Status de Negociação:</b> ${StatusNegociacao}</td>
+                    </tr>  
+                    <tr id="proprietarioRow">
+                      <td class="small-font"><b>Proprietário:</b> ${Proprietario}</td>
+                  </tr>
+                    <tr id="telefoneRow">
+                        <td class="small-font"><b>Telefone:</b> ${Telefone}</td>
                     </tr>
-                    <tr id="fazendaRow">
-                        <td class="small-font"><b>Fazenda:</b> ${Fazenda}</td>
+                    <tr id="vilapovoadoRow">
+                        <td class="small-font"><b>Vila/Povoado:</b> ${VilaPovoado}</td>
                     </tr>
-                    <tr id="dealerRow">
-                        <td class="small-font"><b>Dealer:</b> ${Dealer}</td>
-                    </tr>
-                    <tr id="ativacaoRow">
-                        <td class="small-font"><b>Data de ativação:</b> ${DataDeAtivacao}</td>
+                    <tr id="municipioRow">
+                        <td class="small-font"><b>Município:</b> ${Municipio}</td>
                     </tr>
                 </tbody>
             </table>
             </div>
             <div id="paginacao">
           </div>
-        `        
-        const resultados_10km = document.getElementById('resultados_10km');
-        
-        resultados_10km.innerHTML = `
-        <table class="table custom-table-width rounded-table small-table">
-                <thead>
-                    <tr>
-                        <th class="small-font">Base fundiária</th>
-                        <th class="small-font text-center">Qtd. imóveis</th>
-                        <th class="small-font text-center">Tamanho médio (ha)</th>
-                      </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="small-font">CAR</td>
-                        <td id="car_qtd_7km_tab" class="small-font text-center" >${car_qtd_7km}</td>
-                        <td id="car_areamedia_tab" class="small-font text-center">${car_areamedia.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">SIGEF</td>
-                        <td id="sigef_qtd_7km_tab" class="small-font text-center">${sigef_qtd_7km}</td>
-                        <td id="sigef_areamedia_tab" class="small-font text-center">${sigef_areamedia.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">SNCI</td>
-                        <td id="snci_qtd_7km_tab" class="small-font text-center">${snci_qtd_7km}</td>
-                        <td id="snci_areamedia_tab" class="small-font text-center">${snci_areamedia.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-                <tbody>
-                    <tr>
-                        <td class="small-font"><b>Silos/armazens (qtd):</b></td>
-                        <td id="qto_armzs_7km_tab" class="small-font">${qto_armzs_7km}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font"><b>Capacidade de armazenamento (ton): </b> </td>
-                        <td id="cap_ton_7km_tab" class="small-font">${cap_ton_7km.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>   
-                    <tr>
-                        <td class="small-font"><b>Usinas sucroalcooleiras (qtd):</b> </td>
-                        <td id="usinas_qtd_7km_tab" class="small-font">${usinas_qtd_7km}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font"><b>Frigoríficos-SIF (qtd): </td>
-                        <td id="frigorificos_qtd_7km_tab" class="small-font">${frigorificos_qtd_7km}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-                <thead>
-                    <tr>
-                        <th class="small-font">Uso/cobertura do solo (2022)</th>
-                        <th class="small-font">Área (ha)</th>
-                      </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="small-font">Soja</td>
-                        <td id="lulc_soja_tab" class="small-font" >${lulc_soja.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Outras lavouras temporárias</td>
-                        <td id="outras_lav_temporarias_tab" class="small-font">${outras_lav_temporarias.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>   
-                    <tr>
-                        <td class="small-font">Cana</td>
-                        <td id="lulc_cana_tab" class="small-font">${lulc_cana.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Lavouras perenes</td>
-                        <td id="lav_perenes_tab" class="small-font">${lav_perenes.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Pastagem</td>
-                        <td id="lulc_pastagem_tab" class="small-font">${lulc_pastagem.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Silvicultura</td>
-                        <td id="lulc_silvicultura_tab" class="small-font">${lulc_silvicultura.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Área urbanizada</td>
-                        <td id="lulc_areaurbanizada_tab" class="small-font">${lulc_areaurbanizada.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Água</td>
-                        <td id="lulc_riolagoeoceano_tab" class="small-font">${lulc_riolagoeoceano.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Vegetação nativa</td>
-                        <td id="veg_nativa_tab" class="small-font">${veg_nativa.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-                <thead>
-                    <tr>
-                        <th class="small-font">Categoria territorial</th>
-                        <th class="small-font">Quantidade</th>
-                        <th class="small-font">Área (ha)</th>
-                      </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="small-font">Assentamento</td>
-                        <td id="assent_qtd_7km_tab" class="small-font text-center">${assent_qtd_7km}</td>
-                        <td id="assent_area_7km_tab" class="small-font">${assent_area_7km.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Terra indígena</td>
-                        <td id="ti_qtd_7km_tab" class="small-font text-center">${ti_qtd_7km}</td>
-                        <td id="ti_area_7km_tab" class="small-font">${ti_area_7km.toFixed(2).replace(/\./g, ',')}</td>
-                    
-                    </tr>   
-                    <tr>
-                        <td class="small-font">Unidade de conservação (PI)</td>
-                        <td id="ucpi_qtd_7km_tab" class="small-font text-center"> ${ucpi_qtd_7km}</td>
-                        <td id="ucpi_area_7km_tab" class="small-font"> ${ucpi_area_7km.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Unidade de conservação (US)</td>
-                        <td id="ucus_qtd_7km_tab" class="small-font text-center"> ${ucus_qtd_7km}</td>
-                        <td id="ucus_area_7km_tab" class="small-font"> ${ucus_area_7km.toFixed(2).replace(/\./g, ',')}</td>
-                    </tr>
-                </tbody>
-            </table>
-            `
+        `               
         } else {
         }
       })
@@ -1550,23 +1445,31 @@
     });
 
     // Seleciona o elemento "> Torres" e a div de conteúdo
-    const torresToggle = document.getElementById("torres-toggle");
-    const torresContent = document.getElementById("torres-content");
+    const lt_tropicaliaToggle = document.getElementById("lt_tropicalia-toggle");
+    const lt_tropicaliaContent = document.getElementById("lt_tropicalia-content");
 
     // Adiciona um evento de clique ao elemento "> Torres"
-    torresToggle.addEventListener("click", () => {
+    lt_tropicaliaToggle.addEventListener("click", () => {
 
       // Altera a propriedade display da div de conteúdo
-      if (torresContent.style.display === "none") {
-        torresContent.style.display = "block";
+      if (lt_tropicaliaContent.style.display === "none") {
+        lt_tropicaliaContent.style.display = "block";
       } else {
-        torresContent.style.display = "none";
+        lt_tropicaliaContent.style.display = "none";
       }
     });
 
     // Seleciona o elemento "> Infraestrutura" e a div de conteúdo
     const infraestruturaToggle = document.getElementById("infraestrutura-toggle");
     const infraestruturaContent = document.getElementById("infraestrutura-content");
+
+    // Seleciona o elemento "> Alertas" e a div de conteúdo
+    const alertasToggle = document.getElementById("alertas-toggle");
+    const alertasContent = document.getElementById("alertas-content");
+
+    // Seleciona o elemento "> Alertas" e a div de conteúdo
+    const ambientalToggle = document.getElementById("ambiental-toggle");
+    const ambientalContent = document.getElementById("ambiental-content");
 
     // Adiciona um evento de clique ao elemento "> Infraestrutura"
     infraestruturaToggle.addEventListener("click", () => {
@@ -1576,6 +1479,28 @@
         infraestruturaContent.style.display = "block";
       } else {
         infraestruturaContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento "> Alertas"
+    alertasToggle.addEventListener("click", () => {
+      
+      // Altera a propriedade display da div de conteúdo
+      if (alertasContent.style.display === "none") {
+        alertasContent.style.display = "block";
+      } else {
+        alertasContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento "> Ambiental"
+    ambientalToggle.addEventListener("click", () => {
+  
+      // Altera a propriedade display da div de conteúdo
+      if (ambientalContent.style.display === "none") {
+        ambientalContent.style.display = "block";
+      } else {
+        ambientalContent.style.display = "none";
       }
     });
 
@@ -1625,12 +1550,13 @@
     });
 
     // Seleciona as checkboxes e as camadas de mapa correspondentes
-    const torresativadasCheckbox = document.getElementById("torresativadas-checkbox");
-    const torresemimplantacaoCheckbox = document.getElementById("torresemimplantacao-checkbox");
-    const torresprojetoCheckbox = document.getElementById("torresprojeto-checkbox");
-    const armazensCheckbox = document.getElementById("armazens-checkbox");
-    const frigorificosCheckbox = document.getElementById("frigorificos-checkbox");
-    const usinasCheckbox = document.getElementById("usinas-checkbox");
+    const faixa_servidao_cadastroCheckbox = document.getElementById("faixa_servidao_cadastro-checkbox");
+    const eixoCheckbox = document.getElementById("eixo-checkbox");
+    const torresCheckbox = document.getElementById("torres-checkbox");
+    const acessosCheckbox = document.getElementById("acessos-checkbox");
+    const edificacoesCheckbox = document.getElementById("edificacoes-checkbox");
+    const ps_map_rf_2021Checkbox = document.getElementById("ps_map_rf_2021-checkbox");
+    const ps_map_rf_2023Checkbox = document.getElementById("ps_map_rf_2023-checkbox");
     const imoveis_rurais_carCheckbox = document.getElementById("imoveis_rurais_car-checkbox");
     const imoveis_rurais_sigefCheckbox = document.getElementById("imoveis_rurais_sigef-checkbox");
     const imoveis_rurais_snciCheckbox = document.getElementById("imoveis_rurais_snci-checkbox");
@@ -1642,12 +1568,13 @@
     const ufCheckbox = document.getElementById("uf-checkbox");
 
     // Obtém as camadas de mapa existentes
-    const torresprojetoLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'torres_projeto');
-    const torresativadasLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'torres_ativadas');
-    const torresemimplantacaoLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'torres_emimplantacao');
-    const armazensLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'armazens');
-    const frigorificosLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'frigorificos');
-    const usinasLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'usinas');
+    const faixa_servidao_cadastroLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'faixa_servidao_cadastro');
+    const eixoLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'eixo');
+    const torresLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'torres');
+    const acessosLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'acessos');
+    const edificacoesLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'edificacoes');
+    const ps_map_rf_2021Layer = map.getLayers().getArray().find(layer => layer.get('title') === 'ps_map_rf_2021');
+    const ps_map_rf_2023Layer = map.getLayers().getArray().find(layer => layer.get('title') === 'ps_map_rf_2023');
     const imoveis_rurais_carLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'imoveis_rurais_car'); 
     const imoveis_rurais_sigefLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'imoveis_rurais_sigef'); 
     const imoveis_rurais_snciLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'imoveis_rurais_snci'); 
@@ -1659,31 +1586,35 @@
     const ufLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'uf'); 
 
     // Adiciona eventos de mudança às checkboxes
-    torresativadasCheckbox.addEventListener("change", () => {
-      torresativadasLayer.setVisible(torresativadasCheckbox.checked);
+    faixa_servidao_cadastroCheckbox.addEventListener("change", () => {
+      faixa_servidao_cadastroLayer.setVisible(faixa_servidao_cadastroCheckbox.checked);
     });
 
-    torresemimplantacaoCheckbox.addEventListener("change", () => {
-      torresemimplantacaoLayer.setVisible(torresemimplantacaoCheckbox.checked);
+    eixoCheckbox.addEventListener("change", () => {
+      eixoLayer.setVisible(eixoCheckbox.checked);
     });
 
-    torresprojetoCheckbox.addEventListener("change", () => {
-      torresprojetoLayer.setVisible(torresprojetoCheckbox.checked);
+    torresCheckbox.addEventListener("change", () => {
+      torresLayer.setVisible(torresCheckbox.checked);
     });
 
-    armazensCheckbox.addEventListener("change", () => {
-      armazensLayer.setVisible(armazensCheckbox.checked);
+    acessosCheckbox.addEventListener("change", () => {
+      acessosLayer.setVisible(acessosCheckbox.checked);
     });
 
-    frigorificosCheckbox.addEventListener("change", () => {
-      frigorificosLayer.setVisible(frigorificosCheckbox.checked);
+    edificacoesCheckbox.addEventListener("change", () => {
+      edificacoesLayer.setVisible(edificacoesCheckbox.checked);
     });
 
-    usinasCheckbox.addEventListener("change", () => {
-      usinasLayer.setVisible(usinasCheckbox.checked);
+    ps_map_rf_2021Checkbox.addEventListener("change", () => {
+      ps_map_rf_2021Layer.setVisible(ps_map_rf_2021Checkbox.checked);
     });
 
-    imoveis_rurais_carCheckbox.addEventListener("change", () => {
+    ps_map_rf_2023Checkbox.addEventListener("change", () => {
+      ps_map_rf_2023Layer.setVisible(ps_map_rf_2023Checkbox.checked);
+    });
+
+      imoveis_rurais_carCheckbox.addEventListener("change", () => {
       imoveis_rurais_carLayer.setVisible(imoveis_rurais_carCheckbox.checked);
     });
 

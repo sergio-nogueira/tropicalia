@@ -4,7 +4,7 @@ const attributionControl = new ol.control.Attribution({
 
 const view = new ol.View({
   center: [-39.823866, -13.676764],
-  zoom: 10,
+  zoom: 20,
   projection: 'EPSG:4326',
 });
 
