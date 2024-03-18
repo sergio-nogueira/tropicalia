@@ -17,13 +17,10 @@ const port = 3000;
 
 
 
-
-
-
 // Configurações do mapa
 const mapConfig = {
-  center: [-49, -15],
-  zoom: 5.5,
+  center: [-40, -14],
+  zoom: 2,
   // ... outras configurações do mapa
 };
 
