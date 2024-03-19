@@ -456,7 +456,7 @@
 
     const info_torres = new ol.source.TileWMS({
       ratio: 1,
-      url: 'http://localhost:8080/geoserver/tropicalia/wms',
+      url: 'https://6dee-2804-14c-ca26-8030-79ae-5f03-62f7-8616.ngrok-free.app/geoserver/tropicalia/wms',
       params: {'VERSION': '1.1.0',  
             "STYLES": '',
             "LAYERS": 'tropicalia:faixa_servidao_cadastro ',
@@ -466,7 +466,7 @@
 
     const info_municipios = new ol.source.TileWMS({
       ratio: 1,
-      url: 'http://localhost:8080/geoserver/limites/wms',
+      url: 'https://6dee-2804-14c-ca26-8030-79ae-5f03-62f7-8616.ngrok-free.app/geoserver/limites/wms',
       params: {'VERSION': '1.1.0',  
             "STYLES": '',
             "LAYERS": 'limites:pa_br_ibge_municipios_2022',
@@ -476,11 +476,12 @@
 
     const faixa_servidao_cadastro = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'http://localhost:8080/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Afaixa_servidao_cadastro',
+        url: 'http://localhost:8080/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=limites%3Afaixa_servidao_cadastro',
       }),
       visible: true,
       title: 'faixa_servidao_cadastro'
     });
+    
 
     const eixo = new ol.layer.Tile({
       source: new ol.source.TileWMS({
