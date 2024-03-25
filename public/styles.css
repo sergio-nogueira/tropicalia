@@ -23,8 +23,9 @@ body {
 
 /* Estilos personalizados para a barra de navegação */
 .navbar {
-    background-color: rgba(50, 54, 53, 0.9) ;  
-    position: absolute; 
+    background-color: #041011c9;  
+   
+    margin-top: -8px;
     width: 100%; 
     z-index: 99999; 
 }
@@ -32,17 +33,17 @@ body {
 /* Estilos personalizados para a div .container-fluid */
 .mapa-div {
     height: 100vh; /* 100% da altura da janela (viewport height) */
-    margin-top: -61px
+    margin-top: 0px
 }
 
 /* Estilos personalizados para a barra lateral (sidebar) */
 .sidebar-left {            
-    background-color: rgba(179, 189, 180, 0.6);
+    background-color: rgba(179, 189, 180, 0.9);
     overflow-y: auto;
     width: 350px;
     position: fixed;
     height: 100%;
-    top: 61px;
+    top: 46px;
     left: -350px;
     z-index: 998;
     transition: left 0.3s;           
@@ -205,7 +206,7 @@ background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
     width: 450px;
     position: fixed;
     height: 100%;
-    top: 61px;
+    top: 46px;
     right: -450px;
     z-index: 998;
     transition: right 0.3s;
@@ -235,10 +236,10 @@ background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
 }
 .webmap-text {
     color: white; 
-    font-size: large;
+    font-size: 16px;
     font-weight: bold;
-    margin-left: 20px;
-    margin-top: 2px; 
+    margin-left: 0px;
+    margin-top: 0px; 
     font-family: 'Montserrat', sans-serif; 
 }
 
@@ -309,4 +310,11 @@ background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
   background-color: #707070; 
   border-color: #707070;              
 }
+
+.TabControl .abas li{float:left}
+.aba{width:100px; height:30px; border:solid 1px; border-radius:5px 5px 0 0; text-align:center; padding-top:5px; background:#3A5FCD}
+.ativa{background:#27408B; color:#fff;}
+.conteudo{display:none;}
+.selected{display:block;}
+
 
