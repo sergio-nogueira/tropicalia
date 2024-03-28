@@ -18,6 +18,26 @@
     <script src="/static/ol/dist/ol.js"></script>
     <script src="/static/elm-pep/dist/elm-pep.js"></script>
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+    .ol-overviewmap {
+        transition: right 0.3s;
+        bottom: auto;
+        left: auto;
+        top: 60px;
+        right: 460px;
+    }
+
+    .ol-overviewmap .ol-overviewmap-map {
+      width: 200px;
+      height: 200px;
+  }
+    .ol-overviewmap-box {
+      border: 1.5px solid rgb(0, 0, 0);
+    }    
+  </style>
+
+
 </head>
 
 <body>
@@ -54,17 +74,29 @@
         <div class="expand-content" style="display: yes;" id="lt_tropicalia-content">
           <div id="lt_tropicalia">
             <input type="checkbox" class="camada-checkbox" id="acessos-checkbox" value='acessos' >&nbsp;&nbsp;Acessos<br>
-            <input type="checkbox" class="camada-checkbox" id="faixa_servidao_cadastro-checkbox" value='faixa_servidao_cadastro' checked>&nbsp;&nbsp;Cadastro<br>
-            <input type="checkbox" id="comunidades-checkbox" value='comunidades' >&nbsp;&nbsp;Comunidades visitadas (PEA/PCS)<br>
+            <input type="checkbox" class="camada-checkbox" id="faixa_servidao_cadastro-checkbox" value='faixa_servidao_cadastro'>&nbsp;&nbsp;Cadastro<br>
             <input type="checkbox" id="desapropriados-checkbox" value='desapropriados' >&nbsp;&nbsp;Desapropriados<br>
             <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Edificações<br>
-            <input type="checkbox" class="camada-checkbox" id="eixo-checkbox" value='eixo' >&nbsp;&nbsp;Eixo<br>
+            <input type="checkbox" class="camada-checkbox" id="eixo-checkbox" value='eixo' checked>&nbsp;&nbsp;Eixo<br>
             <input type="checkbox" class="camada-checkbox" id="erosoes-checkbox" value='erosoes' >&nbsp;&nbsp;Erosões<br>
             <input type="checkbox" class="camada-checkbox" id="obras_supressao-checkbox" value='obras_supressao' >&nbsp;&nbsp;Obra (supressão)<br>
             <input type="checkbox" class="camada-checkbox" id="torres-checkbox" value='torres' >&nbsp;&nbsp;Torres<br>
             <input type="checkbox" id="sinalizadoresavifauna-checkbox" value='sinalizadoresavifauna' >&nbsp;&nbsp;Sinalizadores de avifauna<br>
-            <input type="checkbox" class="camada-checkbox" id="ps_map_rf_2021-checkbox" value='ps_map_rf_2021' checked>&nbsp;&nbsp;Uso do solo (2021)<br>
+            <input type="checkbox" class="camada-checkbox" id="ps_map_rf_2021-checkbox" value='ps_map_rf_2021' >&nbsp;&nbsp;Uso do solo (2021)<br>
             <input type="checkbox" class="camada-checkbox" id="ps_map_rf_2023-checkbox" value='ps_map_rf_2023' checked>&nbsp;&nbsp;Uso do solo (2023)<br>
+            <b><span class="link-text" id="projetos-toggle">> Projetos</span></b><br>
+            <div class="expand-content" style="display: none;" id="projetos-content">
+              <input type="checkbox" id="comunidades-checkbox" value='comunidades' >&nbsp;&nbsp;Comunidades visitadas (PEA/PCS)<br>
+              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;PEA<br>
+              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;ESG<br>
+              </div>
+            <b><span class="link-text" id="resposicaoflorestal-toggle">> Reposição Florestal</span></b><br>
+            <div class="expand-content" style="display: none;" id="resposicaoflorestal-content">
+              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Parna Pau Brasil<br>
+              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Rocado Grande<br>
+              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Ubaíra<br>
+              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Incêndio<br>
+              </div>
           </div>
         </div>
       </div>
@@ -73,7 +105,7 @@
         <div class="expand-content" style="display: none;" id="alertas-content">
           <div id="alertas">
             <input type="checkbox" id="domicilio_particular-checkbox" value='domicilio_particular' >&nbsp;&nbsp;Mudanças de uso do solo (Tropicália)<br>
-            <input type="checkbox" id="viirs-checkbox" value='viirs' >&nbsp;&nbsp;Focos de calor (INPE)<br>
+            <input type="checkbox" id="domicilio_coletivo-checkbox" value='domicilio_coletivo' >&nbsp;&nbsp;Focos de calor (INPE)<br>
             <input type="checkbox" id="domicilio_coletivo-checkbox" value='domicilio_coletivo' >&nbsp;&nbsp;Desmatamento (INPE)<br>
           </div>
           </div>
@@ -113,8 +145,10 @@
           <div id="imoveisrurais">
             <b><span class="link-text" id="imoveisrurais-toggle">> Imóveis rurais</span></b><br>
             <div class="expand-content" style="display: none;" id="imoveisrurais-content">
-            <input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Cadastro Ambiental Rural (CAR)<br>
-            <input type="checkbox" id="imoveis_rurais_sigef-checkbox" value='imoveis_rurais_sigef' >&nbsp;&nbsp;Sistema de Gestão Fundiária (SIGEF)<br>
+            <input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Área do imóvel(CAR)<br>
+            <input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Reserva Legal(CAR)<br>
+            <input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;APP (CAR)<br>
+            <input type="checkbox" id="imoveis_rurais_sigef-checkbox" value='imoveis_rurais_sigef' >&nbsp;&nbsp;Área do imóvel (SIGEF)<br>
           </div>
           </div>  
           </div>
@@ -301,7 +335,7 @@
           
       </div>
       <div id="rel_raio10km" class="relatorios">        
-        <h6><b>&nbsp;&nbsp; <span class="link-text"><img src="images/icone_lupa.png" style="height: 16px; width: auto;"> Caracterização do entorno da LT</span></b></h6>                   
+        <h6><b>&nbsp;&nbsp; <span class="link-text"><img src="images/icone_graficos.png" style="height: 20px; width: auto;"> Caracterização do entorno da LT</span></b></h6>                   
         <div class="expand-content" style="display: yes;">
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -347,9 +381,15 @@
                 </tbody>
             </table>
             <table class="table custom-table-width rounded-table small-table">
+              <thead>
+                <th class="small-font"><span class="link-text" id="transicoes36emeio-toggle">>  Uso e cobertura do solo (2021/2023)</span></th>
+              </tbody>
+            </table>
+            <div class="expand-content" style="display: none;" id="transicoes36emeio-content">
+            <table class="table custom-table-width rounded-table small-table">
                 <thead>
                     <tr>
-                        <th class="small-font">Uso/cobertura do solo</th>
+                        <th class="small-font">Classe</th>
                         <th class="small-font">Área (2021)</th>
                         <th class="small-font">Área (2023)</th>
                       </tr>
@@ -405,8 +445,16 @@
                         <td id="caap_2021" class="small-font">0,07 ha</td>
                         <td id="caap_2023" class="small-font">0,02 ha</td>
                     </tr>
-                </tbody>
+                </tbody>                                
+            </table> 
+            <table class="table custom-table-width rounded-table small-table">
+              <thead>
+                <th class="small-font"> Transições</th>
+              </tbody>
             </table>
+            <div id="sankey_basic_36emeio"></div>
+            <br>           
+            </div>
             <table class="table custom-table-width rounded-table small-table">
                 <thead>
                     <tr>
@@ -503,6 +551,12 @@
                 </tbody>
             </table>
             <table class="table custom-table-width rounded-table small-table">
+              <thead>
+                <th class="small-font"><span class="link-text" id="transicoes100m-toggle">>  Uso e cobertura do solo (2021/2023)</span></th>
+              </tbody>
+            </table>
+            <div class="expand-content" style="display: none;" id="transicoes100m-content">
+            <table class="table custom-table-width rounded-table small-table">
                 <thead>
                     <tr>
                         <th class="small-font">Uso/cobertura do solo</th>
@@ -563,6 +617,14 @@
                     </tr>
                 </tbody>
             </table>
+            <table class="table custom-table-width rounded-table small-table">
+              <thead>
+                <th class="small-font"> Transições</th>
+              </tbody>
+            </table>
+            <div id="sankey_basic_100m"></div>
+            <br>
+            </div>
             <table class="table custom-table-width rounded-table small-table">
                 <thead>
                     <tr>
@@ -659,9 +721,15 @@
                 </tbody>
             </table>
             <table class="table custom-table-width rounded-table small-table">
+              <thead>
+                <th class="small-font"><span class="link-text" id="transicoes450m-toggle">>  Uso e cobertura do solo (2021/2023)</span></th>
+              </tbody>
+            </table>
+            <div class="expand-content" style="display: none;" id="transicoes450m-content">
+            <table class="table custom-table-width rounded-table small-table">
                 <thead>
                     <tr>
-                        <th class="small-font">Uso/cobertura do solo</th>
+                        <th class="small-font">Classe</th>
                         <th class="small-font">Área (2021)</th>
                         <th class="small-font">Área (2023)</th>
                       </tr>
@@ -719,6 +787,13 @@
                     </tr>
                 </tbody>
             </table>
+            <table class="table custom-table-width rounded-table small-table">
+              <thead>
+                <th class="small-font"> Transições</th>
+              </tbody>
+            </table>
+              <div id="sankey_basic_450m"></div>
+            </div>
             <table class="table custom-table-width rounded-table small-table">
                 <thead>
                     <tr>
@@ -785,13 +860,10 @@
        
     <div id="relatorios_titulo" class="relatorios_titulo"><b>Legenda</b></div>
       <div id="legenda" class="legenda">
-          <img src="images/" max-width: 180px>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
+
       </div>
+      <br>
+      <br>
   </div>
 
   <!-- Botão de revelação para a barra lateral esquerda -->
@@ -824,6 +896,256 @@
   window.onload = init;
   
   function init() {
+
+    // Configurar diagrama de Sankey (36,5 m)
+    google.charts.load('current', {'packages':['sankey']});
+    google.charts.setOnLoadCallback(drawChart36emeio);
+
+    function drawChart36emeio() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'De');
+      data.addColumn('string', 'Para');
+      data.addColumn('number', 'Área (ha)');
+      data.addRows([
+
+      ['Formação Campestre (2021)','Formação Campestre (2023)',69],
+      ['Formação Campestre (2021)','Formação Savânica (2023)',14],
+      ['Pastagem (2021)','Pastagem (2023)',747],
+      ['Pastagem (2021)','Mosaico de Usos (2023)',65],
+      ['Pastagem (2021)','Formação Savânica (2023)',34],
+      ['Mosaico de Usos (2021)','Pastagem (2023)',34],
+      ['Mosaico de Usos (2021)','Mosaico de Usos (2023)',202],
+      ['Mosaico de Usos (2021)','Formação Florestal (2023)',34],
+      ['Formação Florestal (2021)','Mosaico de Usos (2023)',26],
+      ['Formação Florestal (2021)','Formação Florestal (2023)',274],
+      ['Formação Savânica (2021)','Pastagem (2023)',9],
+      ['Formação Savânica (2021)','Formação Savânica (2023)',205],
+
+      ]);
+
+      var options = {
+        width: 410,
+        height: 400,
+        tooltip: {
+          textStyle: {
+            color: 'black', // Altere conforme desejado
+            fontName: 'Montserrat', // Altere conforme desejado
+            fontSize: 12, // Altere conforme desejado
+            bold: false, // true ou false conforme desejado
+            italic: false // true ou false conforme desejado
+          }, 
+          showColorCode: true
+        },        
+        sankey: {
+          node: {
+            width: 10,
+            nodePadding: 20,
+            interactivity: true,
+            colors: [
+              '#d6bc74', // Formação campestre
+              '#d6bc74', // Formação campestre
+              '#7dc975', // Formação Savânica
+              '#edde8e', // Pastagem
+              '#edde8e', // Pastagem
+              '#ffefc3', // Mosaico de Usos
+              '#ffefc3', // Mosaico de Usos
+              '#1f8d49', // Formação Florestal
+              '#1f8d49', // Formação Florestal
+              '#7dc975', // Formação Savânica
+
+            ]        
+          },
+          link: {
+            colorMode: 'gradient',            
+            colors: [
+            '#d6bc74', // Formação campestre
+            '#d6bc74', // Formação campestre
+            '#7dc975', // Formação Savânica
+            '#edde8e', // Pastagem
+            '#edde8e', // Pastagem
+            '#ffefc3', // Mosaico de Usos
+            '#ffefc3', // Mosaico de Usos
+            '#1f8d49', // Formação Florestal
+            '#1f8d49', // Formação Florestal
+            '#7dc975', // Formação Savânica
+          ],          
+          }  
+        },        
+      };     
+
+      var chart = new google.visualization.Sankey(document.getElementById('sankey_basic_36emeio'));
+      chart.draw(data, options);
+    }
+
+    // Configurar diagrama de Sankey (100 m)
+    google.charts.load('current', {'packages':['sankey']});
+    google.charts.setOnLoadCallback(drawChart100m);
+
+    function drawChart100m() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'De');
+      data.addColumn('string', 'Para');
+      data.addColumn('number', 'Área (ha)');
+      data.addRows([
+
+      ['Formação Campestre (2021)','Formação Campestre (2023)',192],
+      ['Formação Campestre (2021)','Mosaico de Usos (2023)',10],
+      ['Formação Campestre (2021)','Formação Florestal (2023)',14],
+      ['Formação Campestre (2021)','Formação Savânica (2023)',38],
+      ['Pastagem (2021)','Pastagem (2023)',1927],
+      ['Pastagem (2021)','Mosaico de Usos (2023)',157],
+      ['Pastagem (2021)','Formação Savânica (2023)',72],
+      ['Mosaico de Usos (2021)','Pastagem (2023)',108],
+      ['Mosaico de Usos (2021)','Mosaico de Usos (2023)',554],
+      ['Mosaico de Usos (2021)','Formação Florestal (2023)',82],
+      ['Formação Florestal (2021)','Mosaico de Usos (2023)',80],
+      ['Formação Florestal (2021)','Formação Florestal (2023)',845],
+      ['Formação Savânica (2021)','Pastagem (2023)',27],
+      ['Formação Savânica (2021)','Mosaico de Usos (2023)',17],
+      ['Formação Savânica (2021)','Formação Florestal (2023)',11],
+      ['Formação Savânica (2021)','Formação Savânica (2023)',614],    
+       
+      ]);
+
+      var options = {
+        width: 410,
+        height: 450,
+        tooltip: {
+          textStyle: {
+            color: 'black', // Altere conforme desejado
+            fontName: 'Montserrat', // Altere conforme desejado
+            fontSize: 12, // Altere conforme desejado
+            bold: false, // true ou false conforme desejado
+            italic: false // true ou false conforme desejado
+          }, 
+          showColorCode: true
+        },        
+        sankey: {
+          node: {
+            width: 10,
+            nodePadding: 25,
+            interactivity: true,
+            colors: [
+              '#d6bc74', // Formação campestre
+              '#d6bc74', // Formação campestre
+              '#ffefc3', // Mosaico de Usos
+              '#1f8d49', // Formação Florestal
+              '#7dc975', // Formação Savânica
+              '#edde8e', // Pastagem
+              '#edde8e', // Pastagem
+              '#ffefc3', // Mosaico de Usos
+              '#1f8d49', // Formação Florestal
+              '#7dc975', // Formação Savânica
+
+            ]        
+          },
+          link: {
+            colorMode: 'gradient',            
+            colors: [
+            '#d6bc74', // Formação campestre
+            '#d6bc74', // Formação campestre
+            '#ffefc3', // Mosaico de Usos
+            '#1f8d49', // Formação Florestal
+            '#7dc975', // Formação Savânica
+            '#edde8e', // Pastagem
+            '#edde8e', // Pastagem
+            '#ffefc3', // Mosaico de Usos
+            '#1f8d49', // Formação Florestal
+            '#7dc975', // Formação Savânica
+          ],          
+          }  
+        },        
+      };     
+
+      var chart = new google.visualization.Sankey(document.getElementById('sankey_basic_100m'));
+      chart.draw(data, options);
+    }    
+
+    // Configurar diagrama de Sankey (450 m)
+    google.charts.load('current', {'packages':['sankey']});
+    google.charts.setOnLoadCallback(drawChart450m);
+
+    function drawChart450m() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'De');
+      data.addColumn('string', 'Para');
+      data.addColumn('number', 'Área (ha)');
+      data.addRows([
+      ['Formação Campestre (2021)' , 'Formação Campestre (2023)', 846],
+      ['Formação Campestre (2021)' , 'Pastagem (2023)', 26],
+      ['Formação Campestre (2021)' , 'Mosaico de Usos (2023)', 43],
+      ['Formação Campestre (2021)' , 'Formação Florestal (2023)', 63],
+      ['Formação Campestre (2021)' , 'Formação Savânica (2023)', 174],
+      ['Pastagem (2021)' , 'Pastagem (2023)', 8084],
+      ['Pastagem (2021)' , 'Mosaico de Usos (2023)', 606],
+      ['Pastagem (2021)' , 'Formação Florestal (2023)', 13],
+      ['Pastagem (2021)' , 'Formação Savânica (2023)', 274],
+      ['Mosaico de Usos (2021)' , 'Pastagem (2023)', 524],
+      ['Mosaico de Usos (2021)' , 'Formação Florestal (2023)', 339],
+      ['Mosaico de Usos (2021)' , 'Formação Savânica (2023)', 38],
+      ['Formação Florestal (2021)' , 'Pastagem (2023)', 32],
+      ['Formação Florestal (2021)' , 'Mosaico de Usos (2023)', 415],
+      ['Formação Florestal (2021)' , 'Formação Florestal (2023)', 3915],
+      ['Formação Florestal (2021)' , 'Formação Savânica (2023)', 27],
+      ['Formação Savânica (2021)' , 'Pastagem (2023)', 133],
+      ['Formação Savânica (2021)' , 'Mosaico de Usos (2023)', 65],
+      ['Formação Savânica (2021)' , 'Formação Florestal (2023)', 50],
+      ['Formação Savânica (2021)' , 'Formação Savânica (2023)', 2738],      
+      ]);
+
+      var options = {
+        width: 410,
+        height: 450,
+        tooltip: {
+          textStyle: {
+            color: 'black', // Altere conforme desejado
+            fontName: 'Montserrat', // Altere conforme desejado
+            fontSize: 12, // Altere conforme desejado
+            bold: false, // true ou false conforme desejado
+            italic: false // true ou false conforme desejado
+          }, 
+          showColorCode: true
+        },        
+        sankey: {
+          node: {
+            width: 10,
+            nodePadding: 30,
+            interactivity: true,
+            colors: [
+              '#d6bc74', // Formação campestre
+              '#d6bc74', // Formação campestre
+              '#edde8e', // Pastagem
+              '#ffefc3', // Mosaico de Usos
+              '#1f8d49', // Formação Florestal
+              '#7dc975', // Formação Savânica
+              '#edde8e', // Pastagem
+              '#ffefc3', // Mosaico de Usos
+              '#1f8d49', // Formação Florestal
+              '#7dc975', // Formação Savânica
+            ]        
+          },
+          link: {
+            colorMode: 'gradient',            
+            colors: [
+            '#d6bc74', // Formação campestre
+            '#d6bc74', // Formação campestre
+            '#edde8e', // Pastagem
+            '#ffefc3', // Mosaico de Usos
+            '#1f8d49', // Formação Florestal
+            '#7dc975', // Formação Savânica
+            '#edde8e', // Pastagem
+            '#ffefc3', // Mosaico de Usos
+            '#1f8d49', // Formação Florestal
+            '#7dc975', // Formação Savânica
+          ],          
+          }  
+        },        
+      };     
+
+      var chart = new google.visualization.Sankey(document.getElementById('sankey_basic_450m'));
+      chart.draw(data, options);
+    }    
+
     let pointLayer
     let pointLayer_sel
     let pointLayer_sel_v2
@@ -834,7 +1156,7 @@
     });  
   
     const view = new ol.View({
-      center: [-39.8, -13.669],
+      center: [-39.8, -13.578],
       zoom: 9.47,
       projection: 'EPSG:4326',
     });
@@ -850,7 +1172,40 @@
         }),
       ],
       target: "js-map"
+      
     });  
+
+    const eixo = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:eixo',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
+      }),
+      visible: true,
+      title: 'eixo'
+    });   
+
+    const overviewMapControl = new ol.control.OverviewMap({
+      // Opções de camada de visão geral (aqui estamos usando o mesmo que o mapa principal)
+      layers: [
+          new ol.layer.Tile({
+              source: new ol.source.OSM()
+          }),
+          eixo 
+      ],
+      collapseLabel: '\u00BB', // O texto para o botão de colapso
+      label: '\u00AB', // O texto para o botão de expansão
+      collapsed: false // Começa colapsado
+  });
+
+    // Adiciona o mapa de visão geral ao mapa principal
+    map.addControl(overviewMapControl);
+    overviewMapControl.getOverviewMap().updateSize();
 
     const info_cadastro = new ol.source.TileWMS({
       ratio: 1,
@@ -871,43 +1226,7 @@
             "exceptions": 'application/vnd.ogc.se_inimage',
       }
     })
-
-    // Exemplos de features geradas a partir dos dados do CSV
-const features = [
-new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([-37.062742, -10.939341])),
-    intensidade: 3.5,
-    data: '2024-02-23'
-}),
-new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([-37.073085, -11.9456])),
-    intensidade: 2.8,
-    data: '2024-02-23'
-}),
-new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([-38.5014, -12.9714])),
-    intensidade: 4.1,
-    data: '2024-02-23'
-})
-];
-
-    
-    const viirs = new ol.layer.Tile({
-      source: new ol.source.TileWMS({
-        url: 'https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/8611eea53ccad7dbba9a0573b650b290/', // URL do serviço WMS do FIRMS
-        params: {
-          'LAYERS': 'fires', // Nome da camada para dados VIIRS das últimas 24 horas
-          'FORMAT': 'image/png', // Formato da imagem
-          'TRANSPARENT': true, // Fundo transparente
-          'TIME': '2023-03-20/2023-03-27', // Intervalo de tempo (ajuste conforme necessário)
-          'key': '8611eea53ccad7dbba9a0573b650b290' // Sua MapKey
-        },
-        serverType: 'geoserver'
-      }),
-      visible: false,
-      title: 'viirs'
-    });       
-
+   
     const info_municipios = new ol.source.TileWMS({
       ratio: 1,
       url: `http://${GEOSERVER}/geoserver/limites/wms`,
@@ -920,23 +1239,45 @@ new ol.Feature({
 
     const faixa_servidao_cadastro = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=limites%3Afaixa_servidao_cadastro`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:faixa_servidao_cadastro',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
-      visible: true,
+      visible: false,
       title: 'faixa_servidao_cadastro'
     });
 
     const erosoes = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Aerosoes`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:erosoes',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'erosoes'
     });
+    
 
     const obras_supressao = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=limites%3Aobras_supressao`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:obras_supressao',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'obras_supressao'
@@ -944,7 +1285,14 @@ new ol.Feature({
 
     const estab_saude_censo = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=limites%3Aestab_saude_censo`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:estab_saude_censo',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'estab_saude_censo'
@@ -952,7 +1300,14 @@ new ol.Feature({
 
     const estab_educacao_censo = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=limites%3Aestab_educacao_censo`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:estab_educacao_censo',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'estab_educacao_censo'
@@ -960,7 +1315,14 @@ new ol.Feature({
 
     const estab_religioso_censo = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=limites%3Aestab_religioso_censo`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:estab_religioso_censo',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'estab_religioso_censo'
@@ -968,7 +1330,14 @@ new ol.Feature({
     
     const domi_particular_censo = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=limites%3Adomi_particular_censo`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:domi_particular_censo',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'domi_particular_censo'
@@ -976,7 +1345,14 @@ new ol.Feature({
 
     const estab_outrasfinalidades_censo = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=limites%3Aestab_outrasfinalidades_censo`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:estab_outrasfinalidades_censo',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'estab_outrasfinalidades_censo'
@@ -984,23 +1360,30 @@ new ol.Feature({
 
     const estab_agropecuario_censo = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=limites%3Aestab_agropecuario_censo`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:estab_agropecuario_censo',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'estab_agropecuario_censo'
     }); 
 
-    const eixo = new ol.layer.Tile({
-      source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Aeixo`,
-      }),
-      visible: false,
-      title: 'eixo'
-    });
 
     const torres = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Atorres`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:torres',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'torres'
@@ -1008,7 +1391,14 @@ new ol.Feature({
 
     const edificacoes = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: `http://${GEOSERVER}/geoserver/tropicalia/wms?service=WMS&version=1.1.0&request=GetMap&layers=tropicalia%3Aedificacoes`,
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:edificacoes',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
       }),
       visible: false,
       title: 'edificacoes'
@@ -1166,7 +1556,7 @@ new ol.Feature({
         "exceptions": 'application/vnd.ogc.se_inimage',
       }
       }),
-      visible: true,
+      visible: false,
       title: 'ps_map_rf_2021'
     });
 
@@ -1227,7 +1617,7 @@ new ol.Feature({
         url: `http://${GEOSERVER}/geoserver/limites/wms`,
         params: {'VERSION': '1.1.0',  
         "STYLES": '',
-        "LAYERS": 'tropicalia:pa_br_mma_ucs_pi_16072021',
+        "LAYERS": 'limites:pa_br_mma_ucs_pi_16072021',
         "exceptions": 'application/vnd.ogc.se_inimage',
       }
       }),
@@ -1240,7 +1630,7 @@ new ol.Feature({
         url: `http://${GEOSERVER}/geoserver/limites/wms`,
         params: {'VERSION': '1.1.0',  
         "STYLES": '',
-        "LAYERS": 'tropicalia:pa_br_mma_ucs_us_16072021',
+        "LAYERS": 'limites:pa_br_mma_ucs_us_16072021',
         "exceptions": 'application/vnd.ogc.se_inimage',
       }
       }),
@@ -1266,7 +1656,7 @@ new ol.Feature({
         url: `http://${GEOSERVER}/geoserver/limites/wms`,
         params: {'VERSION': '1.1.0',  
         "STYLES": '',
-        "LAYERS": 'tropicalia:pa_br_ibge_uf_2022',
+        "LAYERS": 'limites:pa_br_ibge_uf_2022',
         "exceptions": 'application/vnd.ogc.se_inimage',
       }
       }),
@@ -1307,7 +1697,7 @@ new ol.Feature({
 
     const checkboxGroup = new ol.layer.Group({
       layers: [
-      tropicalia_municipios, ps_map_rf_2021, ps_map_rf_2023, altitude, declividade, obras_supressao, uf, biomas, ucs_pi, ucs_us, estab_agropecuario_censo, estab_outrasfinalidades_censo, domi_particular_censo, imoveis_rurais_car, imoveis_rurais_sigef, torres, erosoes, edificacoes, estab_religioso_censo, estab_educacao_censo, estab_saude_censo, desapropriados, faixa_servidao_cadastro, eixo, osm_roads_ba, hidrografia, cidades, nucleosvilaspovoados, sinalizadoresavifauna, comunidades, acessos, viirs, linhasdetransmissao
+      tropicalia_municipios, ps_map_rf_2021, ps_map_rf_2023, altitude, declividade, obras_supressao, uf, biomas, ucs_pi, ucs_us, estab_agropecuario_censo, estab_outrasfinalidades_censo, domi_particular_censo, imoveis_rurais_car, imoveis_rurais_sigef, torres, erosoes, edificacoes, estab_religioso_censo, estab_educacao_censo, estab_saude_censo, desapropriados, faixa_servidao_cadastro, eixo, osm_roads_ba, hidrografia, cidades, nucleosvilaspovoados, sinalizadoresavifauna, comunidades, acessos, linhasdetransmissao
       ]
     });
 
@@ -1331,7 +1721,6 @@ new ol.Feature({
     eixo.set('layerId', 'eixoLayer');
     torres.set('layerId', 'torresLayer');
     acessos.set('layerId', 'acessosLayer');
-    viirs.set('layerId', 'viirsLayers');
     comunidades.set('layerId', 'comunidadesLayer');
     sinalizadoresavifauna.set('layerId', 'sinalizadoresavifaunaLayer');
     desapropriados.set('layerId', 'desapropriados');
@@ -1365,7 +1754,6 @@ new ol.Feature({
     map.addLayer(eixo);
     map.addLayer(torres);
     map.addLayer(acessos);
-    map.addLayer(viirs);
     map.addLayer(comunidades);
     map.addLayer(sinalizadoresavifauna);
     map.addLayer(desapropriados);
@@ -1612,6 +2000,7 @@ $('#valor').on('input', function () {
           });
     });
 
+    
 
     
 map.on('singleclick', function (evt) {
@@ -1913,6 +2302,62 @@ map.on('singleclick', function (evt) {
           console.error('Erro ao obter informações das camadas:', error);
       });
   });
+
+  const layerTitles = {}; // Define layerTitles no escopo global
+
+  function updateLegend() {
+    var legendHtml = ''; // Inicializa a string que conterá o HTML da legenda    
+
+    map.getLayers().forEach(layer => {
+        if (layer instanceof ol.layer.Tile && layer.getVisible()) {
+            var source = layer.getSource();
+            if (source instanceof ol.source.TileWMS) {
+                var url = source.getUrls()[0];
+                var params = source.getParams();
+                var layerName = params['LAYERS'];
+                var layerTitle = layerTitles[layerName] || layerName; // Usa o título do mapeamento ou o nome da camada como fallback
+
+                var legendOptions = 'forceLabels:on;layout:vertical;columns:1;wrap_limit:12;labelMargin:8;dx:10;dy:0.1;my:0.2';
+                var legendUrl = url + '?REQUEST=GetLegendGraphic&VERSION=1.1.0&FORMAT=image/png&TRANSPARENT=true&LAYER=' +
+                                layerName + '&LEGEND_OPTIONS=' + legendOptions;
+
+                legendHtml += '<div><strong>' + layerTitle + '</strong><br><img src="' + legendUrl + '" style="max-width: 360px;"></div><br>';
+            }
+        }
+    });
+
+    document.getElementById('legenda').innerHTML = legendHtml;
+}
+
+function fetchLayerTitles() {
+  var url = 'http://localhost:8080/geoserver/ows?service=WMS&version=1.3.0&request=GetCapabilities';
+  fetch(url)
+  .then(response => response.text())
+  .then(text => {
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(text, "application/xml");
+      var layers = xmlDoc.getElementsByTagName("Layer");
+
+      for (let layer of layers) {
+          var name = layer.getElementsByTagName("Name")[0]?.textContent;
+          var title = layer.getElementsByTagName("Title")[0]?.textContent;
+          if (name && title) { // Certifique-se de que ambos, nome e título, estão presentes
+              layerTitles[name] = title;
+          }
+      }
+      
+      updateLegend(); // Atualiza a legenda após preencher layerTitles
+  });
+}
+
+fetchLayerTitles(); // Chama a função para preencher layerTitles no início
+
+
+// Chame updateLegend() sempre que o estado de visibilidade de uma camada mudar.
+map.getLayers().on('change', updateLegend); // Escuta mudanças nas camadas
+
+// Chame a função imediatamente para preencher a legenda quando a página carregar
+updateLegend();  
   
 
     const pageContent = document.querySelector('.page-content');  
@@ -1957,6 +2402,14 @@ map.on('singleclick', function (evt) {
     const infraestruturaToggle = document.getElementById("infraestrutura-toggle");
     const infraestruturaContent = document.getElementById("infraestrutura-content");
 
+    // Seleciona o elemento "Reposição Florestal" e a div de conteúdo
+    const reposicaoflorestalToggle = document.getElementById("resposicaoflorestal-toggle");
+    const reposicaoflorestalContent = document.getElementById("resposicaoflorestal-content");
+
+    // Seleciona o elemento "Projetos" e a div de conteúdo
+    const projetosToggle = document.getElementById("projetos-toggle");
+    const projetosContent = document.getElementById("projetos-content");
+
     // Seleciona o elemento "Censo 2022" e a div de conteúdo
     const censo2022Toggle = document.getElementById("censo2022-toggle");
     const censo2022Content = document.getElementById("censo2022-content");
@@ -1972,6 +2425,18 @@ map.on('singleclick', function (evt) {
     // Seleciona o elemento "> Ambiental" e a div de conteúdo
     const ambientalToggle = document.getElementById("ambiental-toggle");
     const ambientalContent = document.getElementById("ambiental-content");
+
+    // Seleciona o elemento "> Uso e cobertura do solo (2021/2023") (36,5 m)" e a div de conteúdo
+    const transicoes36emeioToggle = document.getElementById("transicoes36emeio-toggle");
+    const transicoes36emeioContent = document.getElementById("transicoes36emeio-content");
+
+    // Seleciona o elemento "> Uso e cobertura do solo (2021/2023") (100 m)" e a div de conteúdo
+    const transicoes100mToggle = document.getElementById("transicoes100m-toggle");
+    const transicoes100mContent = document.getElementById("transicoes100m-content");
+
+    // Seleciona o elemento "> Uso e cobertura do solo (2021/2023" (400 m)" e a div de conteúdo
+    const transicoes450mToggle = document.getElementById("transicoes450m-toggle");
+    const transicoes450mContent = document.getElementById("transicoes450m-content");
 
     // Adiciona um evento de clique ao elemento "> Social"
     socialToggle.addEventListener("click", () => {
@@ -1992,6 +2457,28 @@ map.on('singleclick', function (evt) {
         infraestruturaContent.style.display = "block";
       } else {
         infraestruturaContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento "Projetos"
+    projetosToggle.addEventListener("click", () => {
+  
+      // Altera a propriedade display da div de conteúdo
+      if (projetosContent.style.display === "none") {
+        projetosContent.style.display = "block";
+      } else {
+        projetosContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento "Reposição Florestal"
+    reposicaoflorestalToggle.addEventListener("click", () => {
+
+      // Altera a propriedade display da div de conteúdo
+      if (reposicaoflorestalContent.style.display === "none") {
+        reposicaoflorestalContent.style.display = "block";
+      } else {
+        reposicaoflorestalContent.style.display = "none";
       }
     });
 
@@ -2039,6 +2526,37 @@ map.on('singleclick', function (evt) {
       }
     });
 
+    // Adiciona um evento de clique ao elemento "> Uso e cobertura do solo (2021/2023) (36,5 m)"
+    transicoes36emeioToggle.addEventListener("click", () => {
+  
+      // Altera a propriedade display da div de conteúdo
+      if (transicoes36emeioContent.style.display === "none") {
+        transicoes36emeioContent.style.display = "block";
+      } else {
+        transicoes36emeioContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento ">  Uso e cobertura do solo (2021/2023) (100 m)"
+    transicoes100mToggle.addEventListener("click", () => {
+      // Altera a propriedade display da div de conteúdo
+      if (transicoes100mContent.style.display === "none") {
+        transicoes100mContent.style.display = "block";
+      } else {
+        transicoes100mContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento ">  Uso e cobertura do solo (2021/2023) (450 m)"
+    transicoes450mToggle.addEventListener("click", () => {
+      // Altera a propriedade display da div de conteúdo
+      if (transicoes450mContent.style.display === "none") {
+        transicoes450mContent.style.display = "block";
+      } else {
+        transicoes450mContent.style.display = "none";
+      }
+    });
+
     // Seleciona o elemento "> Limites" e a div de conteúdo
     const limitesToggle = document.getElementById("limites-toggle");
     const limitesContent = document.getElementById("limites-content");
@@ -2082,8 +2600,7 @@ map.on('singleclick', function (evt) {
       } else {
         buscatorresContent.style.display = "none";
       }
-    });
-    
+    });    
 
     // Seleciona as checkboxes e as camadas de mapa correspondentes
     const faixa_servidao_cadastroCheckbox = document.getElementById("faixa_servidao_cadastro-checkbox");
@@ -2101,7 +2618,6 @@ map.on('singleclick', function (evt) {
     const hidrografiaCheckbox = document.getElementById("hidrografia-checkbox");
     const desapropriadosCheckbox = document.getElementById("desapropriados-checkbox");
     const acessosCheckbox = document.getElementById("acessos-checkbox");
-    const viirsCheckbox = document.getElementById("viirs-checkbox");
     const comunidadesCheckbox = document.getElementById("comunidades-checkbox");
     const sinalizadoresavifaunaCheckbox = document.getElementById("sinalizadoresavifauna-checkbox");
     const nucleosvilaspovoadosCheckbox = document.getElementById("nucleosvilaspovoados-checkbox");
@@ -2134,7 +2650,6 @@ map.on('singleclick', function (evt) {
     const torresLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'torres');
     const hidrografiaLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'hidrografia');
     const acessosLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'acessos');
-    const viirsLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'viirs');
     const comunidadesLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'comunidades');
     const sinalizadoresavifaunaLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'sinalizadoresavifauna');
     const desapropriadosLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'desapropriados');
@@ -2158,135 +2673,162 @@ map.on('singleclick', function (evt) {
     // Adiciona eventos de mudança às checkboxes
     faixa_servidao_cadastroCheckbox.addEventListener("change", () => {
       faixa_servidao_cadastroLayer.setVisible(faixa_servidao_cadastroCheckbox.checked);
+      updateLegend()
     });
 
     erosoesCheckbox.addEventListener("change", () => {
       erosoesLayer.setVisible(erosoesCheckbox.checked);
+      updateLegend();
     });
 
     obras_supressaoCheckbox.addEventListener("change", () => {
       obras_supressaoLayer.setVisible(obras_supressaoCheckbox.checked);
+      updateLegend();
     });
 
     estab_saude_censoCheckbox.addEventListener("change", () => {
       estab_saude_censoLayer.setVisible(estab_saude_censoCheckbox.checked);
+      updateLegend();
     });
 
     estab_educacao_censoCheckbox.addEventListener("change", () => {
       estab_educacao_censoLayer.setVisible(estab_educacao_censoCheckbox.checked);
+      updateLegend();
     });
 
     estab_agropecuario_censoCheckbox.addEventListener("change", () => {
       estab_agropecuario_censoLayer.setVisible(estab_agropecuario_censoCheckbox.checked);
+      updateLegend();
     });
 
     estab_outrasfinalidades_censoCheckbox.addEventListener("change", () => {
       estab_outrasfinalidades_censoLayer.setVisible(estab_outrasfinalidades_censoCheckbox.checked);
+      updateLegend();
     });
 
     domi_particular_censoCheckbox.addEventListener("change", () => {
       domi_particular_censoLayer.setVisible(domi_particular_censoCheckbox.checked);
+      updateLegend();
     });
 
     estab_religioso_censoCheckbox.addEventListener("change", () => {
       estab_religioso_censoLayer.setVisible(estab_religioso_censoCheckbox.checked);
+      updateLegend();
     });
 
     eixoCheckbox.addEventListener("change", () => {
       eixoLayer.setVisible(eixoCheckbox.checked);
+      updateLegend();
     });
 
     torresCheckbox.addEventListener("change", () => {
       torresLayer.setVisible(torresCheckbox.checked);
+      updateLegend();
     });
 
     acessosCheckbox.addEventListener("change", () => {
       acessosLayer.setVisible(acessosCheckbox.checked);
-    });
-
-    viirsCheckbox.addEventListener("change", () => {
-      viirsLayer.setVisible(viirsCheckbox.checked);
+      updateLegend();
     });
 
     comunidadesCheckbox.addEventListener("change", () => {
       comunidadesLayer.setVisible(comunidadesCheckbox.checked);
+      updateLegend();
     });
 
     sinalizadoresavifaunaCheckbox.addEventListener("change", () => {
       sinalizadoresavifaunaLayer.setVisible(sinalizadoresavifaunaCheckbox.checked);
+      updateLegend();
     });
 
     desapropriadosCheckbox.addEventListener("change", () => {
       desapropriadosLayer.setVisible(desapropriadosCheckbox.checked);
+      updateLegend();
     });
 
     nucleosvilaspovoadosCheckbox.addEventListener("change", () => {
       nucleosvilaspovoadosLayer.setVisible(nucleosvilaspovoadosCheckbox.checked);
+      updateLegend();
     });
 
     cidadesCheckbox.addEventListener("change", () => {
       cidadesLayer.setVisible(cidadesCheckbox.checked);
+      updateLegend();
     });
-
 
     hidrografiaCheckbox.addEventListener("change", () => {
       hidrografiaLayer.setVisible(hidrografiaCheckbox.checked);
+      updateLegend();
     });
 
     osm_roads_baCheckbox.addEventListener("change", () => {
       osm_roads_baLayer.setVisible(osm_roads_baCheckbox.checked);
+      updateLegend();
     });
 
     linhasdetransmissaoCheckbox.addEventListener("change", () => {
       linhasdetransmissaoLayer.setVisible(linhasdetransmissaoCheckbox.checked);
+      updateLegend();
     });
 
     edificacoesCheckbox.addEventListener("change", () => {
       edificacoesLayer.setVisible(edificacoesCheckbox.checked);
+      updateLegend();
     });
 
     altitudeCheckbox.addEventListener("change", () => {
       altitudeLayer.setVisible(altitudeCheckbox.checked);
+      updateLegend();
     });
 
     declividadeCheckbox.addEventListener("change", () => {
       declividadeLayer.setVisible(declividadeCheckbox.checked);
+      updateLegend();
     });
 
     ps_map_rf_2021Checkbox.addEventListener("change", () => {
       ps_map_rf_2021Layer.setVisible(ps_map_rf_2021Checkbox.checked);
+      updateLegend();
     });
 
     ps_map_rf_2023Checkbox.addEventListener("change", () => {
       ps_map_rf_2023Layer.setVisible(ps_map_rf_2023Checkbox.checked);
+      updateLegend();
     });
 
       imoveis_rurais_carCheckbox.addEventListener("change", () => {
       imoveis_rurais_carLayer.setVisible(imoveis_rurais_carCheckbox.checked);
+      updateLegend();
     });
 
     imoveis_rurais_sigefCheckbox.addEventListener("change", () => {
       imoveis_rurais_sigefLayer.setVisible(imoveis_rurais_sigefCheckbox.checked);
+      updateLegend();
     });
 
     ucs_piCheckbox.addEventListener("change", () => {
       ucs_piLayer.setVisible(ucs_piCheckbox.checked);
+      updateLegend();
     });
 
     ucs_usCheckbox.addEventListener("change", () => {
       ucs_usLayer.setVisible(ucs_usCheckbox.checked);
+      updateLegend();
     });
 
     tropicalia_municipiosCheckbox.addEventListener("change", () => {
       tropicalia_municipiosLayer.setVisible(tropicalia_municipiosCheckbox.checked);
+      updateLegend();
     });
 
     ufCheckbox.addEventListener("change", () => {
       ufLayer.setVisible(ufCheckbox.checked);
+      updateLegend();
     });
 
     biomasCheckbox.addEventListener("change", () => {
       biomasLayer.setVisible(biomasCheckbox.checked);
+      updateLegend();
     });
 
     // Expanda a barra lateral esquerda e ajuste o botão ao abrir a página
@@ -2312,12 +2854,16 @@ map.on('singleclick', function (evt) {
       if (sidebarRight.style.right === '0px') {
         sidebarRight.style.right = '-450px';
         toggleSidebarRight.style.right = '10px';
+        document.querySelector('.ol-overviewmap').style.right = '10px'; // Move o mapa de visão geral para perto da borda da tela
       } else {
         sidebarRight.style.right = '0px';
         toggleSidebarRight.style.right = '450px';
+        document.querySelector('.ol-overviewmap').style.right = '460px'; // Move o mapa de visão geral de volta para sua posição original
       }
     });
+    
   }
+
   </script>
 </body>
 </html>

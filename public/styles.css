@@ -24,7 +24,7 @@ body {
 /* Estilos personalizados para a barra de navegação */
 .navbar {
     background-color: #041011c9;  
-   
+    position: absolute; 
     margin-top: -8px;
     width: 100%; 
     z-index: 99999; 
@@ -33,12 +33,12 @@ body {
 /* Estilos personalizados para a div .container-fluid */
 .mapa-div {
     height: 100vh; /* 100% da altura da janela (viewport height) */
-    margin-top: 0px
+    margin-top: -48px
 }
 
 /* Estilos personalizados para a barra lateral (sidebar) */
-.sidebar-left {            
-    background-color: rgba(179, 189, 180, 0.9);
+.sidebar-left {             
+    background-color: rgba(179, 189, 180, 0.5); 
     overflow-y: auto;
     width: 350px;
     position: fixed;
@@ -46,7 +46,7 @@ body {
     top: 46px;
     left: -350px;
     z-index: 998;
-    transition: left 0.3s;           
+    transition: left 0.3s;    
 }
 
 .camadas {
@@ -201,7 +201,7 @@ background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
 
 /* Estilos da Nova Barra Lateral (à direita) */
 .sidebar-right {
-    background-color: rgba(179, 189, 180, 0.6);
+    background-color: rgba(179, 189, 180, 0.5);
     overflow-y: auto;
     width: 450px;
     position: fixed;
@@ -211,6 +211,7 @@ background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
     z-index: 998;
     transition: right 0.3s;
 }
+
 
 /* Estilos para os itens da barra lateral */
 .sidebar-item {
@@ -316,5 +317,3 @@ background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
 .ativa{background:#27408B; color:#fff;}
 .conteudo{display:none;}
 .selected{display:block;}
-
-
