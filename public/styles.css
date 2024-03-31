@@ -49,6 +49,59 @@ body {
     transition: left 0.3s;    
 }
 
+.icone_centralizar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4b4d4bd0;
+    overflow-y: auto;
+    width: 30px;
+    height: 35px;
+    position: fixed;
+    bottom: 75px;
+    left: 355px;
+    transition: left 0.3s;
+}
+
+.icone_kml {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4b4d4bd0;
+    overflow-y: auto;
+    width: 30px;
+    height: 30px;
+    position: fixed;
+    bottom: 40px;
+    left: 355px;
+    transition: left 0.3s;
+}
+
+.icone_regua {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4b4d4bd0;
+    overflow-y: auto;
+    width: 30px;
+    height: 25px;
+    position: fixed;
+    bottom: 10px;
+    left: 355px;
+    transition: left 0.3s;
+}
+
+.medicoes-cam {
+    border-radius: 5px;
+    margin: 10px; /* Adicione margem a todos os parágrafos dentro da .minha-div */
+    background-color: rgba(255, 255, 255, 0.9);
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-size: 14px;
+    color:#4b4d4b
+  }
+
 .camadas {
     border-radius: 5px;
     margin: 10px; /* Adicione margem a todos os parágrafos dentro da .minha-div */
@@ -84,6 +137,21 @@ body {
     font-size: 14px; 
     color:#4b4d4b
 }
+
+.relatorios {
+    border-radius: 5px;
+    width: 430px;
+    margin: 10px;
+    margin-left: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 1px;
+    font-size: 14px; 
+    color:#4b4d4b
+}
+
+
 
 .legenda {
   border-radius: 5px;
@@ -157,6 +225,25 @@ body {
     margin-left: 20px;
 }
 
+.button-limpar-medicoes {
+    height: 30px; 
+    background-color: #e4e4e4; 
+    color: #000000; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 13px;
+}
+
+.button-exportar-kml {
+    height: 30px; 
+    margin-left: -20px;
+    background-color: #e4e4e4; 
+    color: #000000; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 13px;
+}
+
 /* Estilo hover (quando o mouse está sobre o botão) */
 .custom-button-send:hover {
     background-color: #afb1b0; 
@@ -211,7 +298,6 @@ background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
     z-index: 998;
     transition: right 0.3s;
 }
-
 
 /* Estilos para os itens da barra lateral */
 .sidebar-item {
@@ -317,3 +403,40 @@ background-color: #afb1b0; /* Cor de fundo personalizada quando hover */
 .ativa{background:#27408B; color:#fff;}
 .conteudo{display:none;}
 .selected{display:block;}
+
+.ol-popup {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+    min-width: 200px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+}
+.ol-popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+}
+.ol-popup-closer:after {
+    content: "✖";
+}
+
+.align-center {
+    text-align: center;
+}
+
+#medicoes, #medicoes-cam {
+    display: none; 
+}
+
+#atributos-kml, #atributos-kml-cam {
+    display: none; 
+}
+
+

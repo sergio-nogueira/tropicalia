@@ -3,23 +3,25 @@
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
-    <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" href="/static/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/ol/ol.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="/static/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/ol/ol.css">
 
-    <title>Webmap LT Tropicalia</title>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
-    <script src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/static/ol/dist/ol.js"></script>
-    <script src="/static/elm-pep/dist/elm-pep.js"></script>
+  <title>Webmap LT Tropicalia</title>
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+  <script src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/static/ol/dist/ol.js"></script>
+  <script src="/static/elm-pep/dist/elm-pep.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <style>
+
     .ol-overviewmap {
         transition: right 0.3s;
         bottom: auto;
@@ -31,36 +33,45 @@
     .ol-overviewmap .ol-overviewmap-map {
       width: 200px;
       height: 200px;
-  }
+
+    }
     .ol-overviewmap-box {
       border: 1.5px solid rgb(0, 0, 0);
     }    
-  </style>
 
+  </style>
 
 </head>
 
 <body>
-  <!-- Navbar -->
+  <!-- navbar -->
   <nav class="navbar">
       <div class="container-fluid">
-          <!-- Texto "webmap" com margem e cor branca -->
           <span class="webmap-text">&nbsp;&nbsp;&nbsp;&nbsp;<img src="images/webmap_logo.png" style="height: 35px; width: auto;"> </span>      
           <span class="webmap-text"><img src="images/tropicalia_logo.png" style="height: 40px; width: auto;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
           </a>
       </div>
   </nav>
 
-  <!-- Mapa -->
+  <!-- mapa -->
   <div class="mapa-div">
       <div id ='js-map' class='map'></div>
   </div>
+
+  <!-- popup mapa -->
+  <div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+  </div>
   
-  <!-- Barra Lateral (Sidebar) -->
+  <!-- Botão de revelação para a barra lateral esquerda -->
+  <button class="custom-toggler custom-toggler-left" id="toggleSidebarLeft">&RightArrowBar;</button>
+  
+  <!-- barra lateral esquerda -->
   <div class="sidebar-left" id="sidebarLeft">
-      <div id="camadas_visualizacao" class="camadas_titulo"><b>Visualização</b></div>
+    <div id="camadas_visualizacao" class="camadas_titulo"><b>Visualização</b></div>
       <div id="posicao" class="camadas">
-        <h6><b>&nbsp;&nbsp;<span class="link-text" id="posicao-toggle"> <img src="images/icone_bussola.png" style="height: 16px; width: auto;"> Orientação</span></b></h6>  
+        <h6><b>&nbsp;&nbsp;<span class="link-text" id="posicao-toggle"> <img src="images/icone_bussola.png" style="height: 16px; width: auto;"> &nbspOrientação</span></b></h6>  
         <div class="expand-content" style="display: yes;" id="posicao-content">
           <div id="posicao_text">
             <b>Município:</b><br>      
@@ -68,7 +79,30 @@
             <b>Longitude:</b><br>
           </div>
         </div>
-      </div>        
+      </div>
+      <div id="medicoes-cam" class="medicoes-cam">        
+        <h6><b>&nbsp;&nbsp; <img src="images/icone_regua.png" style="height: autopx; width: 20px;"> &nbspMedições</b></h6>            
+          <div id="medicoes">
+            <table class="table rounded-table small-table" style="width: 300px;">
+              <tbody>
+                <tr>
+                  <td class="small-font text-left" style="width: 20px; vertical-align: middle;">
+                    <select id="measurementType">
+                      <option value="LineString">Distância</option>    
+                      <option value="Polygon" selected>Área</option>        
+                    </select>
+                  </td>
+                  <td class="small-font text-center" style="vertical-align: middle;">
+                    <div id="medicoes-resultado">-</div>
+                </tr>
+              </tbody>
+            </table>
+            <div style="text-align: center; vertical-align: middle; height: 30px; margin-top: -10px">
+              <button class="button-exportar-kml" id="exportar-kml">&nbsp &nbsp Exportar &nbsp &nbsp</button>
+              <button class="button-limpar-medicoes" id="limpar-medicoes">&nbsp &nbsp Limpar &nbsp &nbsp</button>
+            </div>          
+          </div>
+      </div>       
       <div id="camadas_lt_tropicalia" class="camadas">
         <h6><b>&nbsp;&nbsp;<span class="link-text" id="lt_tropicalia-toggle"> > Linha de transmissão</span></b></h6>
         <div class="expand-content" style="display: yes;" id="lt_tropicalia-content">
@@ -86,17 +120,17 @@
             <input type="checkbox" class="camada-checkbox" id="ps_map_rf_2023-checkbox" value='ps_map_rf_2023' checked>&nbsp;&nbsp;Uso do solo (2023)<br>
             <b><span class="link-text" id="projetos-toggle">> Projetos</span></b><br>
             <div class="expand-content" style="display: none;" id="projetos-content">
-              <input type="checkbox" id="comunidades-checkbox" value='comunidades' >&nbsp;&nbsp;Comunidades visitadas (PEA/PCS)<br>
-              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;PEA<br>
-              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;ESG<br>
-              </div>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" id="comunidades-checkbox" value='comunidades' >&nbsp;&nbsp;Comunidades visitadas (PEA/PCS)<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;PEA<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;ESG<br>
+            </div>
             <b><span class="link-text" id="resposicaoflorestal-toggle">> Reposição Florestal</span></b><br>
             <div class="expand-content" style="display: none;" id="resposicaoflorestal-content">
-              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Parna Pau Brasil<br>
-              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Rocado Grande<br>
-              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Ubaíra<br>
-              <input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Incêndio<br>
-              </div>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Parna Pau Brasil<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Rocado Grande<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Ubaíra<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Incêndio<br>
+            </div>
           </div>
         </div>
       </div>
@@ -104,70 +138,73 @@
         <h6><b>&nbsp;&nbsp;<span class="link-text" id="alertas-toggle"> > Alertas</span></b></h6>  
         <div class="expand-content" style="display: none;" id="alertas-content">
           <div id="alertas">
-            <input type="checkbox" id="domicilio_particular-checkbox" value='domicilio_particular' >&nbsp;&nbsp;Mudanças de uso do solo (Tropicália)<br>
-            <input type="checkbox" id="domicilio_coletivo-checkbox" value='domicilio_coletivo' >&nbsp;&nbsp;Focos de calor (INPE)<br>
-            <input type="checkbox" id="domicilio_coletivo-checkbox" value='domicilio_coletivo' >&nbsp;&nbsp;Desmatamento (INPE)<br>
-          </div>
-          </div>
-      </div>
-      <div id="camadas_ambiental" class="camadas">
-        <h6><b>&nbsp;&nbsp;<span class="link-text" id="ambiental-toggle"> > Ambiental</span></b></h6>  
-        <div class="expand-content" style="display: none;" id="ambiental-content">
-          <div id="ambiental">
-            <input type="checkbox" id="hidrografia-checkbox" value='hidrografia' >&nbsp;&nbsp;Hidrografia<br>
-            <input type="checkbox" id="altitude-checkbox" value='altitude' >&nbsp;&nbsp;Altitude<br>
-            <input type="checkbox" id="declividade-checkbox" value='declividade' >&nbsp;&nbsp;Declividade<br>
-          </div>
-          </div>
-      </div>
-      <div id="camadas_social" class="camadas">
-        <h6><b>&nbsp;&nbsp;<span class="link-text" id="social-toggle"> > Social</span></b></h6>        
-        <div class="expand-content" style="display: none;" id="social-content">
-          <div id="social">
-            <div id="infraestrutura">
-            <b><span class="link-text" id="infraestrutura-toggle">> Infraestrutura</span></b><br>
-            <div class="expand-content" style="display: yes;" id="infraestrutura-content">
-            <input type="checkbox" id="osm_roads_ba-checkbox" value='osm_roads_ba' >&nbsp;&nbsp;Estradas<br>
-            <input type="checkbox" id="linhasdetransmissao-checkbox" value='linhasdetransmissao' >&nbsp;&nbsp;Linhas de transmissão<br>
-          </div>
-          </div>
-          <div id="censo2022">
-            <b><span class="link-text" id="censo2022-toggle">> Censo 2022</span></b><br>
-            <div class="expand-content" style="display: none;" id="censo2022-content">
-            <input type="checkbox" id="domi_particular_censo-checkbox" value='domi_particular_censo' >&nbsp;&nbsp;Domicílio particular<br>
-            <input type="checkbox" id="estab_agropecuario_censo-checkbox" value='estab_agropecuario_censo' >&nbsp;&nbsp;Estab. agropecuário<br>
-            <input type="checkbox" id="estab_religioso_censo-checkbox" value='estab_religioso_censo' >&nbsp;&nbsp;Estab. religioso<br>
-            <input type="checkbox" id="estab_educacao_censo-checkbox" value='estab_educacao_censo' >&nbsp;&nbsp;Estab. de ensino<br>
-            <input type="checkbox" id="estab_saude_censo-checkbox" value='estab_saude_censo' >&nbsp;&nbsp;Estab. de saúde<br>
-            <input type="checkbox" id="estab_outrasfinalidades_censo-checkbox" value='estab_outrasfinalidades_censo' >&nbsp;&nbsp;Estab. de outras finalidades<br>
-          </div>
-          </div>
-          <div id="imoveisrurais">
-            <b><span class="link-text" id="imoveisrurais-toggle">> Imóveis rurais</span></b><br>
-            <div class="expand-content" style="display: none;" id="imoveisrurais-content">
-            <input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Área do imóvel(CAR)<br>
-            <input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Reserva Legal(CAR)<br>
-            <input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;APP (CAR)<br>
-            <input type="checkbox" id="imoveis_rurais_sigef-checkbox" value='imoveis_rurais_sigef' >&nbsp;&nbsp;Área do imóvel (SIGEF)<br>
-          </div>
-          </div>  
-          </div>
-          </div>
-      </div>
-      <div id="camadas_limites" class="camadas">
-        <h6><b>&nbsp;&nbsp;<span class="link-text" id="limites-toggle"> > Divisão territorial</span></b></h6>  
-        <div class="expand-content" style="display: none;" id="limites-content">
-          <div id="limites">
-            <input type="checkbox" id="cidades-checkbox" value='cidades' checked >&nbsp;&nbsp;Cidades<br>
-            <input type="checkbox" id="nucleosvilaspovoados-checkbox" value='nucleosvilaspovoados'  >&nbsp;&nbsp;Núcleos, vilas e povoados<br>
-            <input type="checkbox" id="biomas-checkbox" value='biomas' >&nbsp;&nbsp;Biomas<br>
-            <input type="checkbox" id="ucs_pi-checkbox" value='ucs_pi'  >&nbsp;&nbsp;Unidade de conservação (PI)<br>
-            <input type="checkbox" id="ucs_us-checkbox" value='ucs_us'  >&nbsp;&nbsp;Unidade de conservação (US)<br>
-            <input type="checkbox" id="tropicalia_municipios-checkbox" value='tropicalia_municipios' checked>&nbsp;&nbsp;Municípios<br>
-            <input type="checkbox" id="uf-checkbox" value='uf' >&nbsp;&nbsp;Unidade da federação<br>
+            <div id="fogo">
+              <b><span class="link-text" id="fogo-toggle">> Fogo</span></b><br>
+              <div class="expand-content" style="display: none;" id="fogo-content">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="frenteDeFogo-checkbox" value='frenteDeFogo' checked>&nbsp;&nbsp;Frentes de fogo 24h (Painel do Fogo)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="modisFires72h-checkbox" value='modisFires72h'>&nbsp;&nbsp;MODIS 72h (NASA FIRMS)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="NPPFires72h-checkbox" value='NPPFires72h'>&nbsp;&nbsp;VIIRS S-NPP 72h (NASA FIRMS)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="noaa21Fires72h-checkbox" value='noaa21Fires72h'>&nbsp;&nbsp;VIIRS NOAA-21 72h (NASA FIRMS)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="viirsFires72h-checkbox" value='viirsFires72h'>&nbsp;&nbsp;VIIRS (S-NPP/NOAA-20) 72h (NASA FIRMS)<br> 
+              </div>
+            </div>        
           </div>
         </div>
-      </div>      
+      </div>
+      <div id="camadas_dadoscomplementares" class="camadas">
+        <h6><b>&nbsp;&nbsp;<span class="link-text" id="dadoscomplementares-toggle"> > Bases complementares</span></b></h6>  
+        <div class="expand-content" style="display: none;" id="dadoscomplementares-content">
+          <div id="dadoscomplementares">  
+            <div id="ambiental">
+              <b><span class="link-text" id="ambiental-toggle">> Ambiental</span></b><br>
+              <div class="expand-content" style="display: none;" id="ambiental-content">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="hidrografia-checkbox" value='hidrografia' >&nbsp;&nbsp;Hidrografia<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="altitude-checkbox" value='altitude' >&nbsp;&nbsp;Altitude<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="declividade-checkbox" value='declividade' >&nbsp;&nbsp;Declividade<br>
+              </div>
+            </div>
+            <div id="censo2022">
+              <b><span class="link-text" id="censo2022-toggle">> Censo 2022</span></b><br>
+              <div class="expand-content" style="display: none;" id="censo2022-content">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="domi_particular_censo-checkbox" value='domi_particular_censo' >&nbsp;&nbsp;Domicílio particular<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="estab_agropecuario_censo-checkbox" value='estab_agropecuario_censo' >&nbsp;&nbsp;Estab. agropecuário<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="estab_religioso_censo-checkbox" value='estab_religioso_censo' >&nbsp;&nbsp;Estab. religioso<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="estab_educacao_censo-checkbox" value='estab_educacao_censo' >&nbsp;&nbsp;Estab. de ensino<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="estab_saude_censo-checkbox" value='estab_saude_censo' >&nbsp;&nbsp;Estab. de saúde<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="estab_outrasfinalidades_censo-checkbox" value='estab_outrasfinalidades_censo' >&nbsp;&nbsp;Estab. de outras finalidades<br>
+              </div>
+            </div>
+            <div id="divisaoterritorial">
+              <b><span class="link-text" id="divisaoterritorial-toggle">> Divisão territorial</span></b><br>
+              <div class="expand-content" style="display: yes;" id="divisaoterritorial-content">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="cidades-checkbox" value='cidades' checked >&nbsp;&nbsp;Cidades<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="nucleosvilaspovoados-checkbox" value='nucleosvilaspovoados'  >&nbsp;&nbsp;Núcleos, vilas e povoados<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="biomas-checkbox" value='biomas' >&nbsp;&nbsp;Biomas<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="ucs_pi-checkbox" value='ucs_pi'  >&nbsp;&nbsp;Unidade de conservação (PI)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="ucs_us-checkbox" value='ucs_us'  >&nbsp;&nbsp;Unidade de conservação (US)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="tropicalia_municipios-checkbox" value='tropicalia_municipios' checked>&nbsp;&nbsp;Municípios<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="uf-checkbox" value='uf' >&nbsp;&nbsp;Unidade da federação<br>
+              </div>
+            </div>
+            <div id="imoveisrurais">
+              <b><span class="link-text" id="imoveisrurais-toggle">> Imóveis rurais</span></b><br>
+              <div class="expand-content" style="display: none;" id="imoveisrurais-content">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Área do imóvel(CAR)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Reserva Legal(CAR)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;APP (CAR)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="imoveis_rurais_sigef-checkbox" value='imoveis_rurais_sigef' >&nbsp;&nbsp;Área do imóvel (SIGEF)<br>
+              </div>
+            </div>
+            <div id="infraestrutura">
+              <b><span class="link-text" id="infraestrutura-toggle">> Infraestrutura</span></b><br>
+              <div class="expand-content" style="display: none;" id="infraestrutura-content">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="osm_roads_ba-checkbox" value='osm_roads_ba' >&nbsp;&nbsp;Estradas<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="linhasdetransmissao-checkbox" value='linhasdetransmissao' >&nbsp;&nbsp;Linhas de transmissão<br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
       <div id="camadas_basemaps" class="camadas">
         <h6><b>&nbsp;&nbsp;<span class="link-text" id="basemaps-toggle"> > Basemap</span></b></h6>  
         <div class="expand-content" style="display: none;" id="basemaps-content">
@@ -180,44 +217,42 @@
             <input type="radio" id="cberswpm-radio" name='baseLayerRadioButton' value='cberswpm' >&nbsp;&nbsp;Satélite (INPE)<br>
           </div>
         </div>                 
-      </div>    
-      
+      </div>      
       <div id="busca_torres" class="busca">
-       <h6><b>&nbsp;&nbsp;<span class="link-text" id="buscatorres-toggle"><img src="images/icone_lupa.png" style="height: 16px; width: auto;">  Buscar</span></b></h6>
-       <div class="expand-content" style="display: yes;" id="buscatorres-content">
-       <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <button class="nav-link active" id="nav-buscatorres-tab" data-bs-toggle="tab" data-bs-target="#nav-buscatorres" type="button" role="tab" aria-controls="nav-buscatorres" aria-selected="true">Torres</button>
-          <button class="nav-link" id="nav-buscacadastro-tab" data-bs-toggle="tab" data-bs-target="#nav-buscacadastro" type="button" role="tab" aria-controls="nav-buscacadastro" aria-selected="false">Cadastro</button>
+        <h6><b>&nbsp;&nbsp;<span class="link-text" id="buscatorres-toggle"><img src="images/icone_lupa.png" style="height: 16px; width: auto;">  Buscar</span></b></h6>
+        <div class="expand-content" style="display: yes;" id="buscatorres-content">
+          <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-buscatorres-tab" data-bs-toggle="tab" data-bs-target="#nav-buscatorres" type="button" role="tab" aria-controls="nav-buscatorres" aria-selected="true">Torres</button>
+            <button class="nav-link" id="nav-buscacadastro-tab" data-bs-toggle="tab" data-bs-target="#nav-buscacadastro" type="button" role="tab" aria-controls="nav-buscacadastro" aria-selected="false">Cadastro</button>
           </div>
-      </nav>
-      <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-buscatorres" role="tabpanel" aria-labelledby="nav-buscatorres-tab">
-          <div class="form-group">
-            <form id="search-form"><br>
-              <b>&nbsp;&nbsp;Atributo:</b><br>
-                <select class="custom-dropdown" name="atributo" id="atributo">
+          </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-buscatorres" role="tabpanel" aria-labelledby="nav-buscatorres-tab">
+            <div class="form-group">
+              <form id="search-form"><br>
+                <b>&nbsp;&nbsp;Atributo:</b><br>
+                  <select class="custom-dropdown" name="atributo" id="atributo">
                     <option value="torreseq">ID (sequencial)</option>
                     <option value="torrekm">ID (km)</option>
                     <option value="tipo">Tipo</option>
                     <option value="descricao">Descrição</option>
                     <option value="obs">Observação</option>
                     <option value="nm_mun">Município</option>
-                </select>
+                  </select>
                 <input type="text" class="custom-input" name="valor" id="valor" list="auto-preenchimento">
                 <datalist id="auto-preenchimento"></datalist>                
-                                    <p style="text-align: left;">
-                                      <button class="custom-button-send" type="submit">
-                                        Buscar</button>
-            </form>   
-          <br>  
-        </div>
-      </div>
-        <div class="tab-pane fade" id="nav-buscacadastro" role="tabpanel" aria-labelledby="nav-buscacadastro-tab">          
-          <div class="form-group">
-            <form id="search-form"><br>
-              <b>&nbsp;&nbsp;Atributo:</b><br>
-                <select class="custom-dropdown" name="atributo" id="atributo">
+                  <p style="text-align: left;">
+                  <button class="custom-button-send" type="submit">Buscar</button>
+              </form>   
+              <br>  
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-buscacadastro" role="tabpanel" aria-labelledby="nav-buscacadastro-tab">          
+            <div class="form-group">
+              <form id="search-form"><br>
+                <b>&nbsp;&nbsp;Atributo:</b><br>
+                  <select class="custom-dropdown" name="atributo" id="atributo">
                     <option value="referencia">Referência</option>
                     <option value="projeto">Projeto</option>
                     <option value="torres">Torres</option>
@@ -225,674 +260,671 @@
                     <option value="proprietario">Proprietário</option>
                     <option value="telefone">Telefone</option>
                     <option value="municipio">Município</option>
-                </select>
+                  </select>
                 <input type="text" class="custom-input" name="valor" id="valor" list="auto-preenchimento">
                 <datalist id="auto-preenchimento"></datalist>                
-                                    <p style="text-align: left;">
-                                      <button class="custom-button-send" type="submit">
-                                        Buscar</button>
-            </form>   
-          <br>  
-        </div>
-        
-      </div>
-                
+                  <p style="text-align: left;">
+                  <button class="custom-button-send" type="submit">
+                  Buscar</button>
+              </form>   
+              <br>  
+            </div>        
+          </div>                
           <br>
           <br>         
         </div>
-        </div>            
-       
+      </div>       
   </div>
-  <div class="sidebar-right" id="sidebarRight">
-      <div id="relatorios_titulo" class="relatorios_titulo"><b>Relatório</b></div>
-      <div id="rel_torre" class="relatorios">
-          <h6><b>&nbsp;&nbsp;<span class="link-text"> <img src="images/icone_item.png" style="height: 16px; width: auto;"> Dados</span></b></h6>
-          <div class="expand-content" style="display: yes;">
-            <nav>
-              <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="nav-camadas-tab" data-bs-toggle="tab" data-bs-target="#nav-camadas" type="button" role="tab" aria-controls="nav-camadas" aria-selected="true">Camadas</button>
-                <button class="nav-link" id="nav-torres-tab" data-bs-toggle="tab" data-bs-target="#nav-torres" type="button" role="tab" aria-controls="nav-torres" aria-selected="false">Torres</button>
-                <button class="nav-link" id="nav-cadastro-tab" data-bs-toggle="tab" data-bs-target="#nav-cadastro" type="button" role="tab" aria-controls="nav-cadastro" aria-selected="false">Cadastro</button>
-              </div>
-            </nav>
-            <div class="tab-content" id="nav-tabContent">
-              <div class="tab-pane fade show active" id="nav-camadas" role="tabpanel" aria-labelledby="nav-camadas-tab">
-                <div id="camadas_tab">                        
-                  <div id="resultados">
-                    <br>
-                    <i>Clique em alguma feição ativa para verificar se existem atributos associados.</i>
-                    <br>
-                    <br>
-                  </div>
-                </div>
-              </div>
-              <div class="tab-pane fade" id="nav-torres" role="tabpanel" aria-labelledby="nav-torres-tab">
-                <div id="torres_tab">            
-                  <div id="resultados">
-                      <table class="table custom-table-width rounded-table small-table">                
-                      <tbody>
-                          <tr id="referenciaRow">
-                              <td class="small-font"><b>ID (sequencial):</b> -</td>
-                          </tr>
-                          <tr id="projetoRow">
-                              <td class="small-font"><b>ID (km):</b> -</td>
-                          </tr>   
-                          <tr id="torresRow">
-                              <td class="small-font"><b>Tipo:</b> -</td>
-                          </tr>  
-                          <tr id="statusnegociacaoRow">
-                              <td class="small-font"><b>Descrição:</b> -</td>
-                          </tr>  
-                          <tr id="proprietarioRow">
-                            <td class="small-font"><b>Observação:</b> -</td>
-                        </tr>
-                          <tr id="municipioRow">
-                             <td class="small-font"><b>Município:</b> -</td>
-                          </tr>
-                      </tbody>
-                  </table>
-                  </div>
-                  <div id="paginacao">
-                  </div>              
-              </div>
-              </div>
-              <div class="tab-pane fade" id="nav-cadastro" role="tabpanel" aria-labelledby="nav-cadastro-tab">
-                <div id="cadastro_tab">            
-                  <div id="resultados">
-                      <table class="table custom-table-width rounded-table small-table">                
-                      <tbody>
-                          <tr id="referenciaRow">
-                              <td class="small-font"><b>Referência:</b> -</td>
-                          </tr>
-                          <tr id="projetoRow">
-                              <td class="small-font"><b>Projeto:</b> -</td>
-                          </tr>   
-                          <tr id="torresRow">
-                              <td class="small-font"><b>Torres:</b> -</td>
-                          </tr>  
-                          <tr id="statusnegociacaoRow">
-                              <td class="small-font"><b>Status de Negociação:</b> -</td>
-                          </tr>  
-                          <tr id="proprietarioRow">
-                            <td class="small-font"><b>Proprietário:</b> -</td>
-                        </tr>
-                          <tr id="telefoneRow">
-                              <td class="small-font"><b>Telefone:</b> -</td>
-                          </tr>
-                          <tr id="municipioRow">
-                              <td class="small-font"><b>Município:</b> -</td>
-                          </tr>
-                      </tbody>
-                  </table>
-                  </div>
-                  <div id="paginacao">
-                  </div>
-              </div>
-              </div>
-              </div>
 
+  <!-- ícone de interação para centralizar mapa no eixo -->
+  <div class="icone_centralizar" id="icone_centralizar">
+    <img id=iconeCentralizarImg src="images/centralizar_mapa.png" style="height: 22px; width: auto; cursor: pointer;">
+  </div>
+
+  <!-- ícone de interação para upload de KML -->
+  <div class="icone_kml" id="icone_kml">
+    <img id=iconeKmlImg src="images/icone_kml_v2.png" style="height: 27px; width: auto; cursor: pointer;">
+    <input type="file" id="file-input" accept=".kml,.kmz" style="display: none;">
+  </div>
+
+  <!-- ícone de interação para medições -->
+  <div class="icone_regua" id="icone_regua">
+    <img id="iconeReguaImg" src="images/icone_regua_white.png" style="height: auto; width: 27px; cursor: pointer;">
+  </div>
+  
+  <!-- botão de revelação para a barra lateral direita -->
+  <button class="custom-toggler custom-toggler-right" id="toggleSidebarRight">&LeftArrowBar;</button>
+
+  <!-- barra lateral direita -->
+  <div class="sidebar-right" id="sidebarRight">    
+    <div id="relatorios_titulo" class="relatorios_titulo"><b>Relatório</b></div>
+    <div id="rel_torre" class="relatorios">
+      <h6><b>&nbsp;&nbsp;<span class="link-text"> <img src="images/icone_item.png" style="height: 16px; width: auto;"> &nbspDados</span></b></h6>
+      <div class="expand-content" style="display: yes;">
+        <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-camadas-tab" data-bs-toggle="tab" data-bs-target="#nav-camadas" type="button" role="tab" aria-controls="nav-camadas" aria-selected="true">Camadas</button>
+          <button class="nav-link" id="nav-torres-tab" data-bs-toggle="tab" data-bs-target="#nav-torres" type="button" role="tab" aria-controls="nav-torres" aria-selected="false">Torres</button>
+          <button class="nav-link" id="nav-cadastro-tab" data-bs-toggle="tab" data-bs-target="#nav-cadastro" type="button" role="tab" aria-controls="nav-cadastro" aria-selected="false">Cadastro</button>
+        </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-camadas" role="tabpanel" aria-labelledby="nav-camadas-tab">
+            <div id="camadas_tab">                        
+              <div id="resultados">
+                <br>
+                <i>Clique em alguma feição ativa para verificar se existem atributos associados.</i>
+                <br>
+                <br>
+              </div>
             </div>
-          
+          </div>
+          <div class="tab-pane fade" id="nav-torres" role="tabpanel" aria-labelledby="nav-torres-tab">
+            <div id="torres_tab">            
+              <div id="resultados">
+                <table class="table custom-table-width rounded-table small-table">                
+                  <tbody>
+                    <tr id="referenciaRow">
+                      <td class="small-font"><b>ID (sequencial):</b> -</td>
+                    </tr>
+                    <tr id="projetoRow">
+                      <td class="small-font"><b>ID (km):</b> -</td>
+                    </tr>   
+                    <tr id="torresRow">
+                      <td class="small-font"><b>Tipo:</b> -</td>
+                    </tr>  
+                    <tr id="statusnegociacaoRow">
+                      <td class="small-font"><b>Descrição:</b> -</td>
+                    </tr>  
+                    <tr id="proprietarioRow">
+                      <td class="small-font"><b>Observação:</b> -</td>
+                    </tr>
+                    <tr id="municipioRow">
+                      <td class="small-font"><b>Município:</b> -</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div id="paginacao"></div>                                
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-cadastro" role="tabpanel" aria-labelledby="nav-cadastro-tab">
+            <div id="cadastro_tab">            
+              <div id="resultados">
+                <table class="table custom-table-width rounded-table small-table">                
+                  <tbody>
+                    <tr id="referenciaRow">
+                      <td class="small-font"><b>Referência:</b> -</td>
+                    </tr>
+                    <tr id="projetoRow">
+                      <td class="small-font"><b>Projeto:</b> -</td>
+                    </tr>   
+                    <tr id="torresRow">
+                      <td class="small-font"><b>Torres:</b> -</td>
+                    </tr>  
+                    <tr id="statusnegociacaoRow">
+                      <td class="small-font"><b>Status de Negociação:</b> -</td>
+                    </tr>  
+                    <tr id="proprietarioRow">
+                      <td class="small-font"><b>Proprietário:</b> -</td>
+                    </tr>
+                    <tr id="telefoneRow">
+                      <td class="small-font"><b>Telefone:</b> -</td>
+                    </tr>
+                    <tr id="municipioRow">
+                      <td class="small-font"><b>Município:</b> -</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div id="paginacao"></div>
+            </div>
+          </div>
+        </div>
+      </div>          
+    </div>
+    <div id="rel_raio10km" class="relatorios">        
+      <h6><b>&nbsp;&nbsp; <span class="link-text"><img src="images/icone_termometro.png" style="height: 20px; width: auto;"> &nbspPrevisão do tempo</span></b></h6>                   
+      <div class="expand-content" style="display: none;">
+        <div id="previsaotempo"></div>          
       </div>
-      <div id="rel_raio10km" class="relatorios">        
-        <h6><b>&nbsp;&nbsp; <span class="link-text"><img src="images/icone_graficos.png" style="height: 20px; width: auto;"> Caracterização do entorno da LT</span></b></h6>                   
-        <div class="expand-content" style="display: yes;">
-          <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <button class="nav-link active" id="nav-area365-tab" data-bs-toggle="tab" data-bs-target="#nav-area365" type="button" role="tab" aria-controls="nav-area365" aria-selected="true">36,5 m</button>
-              <button class="nav-link" id="nav-area100-tab" data-bs-toggle="tab" data-bs-target="#nav-area100" type="button" role="tab" aria-controls="nav-area100" aria-selected="false">100 m</button>
-              <button class="nav-link" id="nav-area450-tab" data-bs-toggle="tab" data-bs-target="#nav-area450" type="button" role="tab" aria-controls="nav-area450" aria-selected="false">450 m</button>
-            </div>
-          </nav>
-          <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-area365" role="tabpanel" aria-labelledby="nav-area365-tab">
-              <div id="resultados_10km">  
+    </div>
+    <div id="atributos-kml-cam" class="relatorios">        
+      <h6><b>&nbsp;&nbsp; <span class="link-text"><img src="images/icone_kml.png" style="height: 20px; width: auto;"> Atributos do KML</span></b></h6>                   
+      <div class="expand-content" style="display: none;">
+        <div id="atributos-kml" style="height: 300px; overflow-y: auto;"></div>          
+      </div>
+    </div>    
+    <div id="rel_raio10km" class="relatorios">        
+      <h6><b>&nbsp;&nbsp; <span class="link-text"><img src="images/icone_graficos.png" style="height: 20px; width: auto;"> Caracterização do entorno da LT</span></b></h6>                   
+      <div class="expand-content" style="display: yes;">
+        <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-area365-tab" data-bs-toggle="tab" data-bs-target="#nav-area365" type="button" role="tab" aria-controls="nav-area365" aria-selected="true">36,5 m</button>
+          <button class="nav-link" id="nav-area100-tab" data-bs-toggle="tab" data-bs-target="#nav-area100" type="button" role="tab" aria-controls="nav-area100" aria-selected="false">100 m</button>
+          <button class="nav-link" id="nav-area450-tab" data-bs-toggle="tab" data-bs-target="#nav-area450" type="button" role="tab" aria-controls="nav-area450" aria-selected="false">450 m</button>
+        </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-area365" role="tabpanel" aria-labelledby="nav-area365-tab">
+            <div id="resultados_10km">  
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                  <tr>
+                    <th class="small-font">Base fundiária</th>
+                    <th class="small-font text-center">Qtd. imóveis</th>
+                    <th class="small-font text-center">Tamanho médio (ha)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="small-font">CAR</td>
+                    <td id="car_qtd" class="small-font text-center" >330</td>
+                    <td id="car_areamedia_tab" class="small-font text-center">83,43 ha</td>
+                  </tr>
+                  <tr>
+                    <td id="" class="small-font">SIGEF</td>
+                    <td id="sigef_qtd" class="small-font text-center">53</td>
+                    <td id="sigef_areamedia_tab" class="small-font text-center">409,76 ha</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table custom-table-width rounded-table small-table">
+                <tbody>
+                  <tr>
+                    <td class="small-font"><b>Área total: </b>1.805 ha </td>
+                    <td id="areatotal" class="small-font"></td>
+                  </tr>
+                  <tr>
+                    <td class="small-font"><b>Quantidade de edificações:</b> 0</td>
+                    <td id="qtd_edificacoes" class="small-font"></td>
+                  </tr>   
+                </tbody>
+              </table>
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                  <th class="small-font"><span class="link-text" id="transicoes36emeio-toggle">>  Uso e cobertura do solo (2021/2023)</span></th>
+                </tbody>
+              </table>
+              <div class="expand-content" style="display: none;" id="transicoes36emeio-content">
                 <table class="table custom-table-width rounded-table small-table">
-                <thead>
+                  <thead>
                     <tr>
-                        <th class="small-font">Base fundiária</th>
-                        <th class="small-font text-center">Qtd. imóveis</th>
-                        <th class="small-font text-center">Tamanho médio (ha)</th>
-                      </tr>
-                </thead>
-                <tbody>
+                      <th class="small-font">Classe</th>
+                      <th class="small-font">Área (2021)</th>
+                      <th class="small-font">Área (2023)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     <tr>
-                        <td class="small-font">CAR</td>
-                        <td id="car_qtd" class="small-font text-center" >330</td>
-                        <td id="car_areamedia_tab" class="small-font text-center">83,43 ha</td>
+                      <td class="small-font">Formação campestre</td>
+                      <td id="formacaocampestre_2021" class="small-font" >63,85 ha</td>
+                      <td id="formacaocampestre_2023" class="small-font" >69,94 ha</td>
                     </tr>
                     <tr>
-                        <td id="" class="small-font">SIGEF</td>
-                        <td id="sigef_qtd" class="small-font text-center">53</td>
-                        <td id="sigef_areamedia_tab" class="small-font text-center">409,76 ha</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-                <tbody>
-                    <tr>
-                        <td class="small-font"><b>Área total: </b>1.805 ha </td>
-                        <td id="areatotal" class="small-font"></td>
-                    </tr>
-                    <tr>
-                        <td class="small-font"><b>Quantidade de edificações:</b> 0</td>
-                        <td id="qtd_edificacoes" class="small-font"></td>
-                    </tr>   
-                </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-              <thead>
-                <th class="small-font"><span class="link-text" id="transicoes36emeio-toggle">>  Uso e cobertura do solo (2021/2023)</span></th>
-              </tbody>
-            </table>
-            <div class="expand-content" style="display: none;" id="transicoes36emeio-content">
-            <table class="table custom-table-width rounded-table small-table">
-                <thead>
-                    <tr>
-                        <th class="small-font">Classe</th>
-                        <th class="small-font">Área (2021)</th>
-                        <th class="small-font">Área (2023)</th>
-                      </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="small-font">Formação campestre</td>
-                        <td id="formacaocampestre_2021" class="small-font" >63,85 ha</td>
-                        <td id="formacaocampestre_2023" class="small-font" >69,94 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Pastagem</td>
-                        <td id="pastagem_2021" class="small-font">859,94 ha</td>
-                        <td id="pastagem_2023" class="small-font">803,68 ha</td>
+                      <td class="small-font">Pastagem</td>
+                      <td id="pastagem_2021" class="small-font">859,94 ha</td>
+                      <td id="pastagem_2023" class="small-font">803,68 ha</td>
                     </tr>   
                     <tr>
-                        <td class="small-font">Mosaico de usos</td>
-                        <td id="mosaicodeusos_2021" class="small-font">278,1 ha</td>
-                        <td id="mosaicodeusos_2023" class="small-font">305,25 ha</td>
+                      <td class="small-font">Mosaico de usos</td>
+                      <td id="mosaicodeusos_2021" class="small-font">278,1 ha</td>
+                      <td id="mosaicodeusos_2023" class="small-font">305,25 ha</td>
                     </tr>
                     <tr>
-                        <td class="small-font">Área urbanizada</td>
-                        <td id="areaurbanizada_2021" class="small-font">1,58 ha</td>
-                        <td id="areaurbanizada_2023" class="small-font">0,98 ha</td>
+                      <td class="small-font">Área urbanizada</td>
+                      <td id="areaurbanizada_2021" class="small-font">1,58 ha</td>
+                      <td id="areaurbanizada_2023" class="small-font">0,98 ha</td>
                     </tr>
                     <tr>
-                        <td class="small-font">Outras áreas não vegetadas</td>
-                        <td id="oanv_2021" class="small-font">12,13 ha</td>
-                        <td id="oanv_2023" class="small-font">11,78 ha</td>
+                      <td class="small-font">Outras áreas não vegetadas</td>
+                      <td id="oanv_2021" class="small-font">12,13 ha</td>
+                      <td id="oanv_2023" class="small-font">11,78 ha</td>
                     </tr>
                     <tr>
-                        <td class="small-font">Formação florestal</td>
-                        <td id="formacaoflorestal_2021" class="small-font">318,34 ha</td>
-                        <td id="formacaoflorestal_2023" class="small-font">322,81 ha</td>
+                      <td class="small-font">Formação florestal</td>
+                      <td id="formacaoflorestal_2021" class="small-font">318,34 ha</td>
+                      <td id="formacaoflorestal_2023" class="small-font">322,81 ha</td>
                     </tr>
                     <tr>
-                        <td class="small-font">Água</td>
-                        <td id="agua_2021" class="small-font">1,21 ha</td>
-                        <td id="agua_2023" class="small-font">1,26 ha</td>
+                      <td class="small-font">Água</td>
+                      <td id="agua_2021" class="small-font">1,21 ha</td>
+                      <td id="agua_2023" class="small-font">1,26 ha</td>
                     </tr>
                     <tr>
-                        <td class="small-font">Formação savânica</td>
-                        <td id="formacaosavanica_2021" class="small-font">248,71 ha</td>
-                        <td id="formacaosavanica_2023" class="small-font">259,54 ha</td>
+                      <td class="small-font">Formação savânica</td>
+                      <td id="formacaosavanica_2021" class="small-font">248,71 ha</td>
+                      <td id="formacaosavanica_2023" class="small-font">259,54 ha</td>
                     </tr>
                     <tr>
                       <td class="small-font">Silvicultura</td>
                       <td id="silvicultura_2021" class="small-font">21,08 ha</td>
                       <td id="silvicultura_2023" class="small-font">29,74 ha</td>
-                  </tr>
-                    <tr>
-                        <td class="small-font">Campo alagado e área pantanosa</td>
-                        <td id="caap_2021" class="small-font">0,07 ha</td>
-                        <td id="caap_2023" class="small-font">0,02 ha</td>
                     </tr>
-                </tbody>                                
-            </table> 
-            <table class="table custom-table-width rounded-table small-table">
-              <thead>
-                <th class="small-font"> Transições</th>
-              </tbody>
-            </table>
-            <div id="sankey_basic_36emeio"></div>
-            <br>           
-            </div>
-            <table class="table custom-table-width rounded-table small-table">
-                <thead>
                     <tr>
-                        <th class="small-font">Unidades de conservação</th>
-                        <th class="small-font">Quantidade</th>
-                        <th class="small-font">Área (ha)</th>
-                      </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="small-font">Uso Sustentável</td>
-                        <td id="ucus_qtd" class="small-font text-center">1</td>
-                        <td id="ucus_area" class="small-font">14,63 ha</td>
+                      <td class="small-font">Campo alagado e área pantanosa</td>
+                      <td id="caap_2021" class="small-font">0,07 ha</td>
+                      <td id="caap_2023" class="small-font">0,02 ha</td>
                     </tr>
-                </tbody>
+                  </tbody>                                
+                </table> 
                 <table class="table custom-table-width rounded-table small-table">
                   <thead>
-                      <tr>
-                          <th class="small-font">Tipos de estabelecimentos (Censo 2022)</th>
-                          <th class="small-font">Quantidade</th>
-                        </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td class="small-font">Domicílio particular</td>
-                          <td id="dom_particular" class="small-font text-center">9</td>
-                      </tr>
-                      <tr>
-                          <td class="small-font">Domicílio coletivo</td>
-                          <td id="dom_coletivo" class="small-font text-center">0</td>
-                          
-                      </tr>   
-                      <tr>
-                          <td class="small-font">Estabelecimento agropecuário</td>
-                          <td id="estab_agropecuario" class="small-font text-center">4</td>
-                      </tr>
-                      <tr>
-                          <td class="small-font">Estabelecimento de saúde</td>
-                          <td id="estab_saude" class="small-font text-center">0</td>
-                      </tr>
-                      <tr>
-                        <td class="small-font">Estabelecimento de ensino</td>
-                        <td id="estab_ensino" class="small-font text-center">0</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Estabelecimento religioso</td>
-                      <td id="estab_religioso" class="small-font text-center">0</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Estabelecimento de outras finalidades</td>
-                      <td id="estab_outrasfinalidades" class="small-font text-center">0</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Edificação em construção</td>
-                      <td id="ed_emconstrucao" class="small-font text-center">0</td>
-                    </tr>
+                    <th class="small-font"> Transições</th>
                   </tbody>
-            </table>
-            </div>  
-            </div>
-            <div class="tab-pane fade" id="nav-area100" role="tabpanel" aria-labelledby="nav-area100-tab">
-              <div id="resultados_10km">  
-                <table class="table custom-table-width rounded-table small-table">
+                </table>
+                <div id="sankey_basic_36emeio"></div>
+                <br>           
+              </div>
+              <table class="table custom-table-width rounded-table small-table">
                 <thead>
-                    <tr>
-                        <th class="small-font">Base fundiária</th>
-                        <th class="small-font text-center">Qtd. imóveis</th>
-                        <th class="small-font text-center">Tamanho médio (ha)</th>
-                      </tr>
+                  <tr>
+                    <th class="small-font">Unidades de conservação</th>
+                    <th class="small-font">Quantidade</th>
+                    <th class="small-font">Área (ha)</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="small-font">CAR</td>
-                        <td id="car_qtd" class="small-font text-center">448</td>
-                        <td id="car_areamedia_tab" class="small-font text-center">66,06 ha</td>
-                    </tr>
-                    <tr>
-                        <td id="" class="small-font">SIGEF</td>
-                        <td id="sigef_qtd" class="small-font text-center">57</td>
-                        <td id="sigef_areamedia_tab" class="small-font text-center">387,72 ha</td>
-                    </tr>
+                  <tr>
+                    <td class="small-font">Uso Sustentável</td>
+                    <td id="ucus_qtd" class="small-font text-center">1</td>
+                    <td id="ucus_area" class="small-font">14,63 ha</td>
+                  </tr>
                 </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                  <tr>
+                    <th class="small-font">Tipos de estabelecimentos (Censo 2022)</th>
+                    <th class="small-font">Quantidade</th>
+                  </tr>
+                </thead>
                 <tbody>
-                    <tr>
-                        <td class="small-font"><b>Área total: </b>4.947 ha </td>
-                        <td id="qto_armzs" class="small-font"></td>
-                    </tr>
-                    <tr>
-                        <td class="small-font"><b>Quantidade de edificações:</b> 236</td>
-                        <td id="cap_ton" class="small-font"></td>
-                    </tr>   
+                  <tr>
+                    <td class="small-font">Domicílio particular</td>
+                    <td id="dom_particular" class="small-font text-center">9</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Domicílio coletivo</td>
+                    <td id="dom_coletivo" class="small-font text-center">0</td>          
+                  </tr>   
+                  <tr>
+                    <td class="small-font">Estabelecimento agropecuário</td>
+                    <td id="estab_agropecuario" class="small-font text-center">4</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Estabelecimento de saúde</td>
+                    <td id="estab_saude" class="small-font text-center">0</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Estabelecimento de ensino</td>
+                    <td id="estab_ensino" class="small-font text-center">0</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Estabelecimento religioso</td>
+                    <td id="estab_religioso" class="small-font text-center">0</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Estabelecimento de outras finalidades</td>
+                    <td id="estab_outrasfinalidades" class="small-font text-center">0</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Edificação em construção</td>
+                    <td id="ed_emconstrucao" class="small-font text-center">0</td>
+                  </tr>
                 </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-              <thead>
-                <th class="small-font"><span class="link-text" id="transicoes100m-toggle">>  Uso e cobertura do solo (2021/2023)</span></th>
-              </tbody>
-            </table>
+              </table>
+            </div>  
+          </div>
+          <div class="tab-pane fade" id="nav-area100" role="tabpanel" aria-labelledby="nav-area100-tab">
+            <div id="resultados_10km">  
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                  <tr>
+                    <th class="small-font">Base fundiária</th>
+                    <th class="small-font text-center">Qtd. imóveis</th>
+                    <th class="small-font text-center">Tamanho médio (ha)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="small-font">CAR</td>
+                    <td id="car_qtd" class="small-font text-center">448</td>
+                    <td id="car_areamedia_tab" class="small-font text-center">66,06 ha</td>
+                  </tr>
+                  <tr>
+                    <td id="" class="small-font">SIGEF</td>
+                    <td id="sigef_qtd" class="small-font text-center">57</td>
+                    <td id="sigef_areamedia_tab" class="small-font text-center">387,72 ha</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table custom-table-width rounded-table small-table">
+                <tbody>
+                  <tr>
+                    <td class="small-font"><b>Área total: </b>4.947 ha </td>
+                    <td id="qto_armzs" class="small-font"></td>
+                  </tr>
+                  <tr>
+                    <td class="small-font"><b>Quantidade de edificações:</b> 236</td>
+                    <td id="cap_ton" class="small-font"></td>
+                  </tr>   
+                </tbody>
+              </table>
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                  <th class="small-font"><span class="link-text" id="transicoes100m-toggle">>  Uso e cobertura do solo (2021/2023)</span></th>
+                </tbody>
+              </table>
             <div class="expand-content" style="display: none;" id="transicoes100m-content">
-            <table class="table custom-table-width rounded-table small-table">
+              <table class="table custom-table-width rounded-table small-table">
                 <thead>
-                    <tr>
-                        <th class="small-font">Uso/cobertura do solo</th>
-                        <th class="small-font">Área (2021)</th>
-                        <th class="small-font">Área (2023)</th>
-                      </tr>
+                  <tr>
+                    <th class="small-font">Uso/cobertura do solo</th>
+                    <th class="small-font">Área (2021)</th>
+                    <th class="small-font">Área (2023)</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="small-font">Formação campestre</td>
-                        <td id="formacaocampestre_2021" class="small-font" >186,74 ha</td>
-                        <td id="formacaocampestre_2023" class="small-font" >192,97 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Pastagem</td>
-                        <td id="pastagem_2021" class="small-font">2.184,86 ha</td>
-                        <td id="pastagem_2023" class="small-font">2.089,73 ha</td>
-                    </tr>   
-                    <tr>
-                        <td class="small-font">Mosaico de usos</td>
-                        <td id="mosaicodeusos_2021" class="small-font">761,02 ha</td>
-                        <td id="mosaicodeusos_2023" class="small-font">822,75 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Área urbanizada</td>
-                        <td id="areaurbanizada_2021" class="small-font">4,18 ha</td>
-                        <td id="areaurbanizada_2023" class="small-font">2,6 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Outras áreas não vegetadas</td>
-                        <td id="oanv_2021" class="small-font">24,9 ha</td>
-                        <td id="oanv_2023" class="small-font">28,42 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Formação florestal</td>
-                        <td id="formacaoflorestal_2021" class="small-font">977,36 ha</td>
-                        <td id="formacaoflorestal_2023" class="small-font">968,87 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Água</td>
-                        <td id="agua_2021" class="small-font">3,75 ha</td>
-                        <td id="agua_2023" class="small-font">4,03 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Formação savânica</td>
-                        <td id="formacaosavanica_2021" class="small-font">726,8 ha</td>
-                        <td id="formacaosavanica_2023" class="small-font">740,2 ha</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Silvicultura</td>
-                      <td id="silvicultura_2021" class="small-font">77,24 ha</td>
-                      <td id="silvicultura_2023" class="small-font">97,4 ha</td>
+                  <tr>
+                    <td class="small-font">Formação campestre</td>
+                    <td id="formacaocampestre_2021" class="small-font" >186,74 ha</td>
+                    <td id="formacaocampestre_2023" class="small-font" >192,97 ha</td>
                   </tr>
-                    <tr>
-                        <td class="small-font">Campo alagado e área pantanosa</td>
-                        <td id="caap_2021" class="small-font">0,15</td>
-                        <td id="caap_2023" class="small-font">0,03</td>
-                    </tr>
+                  <tr>
+                    <td class="small-font">Pastagem</td>
+                    <td id="pastagem_2021" class="small-font">2.184,86 ha</td>
+                    <td id="pastagem_2023" class="small-font">2.089,73 ha</td>
+                  </tr>   
+                  <tr>
+                    <td class="small-font">Mosaico de usos</td>
+                    <td id="mosaicodeusos_2021" class="small-font">761,02 ha</td>
+                    <td id="mosaicodeusos_2023" class="small-font">822,75 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Área urbanizada</td>
+                    <td id="areaurbanizada_2021" class="small-font">4,18 ha</td>
+                    <td id="areaurbanizada_2023" class="small-font">2,6 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Outras áreas não vegetadas</td>
+                    <td id="oanv_2021" class="small-font">24,9 ha</td>
+                    <td id="oanv_2023" class="small-font">28,42 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Formação florestal</td>
+                    <td id="formacaoflorestal_2021" class="small-font">977,36 ha</td>
+                    <td id="formacaoflorestal_2023" class="small-font">968,87 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Água</td>
+                    <td id="agua_2021" class="small-font">3,75 ha</td>
+                    <td id="agua_2023" class="small-font">4,03 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Formação savânica</td>
+                    <td id="formacaosavanica_2021" class="small-font">726,8 ha</td>
+                    <td id="formacaosavanica_2023" class="small-font">740,2 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Silvicultura</td>
+                    <td id="silvicultura_2021" class="small-font">77,24 ha</td>
+                    <td id="silvicultura_2023" class="small-font">97,4 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Campo alagado e área pantanosa</td>
+                    <td id="caap_2021" class="small-font">0,15</td>
+                    <td id="caap_2023" class="small-font">0,03</td>
+                  </tr>
+                 </tbody>
+              </table>
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                  <th class="small-font"> Transições</th>
                 </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-              <thead>
-                <th class="small-font"> Transições</th>
-              </tbody>
-            </table>
-            <div id="sankey_basic_100m"></div>
-            <br>
+              </table>
+              <div id="sankey_basic_100m"></div>
+              <br>
             </div>
             <table class="table custom-table-width rounded-table small-table">
-                <thead>
-                    <tr>
-                        <th class="small-font">Unidades de conservação</th>
-                        <th class="small-font">Quantidade</th>
-                        <th class="small-font">Área (ha)</th>
-                      </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="small-font">Uso Sustentável</td>
-                        <td id="ucus_qtd" class="small-font text-center">1</td>
-                        <td id="ucus_area" class="small-font">43,14 ha</td>
-                    </tr>
-                </tbody>
-                <table class="table custom-table-width rounded-table small-table">
-                  <thead>
-                      <tr>
-                          <th class="small-font">Tipos de estabelecimentos (Censo 2022)</th>
-                          <th class="small-font">Quantidade</th>
-                        </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td class="small-font">Domicílio particular</td>
-                          <td id="dom_particular" class="small-font text-center">163</td>
-                      </tr>
-                      <tr>
-                          <td class="small-font">Domicílio coletivo</td>
-                          <td id="dom_coletivo" class="small-font text-center">0</td>
-                          
-                      </tr>   
-                      <tr>
-                          <td class="small-font">Estabelecimento agropecuário</td>
-                          <td id="estab_agropecuario" class="small-font text-center">59</td>
-                      </tr>
-                      <tr>
-                          <td class="small-font">Estabelecimento de saúde</td>
-                          <td id="estab_saude" class="small-font text-center">0</td>
-                      </tr>
-                      <tr>
-                        <td class="small-font">Estabelecimento de ensino</td>
-                        <td id="estab_ensino" class="small-font text-center">0</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Estabelecimento religioso</td>
-                      <td id="estab_religioso" class="small-font text-center">0</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Estabelecimento de outras finalidades</td>
-                      <td id="estab_outrasfinalidades" class="small-font text-center">0</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Edificação em construção</td>
-                      <td id="ed_emconstrucao" class="small-font text-center">1</td>
-                    </tr>
-                  </tbody>
+              <thead>
+                <tr>
+                  <th class="small-font">Unidades de conservação</th>
+                  <th class="small-font">Quantidade</th>
+                  <th class="small-font">Área (ha)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="small-font">Uso Sustentável</td>
+                  <td id="ucus_qtd" class="small-font text-center">1</td>
+                  <td id="ucus_area" class="small-font">43,14 ha</td>
+                </tr>
+              </tbody>
+            <table class="table custom-table-width rounded-table small-table">
+              <thead>
+                <tr>
+                  <th class="small-font">Tipos de estabelecimentos (Censo 2022)</th>
+                  <th class="small-font">Quantidade</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="small-font">Domicílio particular</td>
+                  <td id="dom_particular" class="small-font text-center">163</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Domicílio coletivo</td>
+                  <td id="dom_coletivo" class="small-font text-center">0</td>                      
+                </tr>   
+                <tr>
+                  <td class="small-font">Estabelecimento agropecuário</td>
+                  <td id="estab_agropecuario" class="small-font text-center">59</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Estabelecimento de saúde</td>
+                  <td id="estab_saude" class="small-font text-center">0</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Estabelecimento de ensino</td>
+                  <td id="estab_ensino" class="small-font text-center">0</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Estabelecimento religioso</td>
+                  <td id="estab_religioso" class="small-font text-center">0</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Estabelecimento de outras finalidades</td>
+                  <td id="estab_outrasfinalidades" class="small-font text-center">0</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Edificação em construção</td>
+                  <td id="ed_emconstrucao" class="small-font text-center">1</td>
+                </tr>
+              </tbody>
             </table>
             </div>  
-            </div>
-            <div class="tab-pane fade" id="nav-area450" role="tabpanel" aria-labelledby="nav-area450-tab">
-              <div id="resultados_10km">  
-                <table class="table custom-table-width rounded-table small-table">
+          </div>
+          <div class="tab-pane fade" id="nav-area450" role="tabpanel" aria-labelledby="nav-area450-tab">
+            <div id="resultados_10km">  
+              <table class="table custom-table-width rounded-table small-table">
                 <thead>
-                    <tr>
-                        <th class="small-font">Base fundiária</th>
-                        <th class="small-font text-center">Qtd. imóveis</th>
-                        <th class="small-font text-center">Tamanho médio (ha)</th>
-                      </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="small-font">CAR</td>
-                        <td id="car_qtd" class="small-font text-center" >1.040</td>
-                        <td id="car_areamedia" class="small-font text-center">35,7 ha</td>
-                    </tr>
-                    <tr>
-                        <td id="" class="small-font">SIGEF</td>
-                        <td id="sigef_qtd" class="small-font text-center">81</td>
-                        <td id="sigef_areamedia" class="small-font text-center">307,6 ha</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-                <tbody>
-                    <tr>
-                        <td class="small-font"><b>Área total:</b> 21.600 ha</td>
-                        <td id="area_total" class="small-font"></td>
-                    </tr>
-                    <tr>
-                        <td class="small-font"><b>Quantidade de edificações: </b>1.711</td>
-                        <td id="qtd_edificacoes" class="small-font"></td>
-                    </tr>   
-                </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-              <thead>
-                <th class="small-font"><span class="link-text" id="transicoes450m-toggle">>  Uso e cobertura do solo (2021/2023)</span></th>
-              </tbody>
-            </table>
-            <div class="expand-content" style="display: none;" id="transicoes450m-content">
-            <table class="table custom-table-width rounded-table small-table">
-                <thead>
-                    <tr>
-                        <th class="small-font">Classe</th>
-                        <th class="small-font">Área (2021)</th>
-                        <th class="small-font">Área (2023)</th>
-                      </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="small-font">Formação campestre</td>
-                        <td id="formacaocampestre_2021" class="small-font" >837,0 ha</td>
-                        <td id="formacaocampestre_2023" class="small-font" >845,8 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Pastagem</td>
-                        <td id="pastagem_2021" class="small-font">9.068,5 ha</td>
-                        <td id="pastagem_2023" class="small-font">8.839,9 ha</td>
-                    </tr>   
-                    <tr>
-                        <td class="small-font">Mosaico de usos</td>
-                        <td id="mosaicodeusos_2021" class="small-font">3.378,6 ha</td>
-                        <td id="mosaicodeusos_2023" class="small-font">3.576,8 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Área urbanizada</td>
-                        <td id="areaurbanizada_2021" class="small-font">26,8 ha</td>
-                        <td id="areaurbanizada_2023" class="small-font">19,7 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Outras áreas não vegetadas</td>
-                        <td id="oanv_2021" class="small-font">90,8 ha</td>
-                        <td id="oanv_2023" class="small-font">124,0 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Formação florestal</td>
-                        <td id="formacaoflorestal_2021" class="small-font">4.556,3 ha</td>
-                        <td id="formacaoflorestal_2023" class="small-font">4.451,5 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Água</td>
-                        <td id="agua_2021" class="small-font">20,8 ha</td>
-                        <td id="agua_2023" class="small-font">24,5 ha</td>
-                    </tr>
-                    <tr>
-                        <td class="small-font">Formação savânica</td>
-                        <td id="formacaosavanica_2021" class="small-font">3.205,4 ha</td>
-                        <td id="formacaosavanica_2023" class="small-font">3.252,8 ha</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Silvicultura</td>
-                      <td id="silvicultura_2021" class="small-font">412,8 ha</td>
-                      <td id="silvicultura_2023" class="small-font">460,3 ha</td>
+                  <tr>
+                    <th class="small-font">Base fundiária</th>
+                    <th class="small-font text-center">Qtd. imóveis</th>
+                    <th class="small-font text-center">Tamanho médio (ha)</th>
                   </tr>
-                    <tr>
-                        <td class="small-font">Campo alagado e área pantanosa</td>
-                        <td id="caap_2021" class="small-font">2,9 ha</td>
-                        <td id="caap_2023" class="small-font">4,7 ha</td>
-                    </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="small-font">CAR</td>
+                    <td id="car_qtd" class="small-font text-center" >1.040</td>
+                    <td id="car_areamedia" class="small-font text-center">35,7 ha</td>
+                  </tr>
+                  <tr>
+                    <td id="" class="small-font">SIGEF</td>
+                    <td id="sigef_qtd" class="small-font text-center">81</td>
+                    <td id="sigef_areamedia" class="small-font text-center">307,6 ha</td>
+                  </tr>
                 </tbody>
-            </table>
-            <table class="table custom-table-width rounded-table small-table">
-              <thead>
-                <th class="small-font"> Transições</th>
-              </tbody>
-            </table>
+              </table>
+              <table class="table custom-table-width rounded-table small-table">
+                <tbody>
+                  <tr>
+                    <td class="small-font"><b>Área total:</b> 21.600 ha</td>
+                    <td id="area_total" class="small-font"></td>
+                  </tr>
+                  <tr>
+                    <td class="small-font"><b>Quantidade de edificações: </b>1.711</td>
+                    <td id="qtd_edificacoes" class="small-font"></td>
+                  </tr>   
+                </tbody>
+              </table>
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                  <th class="small-font"><span class="link-text" id="transicoes450m-toggle">>  Uso e cobertura do solo (2021/2023)</span></th>
+                </tbody>
+              </table>
+            <div class="expand-content" style="display: none;" id="transicoes450m-content">
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                  <tr>
+                    <th class="small-font">Classe</th>
+                    <th class="small-font">Área (2021)</th>
+                    <th class="small-font">Área (2023)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="small-font">Formação campestre</td>
+                    <td id="formacaocampestre_2021" class="small-font" >837,0 ha</td>
+                    <td id="formacaocampestre_2023" class="small-font" >845,8 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Pastagem</td>
+                    <td id="pastagem_2021" class="small-font">9.068,5 ha</td>
+                    <td id="pastagem_2023" class="small-font">8.839,9 ha</td>
+                  </tr>   
+                  <tr>
+                    <td class="small-font">Mosaico de usos</td>
+                    <td id="mosaicodeusos_2021" class="small-font">3.378,6 ha</td>
+                    <td id="mosaicodeusos_2023" class="small-font">3.576,8 ha</td>
+                  </tr>
+                  <tr>
+                     <td class="small-font">Área urbanizada</td>
+                     <td id="areaurbanizada_2021" class="small-font">26,8 ha</td>
+                     <td id="areaurbanizada_2023" class="small-font">19,7 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Outras áreas não vegetadas</td>
+                    <td id="oanv_2021" class="small-font">90,8 ha</td>
+                    <td id="oanv_2023" class="small-font">124,0 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Formação florestal</td>
+                    <td id="formacaoflorestal_2021" class="small-font">4.556,3 ha</td>
+                    <td id="formacaoflorestal_2023" class="small-font">4.451,5 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Água</td>
+                    <td id="agua_2021" class="small-font">20,8 ha</td>
+                    <td id="agua_2023" class="small-font">24,5 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Formação savânica</td>
+                    <td id="formacaosavanica_2021" class="small-font">3.205,4 ha</td>
+                    <td id="formacaosavanica_2023" class="small-font">3.252,8 ha</td>
+                  </tr>
+                  <tr>
+                    <td class="small-font">Silvicultura</td>
+                    <td id="silvicultura_2021" class="small-font">412,8 ha</td>
+                    <td id="silvicultura_2023" class="small-font">460,3 ha</td>
+                  </tr>
+                  <tr>
+                     <td class="small-font">Campo alagado e área pantanosa</td>
+                     <td id="caap_2021" class="small-font">2,9 ha</td>
+                     <td id="caap_2023" class="small-font">4,7 ha</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table custom-table-width rounded-table small-table">
+                <thead>
+                  <th class="small-font"> Transições</th>
+                </tbody>
+              </table>
               <div id="sankey_basic_450m"></div>
             </div>
             <table class="table custom-table-width rounded-table small-table">
-                <thead>
-                    <tr>
-                        <th class="small-font">Unidades de conservação</th>
-                        <th class="small-font">Quantidade</th>
-                        <th class="small-font">Área (ha)</th>
-                      </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="small-font">Uso Sustentável</td>
-                        <td id="ucus_qtd" class="small-font text-center">1</td>
-                        <td id="ucus_area" class="small-font">187,17 ha</td>
-                    </tr>
-                </tbody>
-                <table class="table custom-table-width rounded-table small-table">
-                  <thead>
-                      <tr>
-                          <th class="small-font">Tipos de estabelecimentos (Censo 2022)</th>
-                          <th class="small-font">Quantidade</th>
-                        </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td class="small-font">Domicílio particular</td>
-                          <td id="dom_particular" class="small-font text-center">1.323</td>
-                      </tr>
-                      <tr>
-                          <td class="small-font">Domicílio coletivo</td>
-                          <td id="dom_coletivo" class="small-font text-center">0</td>
-                          
-                      </tr>   
-                      <tr>
-                          <td class="small-font">Estabelecimento agropecuário</td>
-                          <td id="estab_agropecuario" class="small-font text-center">2.144</td>
-                      </tr>
-                      <tr>
-                          <td class="small-font">Estabelecimento de saúde</td>
-                          <td id="estab_saude" class="small-font text-center">1</td>
-                      </tr>
-                      <tr>
-                        <td class="small-font">Estabelecimento de ensino</td>
-                        <td id="estab_ensino" class="small-font text-center">6</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Estabelecimento religioso</td>
-                      <td id="estab_religioso" class="small-font text-center">14</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Estabelecimento de outras finalidades</td>
-                      <td id="estab_outrasfinalidades" class="small-font text-center">116</td>
-                    </tr>
-                    <tr>
-                      <td class="small-font">Edificação em construção</td>
-                      <td id="ed_emconstrucao" class="small-font text-center">116</td>
-                    </tr>
-                  </tbody>
+              <thead>
+                <tr>
+                  <th class="small-font">Unidades de conservação</th>
+                  <th class="small-font">Quantidade</th>
+                  <th class="small-font">Área (ha)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="small-font">Uso Sustentável</td>
+                  <td id="ucus_qtd" class="small-font text-center">1</td>
+                  <td id="ucus_area" class="small-font">187,17 ha</td>
+                </tr>
+              </tbody>
+            <table class="table custom-table-width rounded-table small-table">
+              <thead>
+                <tr>
+                  <th class="small-font">Tipos de estabelecimentos (Censo 2022)</th>
+                  <th class="small-font">Quantidade</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="small-font">Domicílio particular</td>
+                  <td id="dom_particular" class="small-font text-center">1.323</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Domicílio coletivo</td>
+                  <td id="dom_coletivo" class="small-font text-center">0</td>                        
+                </tr>   
+                <tr>
+                  <td class="small-font">Estabelecimento agropecuário</td>
+                  <td id="estab_agropecuario" class="small-font text-center">2.144</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Estabelecimento de saúde</td>
+                  <td id="estab_saude" class="small-font text-center">1</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Estabelecimento de ensino</td>
+                  <td id="estab_ensino" class="small-font text-center">6</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Estabelecimento religioso</td>
+                  <td id="estab_religioso" class="small-font text-center">14</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Estabelecimento de outras finalidades</td>
+                  <td id="estab_outrasfinalidades" class="small-font text-center">116</td>
+                </tr>
+                <tr>
+                  <td class="small-font">Edificação em construção</td>
+                  <td id="ed_emconstrucao" class="small-font text-center">116</td>
+                </tr>
+              </tbody>
             </table>
             </div>  
-            </div>
-          </div>  
-        </div>
-    </div>
-       
-    <div id="relatorios_titulo" class="relatorios_titulo"><b>Legenda</b></div>
-      <div id="legenda" class="legenda">
-
+          </div>
+        </div>  
       </div>
-      <br>
-      <br>
+    </div>       
+    <div id="relatorios_titulo" class="relatorios_titulo"><b>Legenda</b></div>
+    <div id="legenda" class="legenda"></div>
+    <br>
+    <br>
   </div>
-
-  <!-- Botão de revelação para a barra lateral esquerda -->
-  <button class="custom-toggler custom-toggler-left" id="toggleSidebarLeft">&RightArrowBar;</button>
-  
-  <!-- Botão de revelação para a barra lateral direita -->
-  <button class="custom-toggler custom-toggler-right" id="toggleSidebarRight">&LeftArrowBar;</button>
 
   <script>
 
-  // Adicione um evento de clique para cada <h6> dentro das divs "relatorios"
-  const headers = document.querySelectorAll('.relatorios h6');
-  headers.forEach(header => {
-    header.addEventListener('click', () => {
+  const GEOSERVER="177.143.160.56:8080" // IMPORTANTE!! MUDAR PARA O IP DA CONEXÂO QUE FOR USADA!!
 
-      // Encontre o elemento <p> seguinte ao <h6>
-      const content = header.nextElementSibling;
-
-      // Alterne a visibilidade do conteúdo usando a propriedade CSS 'display'
-      if (content.style.display === 'none' || content.style.display === '') {
-        content.style.display = 'block';
-      } else {
-        content.style.display = 'none';
-      }
-    });
-  });
-
-  const GEOSERVER="177.143.160.56:8080"
-  
   window.onload = init;
   
   function init() {
@@ -1146,19 +1178,12 @@
       chart.draw(data, options);
     }    
 
-    let pointLayer
-    let pointLayer_sel
-    let pointLayer_sel_v2
-    let vectorLayer  
-
-    const attributionControl = new ol.control.Attribution({
-      collapsible: true
-    });  
+    // Openlayers  
   
     const view = new ol.View({
       center: [-39.8, -13.578],
       zoom: 9.47,
-      projection: 'EPSG:4326',
+      projection: 'EPSG:4326', 
     });
 
     const map = new ol.Map({
@@ -1171,9 +1196,24 @@
           visible: true
         }),
       ],
-      target: "js-map"
-      
+      target: "js-map"      
+    });
+
+    map.removeControl(map.getControls().getArray().find(control => control instanceof ol.control.Zoom));
+
+    const attributionControl = new ol.control.Attribution({
+      collapsible: true
     });  
+
+    let pointLayer
+    let pointLayer_sel
+    let pointLayer_sel_v2
+    let vectorLayer
+    let drawInteraction
+    var kmlLayer = null;
+
+
+    // Configurar camadas do mapa
 
     const eixo = new ol.layer.Tile({
       source: new ol.source.TileWMS({
@@ -1191,17 +1231,16 @@
     });   
 
     const overviewMapControl = new ol.control.OverviewMap({
-      // Opções de camada de visão geral (aqui estamos usando o mesmo que o mapa principal)
       layers: [
           new ol.layer.Tile({
               source: new ol.source.OSM()
           }),
           eixo 
       ],
-      collapseLabel: '\u00BB', // O texto para o botão de colapso
-      label: '\u00AB', // O texto para o botão de expansão
-      collapsed: false // Começa colapsado
-  });
+      collapseLabel: '\u00BB',
+      label: '\u00AB',
+      collapsed: false 
+    });
 
     // Adiciona o mapa de visão geral ao mapa principal
     map.addControl(overviewMapControl);
@@ -1252,6 +1291,88 @@
       title: 'faixa_servidao_cadastro'
     });
 
+    const frenteDeFogo = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        url: function(extent) {
+          return 'https://panorama.sipam.gov.br/geoserver/painel_do_fogo/wfs?' +
+            'service=WFS&' +
+            'version=1.1.0&' +
+            'request=GetFeature&' +
+            'typename=painel_do_fogo:mv_frente_deteccao&' +
+            'outputFormat=application/json&' +
+            'srsname=EPSG:4674';
+        },
+        strategy: ol.loadingstrategy.bbox,
+      }),
+      visible: true,
+      title: "frenteDeFogo" 
+    });
+
+    frenteDeFogo.setStyle(new ol.style.Style({
+      image: new ol.style.Circle({
+        radius: 4,
+        fill: new ol.style.Fill({color: 'red'}),
+        stroke: new ol.style.Stroke({color: 'yellow', width: 1})
+      })
+    }));    
+
+    const modisFires72h = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: 'https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/d36c51be098b3d055aaaf9443ca4c512/',
+        params: {
+          'LAYERS': 'fires_modis_72',
+          'FORMAT': 'image/png',
+          'CRS': 'EPSG:4326'
+        },
+        serverType: 'geoserver',
+      }),
+      visible: false,
+      title: 'modisFires72h',
+    });
+
+    const viirsFires72h = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: 'https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/8bcedd3cdfe3d1217fc918400d2748e6/',
+        params: {
+          'LAYERS': 'fires_viirs_72',
+          'FORMAT': 'image/png',
+          'CRS': 'EPSG:4326'
+        },
+        serverType: 'geoserver',
+      }),
+      visible: false,
+      title: 'viirsFires72h',
+    });
+    
+    const noaa21Fires72h = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: 'https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/8611eea53ccad7dbba9a0573b650b290/',
+        params: {
+          'LAYERS': 'fires_viirs_noaa21_72',
+          'FORMAT': 'image/png',
+          'CRS': 'EPSG:4326'
+        },
+        serverType: 'geoserver', // Isto pode precisar ser ajustado com base no servidor WMS que você está acessando.
+      }),
+      visible: false,
+      title: 'noaa21Fires72h',
+    });    
+
+    const NPPFires72h = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: 'https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/021366e4b883ffe88a9c0c880b87de1d/',
+        params: {
+          'LAYERS': 'fires_viirs_snpp_72',
+          'FORMAT': 'image/png',
+          'CRS': 'EPSG:4326'
+        },
+        serverType: 'geoserver', // Isto pode precisar ser ajustado com base no servidor WMS que você está acessando.
+      }),
+      visible: false,
+      title: 'NPPFires72h',
+    });
+    
     const erosoes = new ol.layer.Tile({
       source: new ol.source.TileWMS({
         url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
@@ -1267,7 +1388,6 @@
       title: 'erosoes'
     });
     
-
     const obras_supressao = new ol.layer.Tile({
       source: new ol.source.TileWMS({
         url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
@@ -1372,7 +1492,6 @@
       visible: false,
       title: 'estab_agropecuario_censo'
     }); 
-
 
     const torres = new ol.layer.Tile({
       source: new ol.source.TileWMS({
@@ -1695,9 +1814,11 @@
       title: 'satelite_planet_jul2023'
     })  
 
+    // Configurar grupos de camadas
+
     const checkboxGroup = new ol.layer.Group({
       layers: [
-      tropicalia_municipios, ps_map_rf_2021, ps_map_rf_2023, altitude, declividade, obras_supressao, uf, biomas, ucs_pi, ucs_us, estab_agropecuario_censo, estab_outrasfinalidades_censo, domi_particular_censo, imoveis_rurais_car, imoveis_rurais_sigef, torres, erosoes, edificacoes, estab_religioso_censo, estab_educacao_censo, estab_saude_censo, desapropriados, faixa_servidao_cadastro, eixo, osm_roads_ba, hidrografia, cidades, nucleosvilaspovoados, sinalizadoresavifauna, comunidades, acessos, linhasdetransmissao
+      tropicalia_municipios, ps_map_rf_2021, ps_map_rf_2023, altitude, declividade, obras_supressao, uf, biomas, ucs_pi, ucs_us, estab_agropecuario_censo, estab_outrasfinalidades_censo, domi_particular_censo, imoveis_rurais_car, imoveis_rurais_sigef, torres, erosoes, edificacoes, estab_religioso_censo, estab_educacao_censo, estab_saude_censo, desapropriados, faixa_servidao_cadastro, eixo, osm_roads_ba, hidrografia, cidades, nucleosvilaspovoados, sinalizadoresavifauna, comunidades, acessos, noaa21Fires72h, NPPFires72h, viirsFires72h, modisFires72h, frenteDeFogo, linhasdetransmissao
       ]
     });
 
@@ -1707,7 +1828,8 @@
       ]
     })
   
-    // Adicione um ID único a cada camada  
+    // Adicionar um ID único para cada camada
+
     tropicalia_municipios.set('layerId', 'tropicalia_municipiosLayer');
     faixa_servidao_cadastro.set('layerId', 'faixa_servidao_cadastroLayer');
     erosoes.set('layerId', 'erosoesLayer');
@@ -1734,6 +1856,11 @@
     declividade.set('layerId', 'declividadeLayer');
     ps_map_rf_2021.set('layerId', 'ps_map_rf_2021Layer');
     ps_map_rf_2023.set('layerId', 'ps_map_rf_2023Layer');
+    frenteDeFogo.set('layerId', 'frenteDeFogoLayer');    
+    modisFires72h.set('layerId', 'modisFires72hLayer');  
+    viirsFires72h.set('layerId', 'viirsFires72hLayer'); 
+    noaa21Fires72h.set('layerId', 'noaa21Fires72hLayer');         
+    NPPFires72h.set('layerId', 'NPPFires72h');       
     imoveis_rurais_car.set('layerId', 'imoveis_rurais_carLayer');
     imoveis_rurais_sigef.set('layerId', 'imoveis_rurais_sigefLayer');
     ucs_pi.set('layerId', 'ucs_piLayer');
@@ -1741,7 +1868,7 @@
     uf.set('layerId', 'ufLayer');
     biomas.set('layerId', 'biomasLayer');
   
-    // Adicione as camadas ao mapa OpenLayers  
+    // Carregar as camadas ao mapa OpenLayers  
     map.addLayer(faixa_servidao_cadastro);
     map.addLayer(erosoes);
     map.addLayer(obras_supressao);
@@ -1767,6 +1894,11 @@
     map.addLayer(declividade);
     map.addLayer(ps_map_rf_2021);
     map.addLayer(ps_map_rf_2023);
+    map.addLayer(frenteDeFogo); 
+    map.addLayer(modisFires72h);
+    map.addLayer(viirsFires72h);       
+    map.addLayer(noaa21Fires72h);    
+    map.addLayer(NPPFires72h);            
     map.addLayer(imoveis_rurais_car);
     map.addLayer(imoveis_rurais_sigef);
     map.addLayer(ucs_pi);
@@ -1776,15 +1908,14 @@
     map.addLayer(biomas);
     map.addLayer(baseLayerGroup);
     map.addLayer(checkboxGroup);
-    map.removeControl(map.getControls().getArray().find(control => control instanceof ol.control.Zoom));
-  
-    // Seleciona os radio buttons  
+   
+    // Selecção dos radio buttons (basemaps)
     const osmBasemapRadio = document.getElementById("osm-basemap-radio");
     const bing_basemapRadio = document.getElementById("bing-basemap-radio");
     const satellite2021Radio = document.getElementById("satellite-planet-2021-radio");
     const satellite2023Radio = document.getElementById("satellite-planet-2023-radio");
   
-    // Adiciona eventos de mudança aos radio buttons para alternar entre as camadas de mapa base  
+    // Adiciona eventos de mudança aos radio buttons para alternar entre as camadas de basemaps
     osmBasemapRadio.addEventListener("change", () => {
       if (osmBasemapRadio.checked) {
         osm_basemap.setVisible(true);
@@ -1823,88 +1954,49 @@
 
     var info = document.getElementById('info');
  
-// Mapeamento de campos adicionais para IDs de células - parece que isso não é usado diretamente no seu código de autocompletar, 
-// mas estou deixando aqui caso faça parte de uma lógica maior.
-const fieldCellIds = {
-  torreseq: 'torreseq',
-  torrekm: 'torrekm',
-  nm_mun: 'nm_mun',
-  tipo: 'tipo',
-  descricao: 'descricao',
-  obs: 'obs'                 
-};
-
-// Adiciona a funcionalidade de auto preenchimento.
-$('#valor').on('input', function () {
-  // Log no console quando o evento de entrada é acionado.
-  console.log("Evento de entrada acionado");
-  // Obtém os valores dos campos do formulário.
-  const atributo = $('[name="atributo"]').val();
-  const valor = $(this).val();
-  // Log no console os valores que estão sendo enviados.
-  console.log("Enviando:", atributo, valor);
-  // Faz a solicitação GET ao servidor.
-  $.get('/buscar_valores_torres', { atributo, valor })
-    .done(function(response) {
-      // Limpa a lista de auto preenchimento antes de adicionar novos valores.
-      const autoPreenchimento = $('#auto-preenchimento');
-      autoPreenchimento.empty();
-      // Adiciona cada valor retornado como uma opção na lista de auto preenchimento.
-      response.forEach(function(valor) {
-        autoPreenchimento.append('<option value="' + valor + '">');
-      });
-    })
-    .fail(function(jqXHR, textStatus, errorThrown) {
-      // Se a solicitação falhar, loga os erros no console.
-      console.error("Erro na solicitação AJAX:", textStatus, errorThrown);
-      // Loga informações adicionais sobre a resposta do erro.
-      console.error("Resposta do servidor:", jqXHR.responseText);
-    });
-});  
+    $('#valor').on('input', function () {
+      console.log("Evento de entrada acionado");
+      const atributo = $('[name="atributo"]').val();
+      const valor = $(this).val();
+      console.log("Enviando:", atributo, valor);
+      $.get('/buscar_valores_torres', { atributo, valor })
+        .done(function(response) {
+          const autoPreenchimento = $('#auto-preenchimento');
+          autoPreenchimento.empty();
+          response.forEach(function(valor) {
+            autoPreenchimento.append('<option value="' + valor + '">');
+          });
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+          console.error("Erro na solicitação AJAX:", textStatus, errorThrown);
+          console.error("Resposta do servidor:", jqXHR.responseText);
+        });
+    });  
     
     $('#search-form').submit(function (e) {
-      e.preventDefault(); // Impede o envio do formulário padrão
-
+      e.preventDefault();
       const atributo = $('[name="atributo"]').val();
       const valor = $('[name="valor"]').val();
-
       $.ajax({
         type: 'POST',
         url: '/buscar_torres',
         data: { atributo, valor },
         success: function (response) {
-
           map.removeLayer(pointLayer); 
           console.log(response)
-
-          // Verificar se há resultados na resposta do servidor
           if (response.rows && response.rows.length > 0) {     
-
-            // Criar um formato para ler as geometrias WKT
             const wkbFormat = new ol.format.WKB();
-
-            // Criar uma fonte de vetor para a camada de pontos
-            const pointSource = new ol.source.Vector();
-
-            // Iterar sobre os pontos na resposta            
-            response.rows.forEach(function (result, index) {    
-              
-              // Ler a geometria WKN da coluna "geom"
+            const pointSource = new ol.source.Vector();       
+            response.rows.forEach(function (result, index) {              
               const geometry = wkbFormat.readGeometry(result.geom, {
-                dataProjection: 'EPSG:4326', // ou a projeção original dos seus dados
-                featureProjection: map.getView().getProjection() // a projeção do seu mapa
+                dataProjection: 'EPSG:4326',
+                featureProjection: map.getView().getProjection()
             });
-            
-              // Criar um recurso de vetor com a geometria
               const pointFeature = new ol.Feature({
                 geometry: geometry,
-              });
-            
-              // Adicionar o recurso à fonte de vetor
+              });            
               pointSource.addFeature(pointFeature);
-            });
-          
-            // Criar uma camada de vetor para os pontos
+            });          
             pointLayer = new ol.layer.Vector({
               source: pointSource,
               style: new ol.style.Style({
@@ -1914,37 +2006,27 @@ $('#valor').on('input', function () {
                 }),
               }),
             });
-          
-            // Adicionar a camada de vetor dos pontos ao mapa
-            map.addLayer(pointLayer);
-            
-            const extent = pointLayer.getSource().getExtent(); // Obtenha o extent da camada            
-            const view = map.getView(); // Acesse a visão (view) do mapa             
-            const resolution = view.getResolutionForExtent(extent, map.getSize()); // Obtenha a resolução do zoom adequada para cobrir o extent da camada
-            const desiredZoomLevel = view.getZoomForResolution(resolution) - 2; // Defina o nível de zoom desejado (por exemplo, três níveis abaixo)            
-            const maxZoomLevel = 13; // Defina o nível de zoom máximo desejado           
-            const zoomLevel = Math.min(desiredZoomLevel, maxZoomLevel); // Garanta que o nível de zoom desejado não exceda o nível máximo
-            const newResolution = view.getResolutionForZoom(zoomLevel); // Configure a nova resolução com base no novo nível de zoom    
-
-            view.setCenter(ol.extent.getCenter(extent)); // Configure o centro da visão no centro do extent da camada             
-            view.setResolution(newResolution); // Defina a nova resolução        
-
+            map.addLayer(pointLayer);            
+            const extent = pointLayer.getSource().getExtent();          
+            const view = map.getView();       
+            const resolution = view.getResolutionForExtent(extent, map.getSize());
+            const desiredZoomLevel = view.getZoomForResolution(resolution) - 2;          
+            const maxZoomLevel = 13;         
+            const zoomLevel = Math.min(desiredZoomLevel, maxZoomLevel);
+            const newResolution = view.getResolutionForZoom(zoomLevel); 
+            view.setCenter(ol.extent.getCenter(extent));         
+            view.setResolution(newResolution);     
           } 
         },
-
         error: function (error) {
           console.error('Erro ao fazer a solicitação:', error);
         },
       });
     });
-  
-        
-    // Adicione um ouvinte de evento 'pointermove' ao mapa
+
     map.on('pointermove', function (posicaodomouse) {
       const coordinate = posicaodomouse.coordinate;
-      const viewResolution = view.getResolution();
-      
-      // URL para informações do município
+      const viewResolution = view.getResolution();      
       const urlMunicipios = info_municipios.getFeatureInfoUrl(
           coordinate,
           viewResolution,
@@ -1955,8 +2037,6 @@ $('#valor').on('input', function () {
               'exclude_nodata_result': 'true'
           }
       );
-  
-      // URL para informações da torre
       const urlTorres = info_torres.getFeatureInfoUrl(
           coordinate,
           viewResolution,
@@ -1966,9 +2046,7 @@ $('#valor').on('input', function () {
               'propertyName': 'TorreKm',
               'exclude_nodata_result': 'true'
           }
-      );
-  
-      // Solicitação de informações sobre o município
+      );        
       fetch(urlMunicipios)
           .then(response => response.json())
           .then(resposta => {
@@ -1977,8 +2055,6 @@ $('#valor').on('input', function () {
                   const properties = features[0]['properties'];
                   const nome_municipio = properties['nm_mun'] || 0;
                   const uf_municipio = properties['sigla_uf'] || 0;
-                  
-                  // Atualiza a div posicao_text com informações do município
                   posicao_text.innerHTML = `
                   <b>Município:</b> &nbsp;${nome_municipio} (${uf_municipio})<br>
                   <b>Latitude:</b> &nbsp;${coordinate[1].toFixed(4)}<br>
@@ -1986,8 +2062,6 @@ $('#valor').on('input', function () {
                   `;
               }
           });
-  
-      // Solicitação de informações sobre a torre
       fetch(urlTorres)
           .then(response => response.json())
           .then(resposta => {
@@ -1997,368 +2071,659 @@ $('#valor').on('input', function () {
                   const TorreKm = properties['TorreKm'] || 0;
                   
               }
-          });
+        });
+      });
+
+    const overlay = new ol.Overlay({
+      element: document.getElementById('popup'),
+      autoPan: true,
+      autoPanAnimation: {
+          duration: 250,
+      },
+    });
+    map.addOverlay(overlay);
+
+    const closer = document.getElementById('popup-closer');
+
+    closer.onclick = function() {
+        overlay.setPosition(undefined);
+        closer.blur(); // Isso remove o foco do botão 'closer' para evitar comportamentos inesperados do teclado
+        return false; // Previne a navegação padrão do link
+    };
+
+    let currentMeasurementType = 'Polygon'; 
+    const typeSelect = document.getElementById('measurementType');
+
+    const vectorSource = new ol.source.Vector();
+
+    const vectorLayer2 = new ol.layer.Vector({
+      source: vectorSource    
     });
 
-    
+    map.addLayer(vectorLayer2);
 
-    
-map.on('singleclick', function (evt) {
-  const coordinate = evt.coordinate;
-  const viewResolution = map.getView().getResolution();
+    const formatLength = function(line) {
+      const length = ol.sphere.getLength(line, {projection: 'EPSG:4326'});
+      let output;
+      if (length > 100) {
+          output = Math.round((length / 1000) * 100) / 100 + ' km';
+      } else {
+          output = Math.round(length * 100) / 100 + ' m';
+      }
+      return output;
+    };
 
-  // Declaração e uso da variável urlTorres
-  const urlTorres = info_torres.getFeatureInfoUrl(
-    evt.coordinate,
-    viewResolution,
-    'EPSG:4326',
-    {
-        'INFO_FORMAT': 'application/json',
-        'propertyName': 'TorreSeq,TorreKm,NM_Mun,Tipo,Desc,Obs',
-        'exclude_nodata_result': 'true'
+    const formatArea = function(polygon) {
+      const area = ol.sphere.getArea(polygon, {projection: 'EPSG:4326'});
+      let output;
+      if (area > 10000) {
+          output = Math.round((area / 10000) * 100) / 100 + ' ha';
+      } else {
+          output = Math.round(area * 100) / 100 + ' m²';
+      }
+      return output;
+    };
+
+    typeSelect.addEventListener('change', function() {
+      currentMeasurementType = this.value;
+      updateInteraction();
+    });
+
+    function updateInteraction() {
+      if (drawInteraction) {
+        map.removeInteraction(drawInteraction);
+      }
+      addInteraction(currentMeasurementType);
     }
-  );
 
-  // Declaração e uso da variável urlCadastro
-  const urlCadastro = info_cadastro.getFeatureInfoUrl(
-    evt.coordinate,
-    viewResolution,
-    'EPSG:4326',
-    {
-        'INFO_FORMAT': 'application/json',
-        'propertyName': 'geom,referencia,projeto,torres,statusnegociacao,proprietario,telefone,municipio',
-        'exclude_nodata_result': 'true'
-    }
-  );
+    var measureResult;
 
-  // Primeira chamada fetch para urlTorres
-  fetch(urlTorres)
-  .then((resp) => resp.json())
-  .then(function(resposta) {
-      const features = resposta['features'];
-      if (features && features.length > 0) {
-          const feature = features[0];
-          const properties = feature['properties'];
-          const TorreSeq = properties['TorreSeq'] || 'N/A';
-          const TorreKm = properties['TorreKm'] || 'N/A';
-          const NM_Mun = properties['NM_Mun'] || 'N/A';
-          const Tipo = properties['Tipo'] || 'N/A';
-          const Desc = properties['Desc'] || 'N/A';
-          const Obs = properties['Obs'] || 'N/A';
+    function addInteraction(value) {
+
+      if (!value) return;
+    
+      drawInteraction = new ol.interaction.Draw({
+        source: vectorSource,
+        type: value,
+      });
+    
+      map.addInteraction(drawInteraction);
+    
+      drawInteraction.on('drawend', function(evt) {
+        
+        const geometry = evt.feature.getGeometry();
       
-          // Atualiza a interface do usuário com os dados das torres
-          torres_tab.innerHTML = `
+        if (geometry.getType() === 'LineString') {
+            measureResult = formatLength(geometry);
+        } else if (geometry.getType() === 'Polygon') {
+            measureResult = formatArea(geometry);
+        }
+      
+        const medicoesDiv = document.getElementById('medicoes-resultado');
+        medicoesDiv.innerHTML = measureResult; 
+        medicoesDiv.style.display = 'block'; 
+      });      
+    }
+
+    function exibirLinksFeicoes(features) {
+      const container = document.getElementById('atributos-kml');
+      container.innerHTML = ''; 
+  
+      features.forEach((feature, index) => {
+          const name = feature.get('name') || `Feição ${index + 1}`;
+  
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = true; 
+          checkbox.addEventListener('change', function() {
+              if (this.checked) {
+                  feature.setStyle(undefined); 
+              } else {
+                  feature.setStyle(new ol.style.Style({})); 
+              }
+          });
+  
+          const link = document.createElement('a');
+          link.href = '#';
+          link.textContent = name;
+          link.style.marginLeft = '8px';
+          link.addEventListener('click', (e) => {
+              e.preventDefault();
+              visualizarFeicaoNoMapa(feature);
+          });
+  
+          container.appendChild(checkbox);
+          container.appendChild(link);
+          container.appendChild(document.createElement('br'));
+      });
+    }
+  
+    function visualizarFeicaoNoMapa(feature) {
+        const geometry = feature.getGeometry();
+        const extent = geometry.getExtent();
+        map.getView().fit(extent, {duration: 1000, padding: [10, 10, 10, 10]});
+    }  
+
+    function visualizarFeicaoNoMapa(feature) {
+      const geometry = feature.getGeometry();
+      const extent = geometry.getExtent();
+      map.getView().fit(extent, { duration: 1000, padding: [50, 50, 50, 50] });
+    }  
+
+    function exibirAtributosKML(features) {
+      var atributosHtml = '<ul>';  
+      features.forEach(function(feature) {
+          var properties = feature.getProperties();          
+          delete properties.geometry;          
+          atributosHtml += '<li><strong>Feição</strong><ul>';          
+          for (var key in properties) {
+              atributosHtml += '<li>' + key + ': ' + properties[key] + '</li>';
+          }          
+          atributosHtml += '</ul></li>';
+      });  
+      atributosHtml += '</ul>';  
+      document.getElementById('atributos-kml').innerHTML = atributosHtml;
+      }  
+
+    const significadosTempo = {
+      ec: "Encoberto com chuvas isoladas",
+      ci: "Chuvas Isoladas",
+      c: "Chuva",
+      in: "Instável",
+      pp: "Poss. de Pancadas de Chuva",
+      cm: "Chuva pela Manhã",
+      cn: "Chuva a Noite",
+      pt: "Pancadas de Chuva a Tarde",
+      pm: "Pancadas de Chuva pela Manhã",
+      np: "Nublado e Pancadas de Chuva",
+      pc: "Pancadas de Chuva",
+      pn: "Parcialmente Nublado",
+      cv: "Chuvisco",
+      ch: "Chuvoso",
+      t: "Tempestade",
+      ps: "Predomínio de Sol",
+      e: "Encoberto",
+      n: "Nublado",
+      cl: "Céu Claro",
+      nv: "Nevoeiro",
+      g: "Geada",
+      ne: "Neve",
+      nd: "Não Definido",
+      pnt: "Pancadas de Chuva a Noite",
+      psc: "Possibilidade de Chuva",
+      pcm: "Possibilidade de Chuva pela Manhã",
+      pct: "Possibilidade de Chuva a Tarde",
+      pcn: "Possibilidade de Chuva a Noite",
+      npt: "Nublado com Pancadas a Tarde",
+      npn: "Nublado com Pancadas a Noite",
+      ncn: "Nublado com Poss. de Chuva a Noite",
+      nct: "Nublado com Poss. de Chuva a Tarde",
+      ncm: "Nubl. c/ Poss. de Chuva pela Manhã",
+      npm: "Nublado com Pancadas pela Manhã",
+      npp: "Nublado com Possibilidade de Chuva",
+      vn: "Variação de Nebulosidade",
+      ct: "Chuva a Tarde",
+      ppn: "Poss. de Panc. de Chuva a Noite",
+      ppt: "Poss. de Panc. de Chuva a Tarde",
+      ppm: "Poss. de Panc. de Chuva pela Manhã"
+    };
+
+    function carregarPrevisaoDoTempo(lat, lon) {
+      var apiUrl = `http://servicos.cptec.inpe.br/XML/cidade/7dias/${lat}/${lon}/previsaoLatLon.xml`;
+    
+      fetch(apiUrl)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Erro na requisição: ' + response.statusText);
+          }
+          return response.arrayBuffer();
+      })
+      .then(buffer => {
+          const decoder = new TextDecoder('iso-8859-1');
+          const text = decoder.decode(buffer);
+          return text;
+      })
+      .then(str => {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(str, "application/xml");
+      
+          const nome = xmlDoc.getElementsByTagName("nome")[0]?.childNodes[0]?.nodeValue || "Nome não disponível";
+          const uf = xmlDoc.getElementsByTagName("uf")[0]?.childNodes[0]?.nodeValue || "UF não disponível";
+      
+          const nomeFormatado = normalizarString(nome);
+          const ufFormatado = normalizarString(uf);
+      
+          let conteudoHtml = `<table class="table custom-table-width rounded-table small-table">
+                                 <tbody>
+                                    <tr>
+                                        <th class="small-font"><b>Dia</b></th>
+                                        <th class="small-font"><b>Min (°C)</b></th>
+                                        <th class="small-font"><b>Max (°C)</b></th>
+                                        <th class="small-font"><b>Tempo</b></th>
+                                    </tr>`;
+                                  
+          const previsoes = xmlDoc.getElementsByTagName("previsao");
+          for (let i = 0; i < previsoes.length; i++) {
+              const dia = previsoes[i].getElementsByTagName("dia")[0]?.childNodes[0]?.nodeValue || "Data não disponível";
+              const maxima = previsoes[i].getElementsByTagName("maxima")[0]?.childNodes[0]?.nodeValue || "-";
+              const minima = previsoes[i].getElementsByTagName("minima")[0]?.childNodes[0]?.nodeValue || "-";
+              let tempo = previsoes[i].getElementsByTagName("tempo")[0]?.childNodes[0]?.nodeValue;
+              tempo = significadosTempo[tempo] || "Descrição não disponível";
+          
+              conteudoHtml += `<tr>
+                                   <td class="small-font">${dia}</td>
+                                   <td class="small-font">${minima}</td>
+                                   <td class="small-font">${maxima}</td>
+                                   <td class="small-font">${tempo}</td>
+                               </tr>`;
+          }
+        
+          const link = `https://previsaonumerica.cptec.inpe.br/novo/meteograma/wrf7/${ufFormatado}/${nomeFormatado}`;
+        
+          conteudoHtml += `</tbody></table>
+              <div class="cidade-info">
+                  <i><b>Obs:</b> Previsão do tempo para <a href="${link}" target="_blank">${nome} - ${uf}</a> (cidade mais próxima do ponto indicado). Fonte: CPTEC/INPE</i>
+              </div><br>`;
+            
+          document.getElementById('previsaotempo').innerHTML = conteudoHtml;
+            
+          document.querySelector('.expand-content').style.display = 'block';
+      })
+      .catch(error => {
+          console.error('Falha ao carregar a previsão do tempo:', error);
+      });
+    }
+  
+    function normalizarString(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove acentos
+               .toLowerCase() // Converte para minúsculas
+               .trim() // Remove espaços no início e fim
+               .replace(/\s+/g, "-"); // Substitui espaços por "-"
+    }
+       
+    map.on('singleclick', function (evt) {
+      const coordinate = evt.coordinate;
+      const viewResolution = map.getView().getResolution();
+    
+      const urlTorres = info_torres.getFeatureInfoUrl(
+        evt.coordinate,
+        viewResolution,
+        'EPSG:4326',
+        {
+            'INFO_FORMAT': 'application/json',
+            'propertyName': 'TorreSeq,TorreKm,NM_Mun,Tipo,Desc,Obs',
+            'exclude_nodata_result': 'true'
+        });
+      
+      const urlCadastro = info_cadastro.getFeatureInfoUrl(
+        evt.coordinate,
+        viewResolution,
+        'EPSG:4326',
+        {
+            'INFO_FORMAT': 'application/json',
+            'propertyName': 'geom,referencia,projeto,torres,statusnegociacao,proprietario,telefone,municipio',
+            'exclude_nodata_result': 'true'
+        });
+      
+      const lat = coordinate[1].toFixed(4);
+      const lon = coordinate[0].toFixed(4);
+      
+      carregarPrevisaoDoTempo(lat, lon);
+      
+      map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+        if (layer === frenteDeFogo) {
+            const idEvento = feature.get('id_evento') || 'N/A';
+            const dtAtualizacao = feature.get('dt_atualizacao') || 'N/A';
+            const dtDeteccao = feature.get('dt_deteccao') || 'N/A';
+        
+            const content = `<div style="text-align: center;"><img src="images/icone_fogo.png" style="height: 12px; width: auto;"><strong>&nbsp&nbsp;FRENTE DE FOGO</strong><br></div>
+                             <br>
+                             <strong>ID do evento:</strong> ${idEvento}<br>
+                             <strong>Atualização:</strong> ${dtAtualizacao}<br>
+                             <strong>Detecção:</strong> ${dtDeteccao}<br>
+                             <div><strong>Latitude:</strong> ${lat}<br>
+                            <strong>Longitude:</strong> ${lon}</div>`;
+            document.getElementById('popup-content').innerHTML = content;
+                            
+            overlay.setPosition(evt.coordinate);
+                            
+            return true;
+        }
+      });
+      
+      fetch(urlTorres)
+      .then((resp) => resp.json())
+      .then(function(resposta) {
+          const features = resposta['features'];
+          if (features && features.length > 0) {
+              const feature = features[0];
+              const properties = feature['properties'];
+              const TorreSeq = properties['TorreSeq'] || 'N/A';
+              const TorreKm = properties['TorreKm'] || 'N/A';
+              const NM_Mun = properties['NM_Mun'] || 'N/A';
+              const Tipo = properties['Tipo'] || 'N/A';
+              const Desc = properties['Desc'] || 'N/A';
+              const Obs = properties['Obs'] || 'N/A';
+          
+              torres_tab.innerHTML = `
+                  <div id="resultados">
+                  <table class="table custom-table-width rounded-table small-table">                
+                          <tbody>
+                              <tr id="referenciaRow">
+                                  <td class="small-font"><b>ID (sequencial):</b> ${TorreSeq}</td>
+                              </tr>
+                              <tr id="projetoRow">
+                                  <td class="small-font"><b>ID (km):</b> ${TorreKm}</td>
+                              </tr>   
+                              <tr id="torresRow">
+                                  <td class="small-font"><b>Tipo:</b> ${Tipo}</td>
+                              </tr>  
+                              <tr id="statusnegociacaoRow">
+                                  <td class="small-font"><b>Descrição:</b> ${Desc}</td>
+                              </tr>  
+                              <tr id="proprietarioRow">
+                                  <td class="small-font"><b>Observação:</b> ${Obs}</td>
+                              </tr>
+                              <tr id="municipioRow">
+                                  <td class="small-font"><b>Município:</b> ${NM_Mun}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                  <div id="paginacao">
+                  </div>
+              `;
+          } else {
+              torres_tab.innerHTML = `
               <div id="resultados">
-              <table class="table custom-table-width rounded-table small-table">                
-                      <tbody>
-                          <tr id="referenciaRow">
-                              <td class="small-font"><b>ID (sequencial):</b> ${TorreSeq}</td>
-                          </tr>
-                          <tr id="projetoRow">
-                              <td class="small-font"><b>ID (km):</b> ${TorreKm}</td>
-                          </tr>   
-                          <tr id="torresRow">
-                              <td class="small-font"><b>Tipo:</b> ${Tipo}</td>
-                          </tr>  
-                          <tr id="statusnegociacaoRow">
-                              <td class="small-font"><b>Descrição:</b> ${Desc}</td>
-                          </tr>  
-                          <tr id="proprietarioRow">
-                              <td class="small-font"><b>Observação:</b> ${Obs}</td>
-                          </tr>
-                          <tr id="municipioRow">
-                              <td class="small-font"><b>Município:</b> ${NM_Mun}</td>
-                          </tr>
-                      </tbody>
-                  </table>
+                <table class="table custom-table-width rounded-table small-table">                
+                        <tbody>
+                            <tr id="referenciaRow">
+                                <td class="small-font"><b>ID (sequencial):</b> - </td>
+                            </tr>
+                            <tr id="projetoRow">
+                                <td class="small-font"><b>ID (km):</b> - </td>
+                            </tr>   
+                            <tr id="torresRow">
+                                <td class="small-font"><b>Tipo:</b> - </td>
+                            </tr>  
+                            <tr id="statusnegociacaoRow">
+                                <td class="small-font"><b>Descrição:</b> - </td>
+                            </tr>  
+                            <tr id="proprietarioRow">
+                                <td class="small-font"><b>Observação:</b> - </td>
+                            </tr>
+                            <tr id="municipioRow">
+                                <td class="small-font"><b>Município:</b> - </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="paginacao">
+                </div>
+                `;
+          }
+      });
+    
+      fetch(urlCadastro)
+      .then((resp) => resp.json())
+      .then(function(resposta) {
+          const features = resposta['features'];
+          if (features && features.length > 0) {
+              const feature = features[0];
+              const properties = feature['properties'];
+              const Referencia = properties['referencia'] || 'N/A';
+              const Projeto = properties['projeto'] || 'N/A';
+              const Torres = properties['torres'] || 'N/A';
+              const StatusNegociacao = properties['statusnegociacao'] || 'N/A';
+              const Proprietario = properties['proprietario'] || 'N/A';   
+              const Telefone = properties['telefone'] || 'N/A';
+              const Municipio = properties['municipio'] || 'N/A';
+          
+          cadastro_tab.innerHTML = `
+          <div id="resultados">        
+          <table class="table custom-table-width rounded-table small-table">                
+                  <tbody>
+                      <tr id="referenciaRow">
+                          <td class="small-font"><b>Referência:</b> ${Referencia}</td>
+                      </tr>
+                      <tr id="projetoRow">
+                          <td class="small-font"><b>Projeto:</b> ${Projeto}</td>
+                      </tr>   
+                      <tr id="torresRow">
+                          <td class="small-font"><b>Torres:</b> ${Torres}</td>
+                      </tr>  
+                      <tr id="statusnegociacaoRow">
+                          <td class="small-font"><b>Status de Negociação:</b> ${StatusNegociacao}</td>
+                      </tr>  
+                      <tr id="proprietarioRow">
+                        <td class="small-font"><b>Proprietário:</b> ${Proprietario}</td>
+                    </tr>
+                      <tr id="telefoneRow">
+                          <td class="small-font"><b>Telefone:</b> ${Telefone}</td>
+                      </tr>
+                      <tr id="municipioRow">
+                          <td class="small-font"><b>Município:</b> ${Municipio}</td>
+                      </tr>
+                  </tbody>
+              </table>
               </div>
               <div id="paginacao">
-              </div>
-          `;
-      } else {
-          // Limpa o conteúdo de torres_tab se nenhuma feição for encontrada
-          torres_tab.innerHTML = `
-          <div id="resultados">
+            </div>
+          `        
+         } else {
+          cadastro_tab.innerHTML = `
+          <div id="resultados">        
             <table class="table custom-table-width rounded-table small-table">                
                     <tbody>
                         <tr id="referenciaRow">
-                            <td class="small-font"><b>ID (sequencial):</b> - </td>
+                            <td class="small-font"><b>Referência:</b> -</td>
                         </tr>
                         <tr id="projetoRow">
-                            <td class="small-font"><b>ID (km):</b> - </td>
+                            <td class="small-font"><b>Projeto:</b> -</td>
                         </tr>   
                         <tr id="torresRow">
-                            <td class="small-font"><b>Tipo:</b> - </td>
+                            <td class="small-font"><b>Torres:</b> -</td>
                         </tr>  
                         <tr id="statusnegociacaoRow">
-                            <td class="small-font"><b>Descrição:</b> - </td>
+                            <td class="small-font"><b>Status de Negociação:</b> -</td>
                         </tr>  
                         <tr id="proprietarioRow">
-                            <td class="small-font"><b>Observação:</b> - </td>
+                          <td class="small-font"><b>Proprietário:</b> -</td>
+                      </tr>
+                        <tr id="telefoneRow">
+                            <td class="small-font"><b>Telefone:</b> -</td>
                         </tr>
                         <tr id="municipioRow">
-                            <td class="small-font"><b>Município:</b> - </td>
+                            <td class="small-font"><b>Município:</b> -</td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div id="paginacao">
-            </div>
+                </div>
+                <div id="paginacao">
+              </div>
             `;
       }
-  });
-
-  // Segunda chamada fetch para urlCadastro
-  fetch(urlCadastro)
-  .then((resp) => resp.json())
-  .then(function(resposta) {
-      const features = resposta['features'];
-      if (features && features.length > 0) {
-          const feature = features[0];
-          const properties = feature['properties'];
-          const Referencia = properties['referencia'] || 'N/A';
-          const Projeto = properties['projeto'] || 'N/A';
-          const Torres = properties['torres'] || 'N/A';
-          const StatusNegociacao = properties['statusnegociacao'] || 'N/A';
-          const Proprietario = properties['proprietario'] || 'N/A';   
-          const Telefone = properties['telefone'] || 'N/A';
-          const Municipio = properties['municipio'] || 'N/A';
-
-      cadastro_tab.innerHTML = `
-      <div id="resultados">        
-      <table class="table custom-table-width rounded-table small-table">                
-              <tbody>
-                  <tr id="referenciaRow">
-                      <td class="small-font"><b>Referência:</b> ${Referencia}</td>
-                  </tr>
-                  <tr id="projetoRow">
-                      <td class="small-font"><b>Projeto:</b> ${Projeto}</td>
-                  </tr>   
-                  <tr id="torresRow">
-                      <td class="small-font"><b>Torres:</b> ${Torres}</td>
-                  </tr>  
-                  <tr id="statusnegociacaoRow">
-                      <td class="small-font"><b>Status de Negociação:</b> ${StatusNegociacao}</td>
-                  </tr>  
-                  <tr id="proprietarioRow">
-                    <td class="small-font"><b>Proprietário:</b> ${Proprietario}</td>
-                </tr>
-                  <tr id="telefoneRow">
-                      <td class="small-font"><b>Telefone:</b> ${Telefone}</td>
-                  </tr>
-                  <tr id="municipioRow">
-                      <td class="small-font"><b>Município:</b> ${Municipio}</td>
-                  </tr>
-              </tbody>
-          </table>
-          </div>
-          <div id="paginacao">
-        </div>
-      `        
-     } else {
-      // Limpa o conteúdo de torres_tab se nenhuma feição for encontrada
-      cadastro_tab.innerHTML = `
-      <div id="resultados">        
-        <table class="table custom-table-width rounded-table small-table">                
-                <tbody>
-                    <tr id="referenciaRow">
-                        <td class="small-font"><b>Referência:</b> -</td>
-                    </tr>
-                    <tr id="projetoRow">
-                        <td class="small-font"><b>Projeto:</b> -</td>
-                    </tr>   
-                    <tr id="torresRow">
-                        <td class="small-font"><b>Torres:</b> -</td>
-                    </tr>  
-                    <tr id="statusnegociacaoRow">
-                        <td class="small-font"><b>Status de Negociação:</b> -</td>
-                    </tr>  
-                    <tr id="proprietarioRow">
-                      <td class="small-font"><b>Proprietário:</b> -</td>
-                  </tr>
-                    <tr id="telefoneRow">
-                        <td class="small-font"><b>Telefone:</b> -</td>
-                    </tr>
-                    <tr id="municipioRow">
-                        <td class="small-font"><b>Município:</b> -</td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-            <div id="paginacao">
-          </div>
-        `;
-  }
-    });
-
-    let innerHTMLCamadas = '<table class="table custom-table-width rounded-table small-table"><tbody>';
-
-      // Processa a camada 'dadosMunicipios'
-      const urlDadosMunicipios = info_municipios.getFeatureInfoUrl(
-          coordinate,
-          viewResolution,
-          'EPSG:4326',
-          {'INFO_FORMAT': 'application/json', 'propertyName': 'nm_mun,sigla_uf', 'exclude_nodata_result': 'true'}
-      );
-  
-      fetch(urlDadosMunicipios).then(resp => resp.json()).then(resposta => {
-          const municipioInfo = resposta['features'];
-          let municipio = municipioInfo.length > 0 ? municipioInfo[0]['properties']['nm_mun'] : 'N/A';
-          let uf = municipioInfo.length > 0 ? municipioInfo[0]['properties']['sigla_uf'] : 'N/A';
-  
-          innerHTMLCamadas += `<tr><td class="small-font"><b>Município:</b> ${municipio} (${uf})</td></tr>`;
-  
-          // Continua a cadeia de promessas para outras camadas
-          return Promise.all([
-              comunidadesCheckbox.checked && comunidadesLayer.getVisible() ? 
-                  fetch(comunidadesLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'Comunidade', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
-              desapropriadosCheckbox.checked && desapropriadosLayer.getVisible() ?
-                  fetch(desapropriadosLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'NomeProprietario,TipoImovel', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
-              sinalizadoresavifaunaCheckbox.checked && sinalizadoresavifaunaLayer.getVisible() ?
-                  fetch(sinalizadoresavifaunaLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'Sinalizador', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
-              nucleosvilaspovoadosCheckbox.checked && nucleosvilaspovoadosLayer.getVisible() ?
-                  fetch(nucleosvilaspovoadosLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'NM_LOCALID', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
-              linhasdetransmissaoCheckbox.checked && linhasdetransmissaoLayer.getVisible() ?
-                  fetch(linhasdetransmissaoLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'EMPREEM', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
-              biomasCheckbox.checked && biomasLayer.getVisible() ?
-                  fetch(biomasLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'Bioma', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
-              altitudeCheckbox.checked && altitudeLayer.getVisible() ?
-                  fetch(altitudeLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'GRAY_INDEX', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
-              declividadeCheckbox.checked && declividadeLayer.getVisible() ?
-                  fetch(declividadeLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'GRAY_INDEX', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),              
-              hidrografiaCheckbox.checked && hidrografiaLayer.getVisible() ?
-                  fetch(hidrografiaLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'nome', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),              
-              ucs_usCheckbox.checked && ucs_usLayer.getVisible() ?
-                  fetch(ucs_usLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'nome,categoria,grupo,esfera,anocriacao', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
-              ucs_piCheckbox.checked && ucs_piLayer.getVisible() ?
-                  fetch(ucs_piLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'nome,categoria,grupo,esfera,anocriacao', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null)
-          ]);
-      }).then(([comunidadeRes, desapropriadosRes, sinalizadoresRes, nucleosvilaspovoadosRes, linhasdetransmissaoRes, biomasRes, altitudeRes, declividadeRes, hidrografiaRes, ucs_usRes, ucs_piRes]) => {
-          if (comunidadeRes && comunidadeRes['features'].length > 0) {
-              const comunidade = comunidadeRes['features'][0]['properties']['Comunidade'];
-              innerHTMLCamadas += `<tr><td class="small-font"><b>Comunidade visitada:</b> ${comunidade}</td></tr>`;
-          }
-          if (desapropriadosRes && desapropriadosRes['features'].length > 0) {
-              const nomeDesapropriado = desapropriadosRes['features'][0]['properties']['NomeProprietario'];
-              const tipoImovel = desapropriadosRes['features'][0]['properties']['TipoImovel'];
-              innerHTMLCamadas += `<tr><td class="small-font"><b>Imóvel desapropriado:</b> ${tipoImovel}</td></tr>`;
-              innerHTMLCamadas += `<tr><td class="small-font"><b>Nome do desapropriado:</b> ${nomeDesapropriado}</td></tr>`;              
-          }
-          if (sinalizadoresRes && sinalizadoresRes['features'].length > 0) {
-              const Sinalizador = sinalizadoresRes['features'][0]['properties']['Sinalizador'];
-              innerHTMLCamadas += `<tr><td class="small-font"><b>Sinalizador de avifauna:</b> ${Sinalizador}</td></tr>`;
-          }
-          if (nucleosvilaspovoadosRes && nucleosvilaspovoadosRes['features'].length > 0) {
-            const Localidade = nucleosvilaspovoadosRes['features'][0]['properties']['NM_LOCALID'];
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Núcleo, vila ou povoado:</b> ${Localidade}</td></tr>`;
-          }
-          if (linhasdetransmissaoRes && linhasdetransmissaoRes['features'].length > 0) {
-            const LinhasTransmissao = linhasdetransmissaoRes['features'][0]['properties']['EMPREEM'];
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Linha de transmissão:</b> ${LinhasTransmissao}</td></tr>`;
-          }
-          if (biomasRes && biomasRes['features'].length > 0) {
-            const Bioma = biomasRes['features'][0]['properties']['Bioma'];
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Bioma:</b> ${Bioma}</td></tr>`;
-          }
-          if (altitudeRes && altitudeRes['features'].length > 0) {
-            const AltitudeM = altitudeRes['features'][0]['properties']['GRAY_INDEX'];
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Altitude:</b> ${AltitudeM} metros</td></tr>`;
-          }
-          if (declividadeRes && declividadeRes['features'].length > 0) {
-            const DeclividadePct = declividadeRes['features'][0]['properties']['GRAY_INDEX'];
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Declividade:</b> ${(DeclividadePct / 100).toFixed(2)}%</td></tr>`;
-          }
-          if (hidrografiaRes && hidrografiaRes['features'].length > 0) {
-            const NomeRio = hidrografiaRes['features'][0]['properties']['nome'];
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Curso d'água:</b> ${NomeRio}</td></tr>`;
-          }
-          if (ucs_usRes && ucs_usRes['features'].length > 0) {
-            const NomeUCUS = ucs_usRes['features'][0]['properties']['nome'];
-            const CategoriaUCUS = ucs_usRes['features'][0]['properties']['categoria'];
-            const GrupoUCUS = ucs_usRes['features'][0]['properties']['grupo'];
-            const EsferaUCUS = ucs_usRes['features'][0]['properties']['esfera'];
-            const AnoCriacaoUCUS = ucs_usRes['features'][0]['properties']['anocriacao'];
-            innerHTMLCamadas += `<tr><td class="small-font"><br><b>Unidade de Conservação (Uso Sustentável)</b></td></tr>`;
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Nome:</b> ${NomeUCUS}</td></tr>`;
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Categoria:</b> ${CategoriaUCUS}</td></tr>`;
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Esfera:</b> ${EsferaUCUS}</td></tr>`;
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Ano de criação:</b> ${AnoCriacaoUCUS}</td></tr>`;
-        }
-          if (ucs_piRes && ucs_piRes['features'].length > 0) {
-            const NomeUCPI = ucs_piRes['features'][0]['properties']['nome'];
-            const CategoriaUCPI = ucs_piRes['features'][0]['properties']['categoria'];
-            const GrupoUCPI = ucs_piRes['features'][0]['properties']['grupo'];
-            const EsferaUCPI = ucs_piRes['features'][0]['properties']['esfera'];
-            const AnoCriacaoUCPI = ucs_piRes['features'][0]['properties']['anocriacao'];
-            innerHTMLCamadas += `<tr><td class="small-font"><br><b>Unidade de Conservação (Proteção Integral)</b></td></tr>`;
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Nome:</b> ${NomeUCPI}</td></tr>`;
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Categoria:</b> ${CategoriaUCPI}</td></tr>`;
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Esfera:</b> ${EsferaUCPI}</td></tr>`;
-            innerHTMLCamadas += `<tr><td class="small-font"><b>Ano de criação:</b> ${AnoCriacaoUCPI}</td></tr>`;
-        }
-          innerHTMLCamadas += '</tbody></table>';
-          document.getElementById('camadas_tab').innerHTML = innerHTMLCamadas;
-      }).catch(error => {
-          console.error('Erro ao obter informações das camadas:', error);
-      });
-  });
-
-  const layerTitles = {}; // Define layerTitles no escopo global
-
-  function updateLegend() {
-    var legendHtml = ''; // Inicializa a string que conterá o HTML da legenda    
-
-    map.getLayers().forEach(layer => {
-        if (layer instanceof ol.layer.Tile && layer.getVisible()) {
-            var source = layer.getSource();
-            if (source instanceof ol.source.TileWMS) {
-                var url = source.getUrls()[0];
-                var params = source.getParams();
-                var layerName = params['LAYERS'];
-                var layerTitle = layerTitles[layerName] || layerName; // Usa o título do mapeamento ou o nome da camada como fallback
-
-                var legendOptions = 'forceLabels:on;layout:vertical;columns:1;wrap_limit:12;labelMargin:8;dx:10;dy:0.1;my:0.2';
-                var legendUrl = url + '?REQUEST=GetLegendGraphic&VERSION=1.1.0&FORMAT=image/png&TRANSPARENT=true&LAYER=' +
-                                layerName + '&LEGEND_OPTIONS=' + legendOptions;
-
-                legendHtml += '<div><strong>' + layerTitle + '</strong><br><img src="' + legendUrl + '" style="max-width: 360px;"></div><br>';
-            }
-        }
-    });
-
-    document.getElementById('legenda').innerHTML = legendHtml;
-}
-
-function fetchLayerTitles() {
-  var url = 'http://localhost:8080/geoserver/ows?service=WMS&version=1.3.0&request=GetCapabilities';
-  fetch(url)
-  .then(response => response.text())
-  .then(text => {
-      var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(text, "application/xml");
-      var layers = xmlDoc.getElementsByTagName("Layer");
-
-      for (let layer of layers) {
-          var name = layer.getElementsByTagName("Name")[0]?.textContent;
-          var title = layer.getElementsByTagName("Title")[0]?.textContent;
-          if (name && title) { // Certifique-se de que ambos, nome e título, estão presentes
-              layerTitles[name] = title;
-          }
-      }
+        });
       
-      updateLegend(); // Atualiza a legenda após preencher layerTitles
-  });
-}
+        let innerHTMLCamadas = '<table class="table custom-table-width rounded-table small-table"><tbody>';
+        
+          const urlDadosMunicipios = info_municipios.getFeatureInfoUrl(
+              coordinate,
+              viewResolution,
+              'EPSG:4326',
+              {'INFO_FORMAT': 'application/json', 'propertyName': 'nm_mun,sigla_uf', 'exclude_nodata_result': 'true'}
+          );
+        
+          fetch(urlDadosMunicipios).then(resp => resp.json()).then(resposta => {
+              const municipioInfo = resposta['features'];
+              let municipio = municipioInfo.length > 0 ? municipioInfo[0]['properties']['nm_mun'] : 'N/A';
+              let uf = municipioInfo.length > 0 ? municipioInfo[0]['properties']['sigla_uf'] : 'N/A';
+          
+              innerHTMLCamadas += `<tr><td class="small-font"><b>Município:</b> ${municipio} (${uf})</td></tr>`;          
+              innerHTMLCamadas += `<tr><td class="small-font"><b>Latitude:</b> ${lat}</td></tr>`; 
+              innerHTMLCamadas += `<tr><td class="small-font"><b>Longitude:</b> ${lon}</td></tr>`;  
 
-fetchLayerTitles(); // Chama a função para preencher layerTitles no início
+              const frenteDeFogoURL = `https://panorama.sipam.gov.br/geoserver/painel_do_fogo/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=painel_do_fogo:mv_frente_deteccao&outputFormat=application/json&srsname=EPSG:4674`;
+                    
+              return Promise.all([
+                  comunidadesCheckbox.checked && comunidadesLayer.getVisible() ? 
+                      fetch(comunidadesLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'Comunidade', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
+                  desapropriadosCheckbox.checked && desapropriadosLayer.getVisible() ?
+                      fetch(desapropriadosLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'NomeProprietario,TipoImovel', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
+                  sinalizadoresavifaunaCheckbox.checked && sinalizadoresavifaunaLayer.getVisible() ?
+                      fetch(sinalizadoresavifaunaLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'Sinalizador', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
+                  nucleosvilaspovoadosCheckbox.checked && nucleosvilaspovoadosLayer.getVisible() ?
+                      fetch(nucleosvilaspovoadosLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'NM_LOCALID', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
+                  linhasdetransmissaoCheckbox.checked && linhasdetransmissaoLayer.getVisible() ?
+                      fetch(linhasdetransmissaoLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'EMPREEM', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
+                  biomasCheckbox.checked && biomasLayer.getVisible() ?
+                      fetch(biomasLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'Bioma', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
+                  altitudeCheckbox.checked && altitudeLayer.getVisible() ?
+                      fetch(altitudeLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'GRAY_INDEX', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
+                  declividadeCheckbox.checked && declividadeLayer.getVisible() ?
+                      fetch(declividadeLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'GRAY_INDEX', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),              
+                  osm_roads_baCheckbox.checked && osm_roads_baLayer.getVisible() ?
+                      fetch(osm_roads_ba.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'name,ref', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),              
+                  hidrografiaCheckbox.checked && hidrografiaLayer.getVisible() ?
+                      fetch(hidrografiaLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'nome', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),              
+                  ucs_usCheckbox.checked && ucs_usLayer.getVisible() ?
+                      fetch(ucs_usLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': 'nome,categoria,grupo,esfera,anocriacao', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
+                  ucs_piCheckbox.checked && ucs_piLayer.getVisible() ?              
+                      fetch(ucs_piLayer.getSource().getFeatureInfoUrl(coordinate, viewResolution, 'EPSG:4326', {'INFO_FORMAT': 'application/json', 'propertyName': '', 'exclude_nodata_result': 'true'})).then(resp => resp.json()) : Promise.resolve(null),
+                  ]);
+          }).then(([comunidadeRes, desapropriadosRes, sinalizadoresRes, nucleosvilaspovoadosRes, linhasdetransmissaoRes, biomasRes, altitudeRes, declividadeRes, osm_roads_baRes, hidrografiaRes, ucs_usRes, ucs_piRes]) => {
+              if (comunidadeRes && comunidadeRes['features'].length > 0) {
+                  const comunidade = comunidadeRes['features'][0]['properties']['Comunidade'];
+                  innerHTMLCamadas += `<tr><td class="small-font"><b>Comunidade visitada:</b> ${comunidade}</td></tr>`;
+              }
+              if (desapropriadosRes && desapropriadosRes['features'].length > 0) {
+                  const nomeDesapropriado = desapropriadosRes['features'][0]['properties']['NomeProprietario'];
+                  const tipoImovel = desapropriadosRes['features'][0]['properties']['TipoImovel'];
+                  innerHTMLCamadas += `<tr><td class="small-font"><b>Imóvel desapropriado:</b> ${tipoImovel}</td></tr>`;
+                  innerHTMLCamadas += `<tr><td class="small-font"><b>Nome do desapropriado:</b> ${nomeDesapropriado}</td></tr>`;              
+              }
+              if (sinalizadoresRes && sinalizadoresRes['features'].length > 0) {
+                  const Sinalizador = sinalizadoresRes['features'][0]['properties']['Sinalizador'];
+                  innerHTMLCamadas += `<tr><td class="small-font"><b>Sinalizador de avifauna:</b> ${Sinalizador}</td></tr>`;
+              }
+              if (nucleosvilaspovoadosRes && nucleosvilaspovoadosRes['features'].length > 0) {
+                const Localidade = nucleosvilaspovoadosRes['features'][0]['properties']['NM_LOCALID'];
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Núcleo, vila ou povoado:</b> ${Localidade}</td></tr>`;
+              }
+              if (linhasdetransmissaoRes && linhasdetransmissaoRes['features'].length > 0) {
+                const LinhasTransmissao = linhasdetransmissaoRes['features'][0]['properties']['EMPREEM'];
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Linha de transmissão:</b> ${LinhasTransmissao}</td></tr>`;
+              }
+              if (biomasRes && biomasRes['features'].length > 0) {
+                const Bioma = biomasRes['features'][0]['properties']['Bioma'];
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Bioma:</b> ${Bioma}</td></tr>`;
+              }
+              if (altitudeRes && altitudeRes['features'].length > 0) {
+                const AltitudeM = altitudeRes['features'][0]['properties']['GRAY_INDEX'];
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Altitude:</b> ${AltitudeM} metros</td></tr>`;
+              }
+              if (declividadeRes && declividadeRes['features'].length > 0) {
+                const DeclividadePct = declividadeRes['features'][0]['properties']['GRAY_INDEX'];
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Declividade:</b> ${(DeclividadePct / 100).toFixed(2)}%</td></tr>`;
+              }
+              if (osm_roads_baRes && osm_roads_baRes['features'].length > 0) {
+                const DescVia = osm_roads_baRes['features'][0]['properties']['name'];
+                const NomeVia = osm_roads_baRes['features'][0]['properties']['ref'];
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Código da via:</b> ${NomeVia}</td></tr>`;
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Nome da via:</b> ${DescVia}</td></tr>`;
+              }
+              if (hidrografiaRes && hidrografiaRes['features'].length > 0) {
+                const NomeRio = hidrografiaRes['features'][0]['properties']['nome'];
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Curso d'água:</b> ${NomeRio}</td></tr>`;
+              }
+              if (ucs_usRes && ucs_usRes['features'].length > 0) {
+                const NomeUCUS = ucs_usRes['features'][0]['properties']['nome'];
+                const CategoriaUCUS = ucs_usRes['features'][0]['properties']['categoria'];
+                const GrupoUCUS = ucs_usRes['features'][0]['properties']['grupo'];
+                const EsferaUCUS = ucs_usRes['features'][0]['properties']['esfera'];
+                const AnoCriacaoUCUS = ucs_usRes['features'][0]['properties']['anocriacao'];
+                innerHTMLCamadas += `<tr><td class="small-font"><br><b>Unidade de Conservação (Uso Sustentável)</b></td></tr>`;
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Nome:</b> ${NomeUCUS}</td></tr>`;
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Categoria:</b> ${CategoriaUCUS}</td></tr>`;
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Esfera:</b> ${EsferaUCUS}</td></tr>`;
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Ano de criação:</b> ${AnoCriacaoUCUS}</td></tr>`;
+            }
+              if (ucs_piRes && ucs_piRes['features'].length > 0) {
+                const NomeUCPI = ucs_piRes['features'][0]['properties']['nome'];
+                const CategoriaUCPI = ucs_piRes['features'][0]['properties']['categoria'];
+                const GrupoUCPI = ucs_piRes['features'][0]['properties']['grupo'];
+                const EsferaUCPI = ucs_piRes['features'][0]['properties']['esfera'];
+                const AnoCriacaoUCPI = ucs_piRes['features'][0]['properties']['anocriacao'];
+                innerHTMLCamadas += `<tr><td class="small-font"><br><b>Unidade de Conservação (Proteção Integral)</b></td></tr>`;
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Nome:</b> ${NomeUCPI}</td></tr>`;
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Categoria:</b> ${CategoriaUCPI}</td></tr>`;
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Esfera:</b> ${EsferaUCPI}</td></tr>`;
+                innerHTMLCamadas += `<tr><td class="small-font"><b>Ano de criação:</b> ${AnoCriacaoUCPI}</td></tr>`;
+            }
+          
+              innerHTMLCamadas += '</tbody></table>';
+              document.getElementById('camadas_tab').innerHTML = innerHTMLCamadas;
+          }).catch(error => {
+              console.error('Erro ao obter informações das camadas:', error);
+          });
+      });
+    
+    const layerTitles = {}; 
+    
+    function updateLegend() {
+      var legendHtml = ''; // Inicializa a string que conterá o HTML da legenda    
+    
+      map.getLayers().forEach(layer => {
+          if (layer instanceof ol.layer.Tile && layer.getVisible()) {
+              var source = layer.getSource();
+              if (source instanceof ol.source.TileWMS) {
+                  var url = source.getUrls()[0];
+                  var params = source.getParams();
+                  var layerName = params['LAYERS'];
+                  var layerTitle = layerTitles[layerName] || layerName; // Usa o título do mapeamento ou o nome da camada como fallback
+              
+                  var legendOptions = 'forceLabels:on;layout:vertical;columns:1;labelMargin:5;dx:10;dy:0.1;my:0.2';
+                  var legendUrl = url + '?REQUEST=GetLegendGraphic&VERSION=1.1.0&FORMAT=image/png&TRANSPARENT=true&LAYER=' +
+                                  layerName + '&LEGEND_OPTIONS=' + legendOptions;
+              
+                  legendHtml += '<div><strong>' + layerTitle + '</strong><br><img src="' + legendUrl + '" style="max-width: 360px;"></div><br>';
+              }
+          }
+      });
+    
+      // Adiciona uma legenda personalizada para a camada frenteDeFogo
+      if (frenteDeFogo.getVisible()) {
+          legendHtml += '<div><strong>Frente de fogo</strong><br>' +
+                        '<svg width="40" height="20"><circle cx="20" cy="10" r="4" stroke="yellow" stroke-width="1" fill="red" /></svg>' +
+                        '</div><br>';
+      }
+    
+      document.getElementById('legenda').innerHTML = legendHtml;
+    }
 
+    function fetchLayerTitles() {
+      var url = 'http://localhost:8080/geoserver/ows?service=WMS&version=1.3.0&request=GetCapabilities';
+      fetch(url)
+      .then(response => response.text())
+      .then(text => {
+          var parser = new DOMParser();
+          var xmlDoc = parser.parseFromString(text, "application/xml");
+          var layers = xmlDoc.getElementsByTagName("Layer");
+      
+          for (let layer of layers) {
+              var name = layer.getElementsByTagName("Name")[0]?.textContent;
+              var title = layer.getElementsByTagName("Title")[0]?.textContent;
+              if (name && title) { // Certifique-se de que ambos, nome e título, estão presentes
+                  layerTitles[name] = title;
+              }
+          }
 
-// Chame updateLegend() sempre que o estado de visibilidade de uma camada mudar.
-map.getLayers().on('change', updateLegend); // Escuta mudanças nas camadas
+          updateLegend(); // Atualiza a legenda após preencher layerTitles
+      });
+    }
 
-// Chame a função imediatamente para preencher a legenda quando a página carregar
-updateLegend();  
-  
+    map.getLayers().on('change', updateLegend); 
 
     const pageContent = document.querySelector('.page-content');  
     const toggleSidebarLeft = document.getElementById('toggleSidebarLeft');
@@ -2383,20 +2748,17 @@ updateLegend();
     const lt_tropicaliaToggle = document.getElementById("lt_tropicalia-toggle");
     const lt_tropicaliaContent = document.getElementById("lt_tropicalia-content");
 
-    // Adiciona um evento de clique ao elemento "> Torres"
-    lt_tropicaliaToggle.addEventListener("click", () => {
+    // Seleciona o elemento "Fogo" e a div de conteúdo
+    const fogoToggle = document.getElementById("fogo-toggle");
+    const fogoContent = document.getElementById("fogo-content");
 
-      // Altera a propriedade display da div de conteúdo
-      if (lt_tropicaliaContent.style.display === "none") {
-        lt_tropicaliaContent.style.display = "block";
-      } else {
-        lt_tropicaliaContent.style.display = "none";
-      }
-    });
-
-    // Seleciona o elemento "> Social" e a div de conteúdo
-    const socialToggle = document.getElementById("social-toggle");
-    const socialContent = document.getElementById("social-content");
+    // Seleciona o elemento "Ambiental" e a div de conteúdo
+    const ambientalToggle = document.getElementById("ambiental-toggle");
+    const ambientalContent = document.getElementById("ambiental-content");
+    
+    // Seleciona o elemento "Divisão territorial" e a div de conteúdo
+    const divisaoterritorialToggle = document.getElementById("divisaoterritorial-toggle");
+    const divisaoterritorialContent = document.getElementById("divisaoterritorial-content");
 
     // Seleciona o elemento "Infraestrutura" e a div de conteúdo
     const infraestruturaToggle = document.getElementById("infraestrutura-toggle");
@@ -2422,9 +2784,9 @@ updateLegend();
     const alertasToggle = document.getElementById("alertas-toggle");
     const alertasContent = document.getElementById("alertas-content");
 
-    // Seleciona o elemento "> Ambiental" e a div de conteúdo
-    const ambientalToggle = document.getElementById("ambiental-toggle");
-    const ambientalContent = document.getElementById("ambiental-content");
+    // Seleciona o elemento "> Dados complementares" e a div de conteúdo
+    const dadoscomplementaresToggle = document.getElementById("dadoscomplementares-toggle");
+    const dadoscomplementaresContent = document.getElementById("dadoscomplementares-content");
 
     // Seleciona o elemento "> Uso e cobertura do solo (2021/2023") (36,5 m)" e a div de conteúdo
     const transicoes36emeioToggle = document.getElementById("transicoes36emeio-toggle");
@@ -2438,20 +2800,46 @@ updateLegend();
     const transicoes450mToggle = document.getElementById("transicoes450m-toggle");
     const transicoes450mContent = document.getElementById("transicoes450m-content");
 
-    // Adiciona um evento de clique ao elemento "> Social"
-    socialToggle.addEventListener("click", () => {
+    // Seleciona o elemento "> Basemap" e a div de conteúdo
+    const basemapsToggle = document.getElementById("basemaps-toggle");
+    const basemapsContent = document.getElementById("basemaps-content");
 
-      // Altera a propriedade display da div de conteúdo
-      if (socialContent.style.display === "none") {
-        socialContent.style.display = "block";
+    // Seleciona o elemento de busca "> Torres" e a div de conteúdo
+    const buscatorresToggle = document.getElementById("buscatorres-toggle");
+    const buscatorresContent = document.getElementById("buscatorres-content");
+
+    // Adiciona um evento de clique ao elemento "Fogo"
+    fogoToggle.addEventListener("click", () => {
+         // Altera a propriedade display da div de conteúdo
+      if (fogoContent.style.display === "none") {
+        fogoContent.style.display = "block";
       } else {
-        socialContent.style.display = "none";
+        fogoContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento "Ambiental"
+    ambientalToggle.addEventListener("click", () => {
+         // Altera a propriedade display da div de conteúdo
+      if (ambientalContent.style.display === "none") {
+        ambientalContent.style.display = "block";
+      } else {
+        ambientalContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento "Divisao territorial"
+    divisaoterritorialToggle.addEventListener("click", () => {
+         // Altera a propriedade display da div de conteúdo
+      if (divisaoterritorialContent.style.display === "none") {
+        divisaoterritorialContent.style.display = "block";
+      } else {
+        divisaoterritorialContent.style.display = "none";
       }
     });
 
     // Adiciona um evento de clique ao elemento "Infraestrutura"
-    infraestruturaToggle.addEventListener("click", () => {
-      
+    infraestruturaToggle.addEventListener("click", () => {      
       // Altera a propriedade display da div de conteúdo
       if (infraestruturaContent.style.display === "none") {
         infraestruturaContent.style.display = "block";
@@ -2461,8 +2849,7 @@ updateLegend();
     });
 
     // Adiciona um evento de clique ao elemento "Projetos"
-    projetosToggle.addEventListener("click", () => {
-  
+    projetosToggle.addEventListener("click", () => {  
       // Altera a propriedade display da div de conteúdo
       if (projetosContent.style.display === "none") {
         projetosContent.style.display = "block";
@@ -2473,7 +2860,6 @@ updateLegend();
 
     // Adiciona um evento de clique ao elemento "Reposição Florestal"
     reposicaoflorestalToggle.addEventListener("click", () => {
-
       // Altera a propriedade display da div de conteúdo
       if (reposicaoflorestalContent.style.display === "none") {
         reposicaoflorestalContent.style.display = "block";
@@ -2483,8 +2869,7 @@ updateLegend();
     });
 
     // Adiciona um evento de clique ao elemento "Censo 2022"
-    censo2022Toggle.addEventListener("click", () => {
-  
+    censo2022Toggle.addEventListener("click", () => {  
       // Altera a propriedade display da div de conteúdo
       if (censo2022Content.style.display === "none") {
         censo2022Content.style.display = "block";
@@ -2495,7 +2880,6 @@ updateLegend();
 
     // Adiciona um evento de clique ao elemento "Imóveis rurais
     imoveisruraisToggle.addEventListener("click", () => {
-
       // Altera a propriedade display da div de conteúdo
       if (imoveisruraisContent.style.display === "none") {
         imoveisruraisContent.style.display = "block";
@@ -2505,8 +2889,7 @@ updateLegend();
     });   
 
     // Adiciona um evento de clique ao elemento "> Alertas"
-    alertasToggle.addEventListener("click", () => {
-      
+    alertasToggle.addEventListener("click", () => {      
       // Altera a propriedade display da div de conteúdo
       if (alertasContent.style.display === "none") {
         alertasContent.style.display = "block";
@@ -2516,19 +2899,17 @@ updateLegend();
     });
 
     // Adiciona um evento de clique ao elemento "> Ambiental"
-    ambientalToggle.addEventListener("click", () => {
-  
+    dadoscomplementaresToggle.addEventListener("click", () => {  
       // Altera a propriedade display da div de conteúdo
-      if (ambientalContent.style.display === "none") {
-        ambientalContent.style.display = "block";
+      if (dadoscomplementaresContent.style.display === "none") {
+        dadoscomplementaresContent.style.display = "block";
       } else {
-        ambientalContent.style.display = "none";
+        dadoscomplementaresContent.style.display = "none";
       }
     });
 
     // Adiciona um evento de clique ao elemento "> Uso e cobertura do solo (2021/2023) (36,5 m)"
-    transicoes36emeioToggle.addEventListener("click", () => {
-  
+    transicoes36emeioToggle.addEventListener("click", () => {  
       // Altera a propriedade display da div de conteúdo
       if (transicoes36emeioContent.style.display === "none") {
         transicoes36emeioContent.style.display = "block";
@@ -2557,25 +2938,6 @@ updateLegend();
       }
     });
 
-    // Seleciona o elemento "> Limites" e a div de conteúdo
-    const limitesToggle = document.getElementById("limites-toggle");
-    const limitesContent = document.getElementById("limites-content");
-
-    // Adiciona um evento de clique ao elemento "> Limites"
-    limitesToggle.addEventListener("click", () => {
-
-      // Altera a propriedade display da div de conteúdo
-      if (limitesContent.style.display === "none") {
-        limitesContent.style.display = "block";
-      } else {
-        limitesContent.style.display = "none";
-      }
-    });
-
-    // Seleciona o elemento "> Basemap" e a div de conteúdo
-    const basemapsToggle = document.getElementById("basemaps-toggle");
-    const basemapsContent = document.getElementById("basemaps-content");
-
     // Adiciona um evento de clique ao elemento "> Basemaps"
     basemapsToggle.addEventListener("click", () => {
 
@@ -2587,11 +2949,7 @@ updateLegend();
       }
     });
 
-    // Seleciona o elemento de busca "> Torres" e a div de conteúdo
-    const buscatorresToggle = document.getElementById("buscatorres-toggle");
-    const buscatorresContent = document.getElementById("buscatorres-content");
-  
-    // Adiciona um evento de clique ao elemento "> Torres"
+    // Adiciona um evento de clique ao elemento "> Buscar"
     buscatorresToggle.addEventListener("click", () => {
 
       // Altera a propriedade display da div de conteúdo
@@ -2602,7 +2960,16 @@ updateLegend();
       }
     });    
 
-    // Seleciona as checkboxes e as camadas de mapa correspondentes
+    // Adiciona um evento de clique ao elemento "> Torres"
+    lt_tropicaliaToggle.addEventListener("click", () => {
+      // Altera a propriedade display da div de conteúdo
+      if (lt_tropicaliaContent.style.display === "none") {
+        lt_tropicaliaContent.style.display = "block";
+      } else {
+        lt_tropicaliaContent.style.display = "none";
+      }
+    });
+        
     const faixa_servidao_cadastroCheckbox = document.getElementById("faixa_servidao_cadastro-checkbox");
     const erosoesCheckbox = document.getElementById("erosoes-checkbox");
     const obras_supressaoCheckbox = document.getElementById("obras_supressao-checkbox");
@@ -2628,6 +2995,11 @@ updateLegend();
     const declividadeCheckbox = document.getElementById("declividade-checkbox");
     const ps_map_rf_2021Checkbox = document.getElementById("ps_map_rf_2021-checkbox");
     const ps_map_rf_2023Checkbox = document.getElementById("ps_map_rf_2023-checkbox");
+    const frenteDeFogoCheckbox = document.getElementById("frenteDeFogo-checkbox");  
+    const modisFires72hCheckbox = document.getElementById("modisFires72h-checkbox");
+    const viirsFires72hCheckbox = document.getElementById("viirsFires72h-checkbox");
+    const noaa21Fires72hCheckbox = document.getElementById("noaa21Fires72h-checkbox");       
+    const NPPFires72hCheckbox = document.getElementById("NPPFires72h-checkbox");         
     const imoveis_rurais_carCheckbox = document.getElementById("imoveis_rurais_car-checkbox");
     const imoveis_rurais_sigefCheckbox = document.getElementById("imoveis_rurais_sigef-checkbox");
     const ucs_piCheckbox = document.getElementById("ucs_pi-checkbox");
@@ -2636,7 +3008,6 @@ updateLegend();
     const ufCheckbox = document.getElementById("uf-checkbox");
     const biomasCheckbox = document.getElementById("biomas-checkbox");
 
-    // Obtém as camadas de mapa existentes
     const faixa_servidao_cadastroLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'faixa_servidao_cadastro');
     const erosoesLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'erosoes');
     const obras_supressaoLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'obras_supressao');
@@ -2662,6 +3033,11 @@ updateLegend();
     const declividadeLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'declividade');
     const ps_map_rf_2021Layer = map.getLayers().getArray().find(layer => layer.get('title') === 'ps_map_rf_2021');
     const ps_map_rf_2023Layer = map.getLayers().getArray().find(layer => layer.get('title') === 'ps_map_rf_2023');
+    const frenteDeFogoLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'frenteDeFogo');
+    const modisFires72hLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'modisFires72h');   
+    const viirsFires72hLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'viirsFires72h');          
+    const noaa21Fires72hLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'noaa21Fires72h');    
+    const NPPFires72hLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'NPPFires72h');      
     const imoveis_rurais_carLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'imoveis_rurais_car'); 
     const imoveis_rurais_sigefLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'imoveis_rurais_sigef'); 
     const ucs_piLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'ucs_pi'); 
@@ -2670,7 +3046,6 @@ updateLegend();
     const ufLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'uf'); 
     const biomasLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'biomas'); 
 
-    // Adiciona eventos de mudança às checkboxes
     faixa_servidao_cadastroCheckbox.addEventListener("change", () => {
       faixa_servidao_cadastroLayer.setVisible(faixa_servidao_cadastroCheckbox.checked);
       updateLegend()
@@ -2794,9 +3169,34 @@ updateLegend();
     ps_map_rf_2023Checkbox.addEventListener("change", () => {
       ps_map_rf_2023Layer.setVisible(ps_map_rf_2023Checkbox.checked);
       updateLegend();
+    });    
+
+    frenteDeFogoCheckbox.addEventListener("change", () => {
+      frenteDeFogoLayer.setVisible(frenteDeFogoCheckbox.checked);
+      updateLegend();
     });
 
-      imoveis_rurais_carCheckbox.addEventListener("change", () => {
+    modisFires72hCheckbox.addEventListener("change", () => {
+      modisFires72hLayer.setVisible(modisFires72hCheckbox.checked);
+      updateLegend();
+    });  
+    
+    viirsFires72hCheckbox.addEventListener("change", () => {
+      viirsFires72hLayer.setVisible(viirsFires72hCheckbox.checked);
+      updateLegend();
+    });  
+
+    noaa21Fires72hCheckbox.addEventListener("change", () => {
+      noaa21Fires72hLayer.setVisible(noaa21Fires72hCheckbox.checked);
+      updateLegend();
+    });  
+
+    NPPFires72hCheckbox.addEventListener("change", () => {
+      NPPFires72hLayer.setVisible(NPPFires72hCheckbox.checked);
+      updateLegend();
+    });  
+
+    imoveis_rurais_carCheckbox.addEventListener("change", () => {
       imoveis_rurais_carLayer.setVisible(imoveis_rurais_carCheckbox.checked);
       updateLegend();
     });
@@ -2831,22 +3231,25 @@ updateLegend();
       updateLegend();
     });
 
-    // Expanda a barra lateral esquerda e ajuste o botão ao abrir a página
     sidebarLeft.style.left = '0px';
     toggleSidebarLeft.style.left = '350px';
 
-    // Expanda a barra lateral direita e ajuste o botão ao abrir a página
     sidebarRight.style.right = '0px';
     toggleSidebarRight.style.right = '450px';
 
-    // Adicione os eventos de clique para alternar as barras laterais
     toggleSidebarLeft.addEventListener('click', () => {
       if (sidebarLeft.style.left === '0px') {
         sidebarLeft.style.left = '-350px';
         toggleSidebarLeft.style.left = '10px';
+        document.getElementById('icone_centralizar').style.left = '10px';
+        document.getElementById('icone_kml').style.left = '10px';
+        document.getElementById('icone_regua').style.left = '10px';
       } else {
         sidebarLeft.style.left = '0px';
         toggleSidebarLeft.style.left = '350px';
+        document.getElementById('icone_centralizar').style.left = '355px';
+        document.getElementById('icone_kml').style.left = '355px';
+        document.getElementById('icone_regua').style.left = '355px';
       }
     });
 
@@ -2859,11 +3262,139 @@ updateLegend();
         sidebarRight.style.right = '0px';
         toggleSidebarRight.style.right = '450px';
         document.querySelector('.ol-overviewmap').style.right = '460px'; // Move o mapa de visão geral de volta para sua posição original
+
       }
     });
-    
-  }
 
+    document.getElementById('measurementType').addEventListener('change', function() {
+      currentMeasurementType = this.value;
+      if (drawInteraction) {
+        map.removeInteraction(drawInteraction);
+        addInteraction(currentMeasurementType);
+      }
+    });
+
+    document.getElementById('limpar-medicoes').addEventListener('click', function() {
+      document.getElementById('medicoes-resultado').innerText = '-'; 
+
+      vectorSource.clear();
+    });
+
+    document.getElementById('exportar-kml').addEventListener('click', function() {      
+        var format = new ol.format.KML();  
+        var features = vectorSource.getFeatures();
+        console.log(measureResult)
+
+        features.forEach(function(feature) {
+          feature.set('description', 'Resultado da Medição: ' + measureResult);
+        });
+        var kmlString = format.writeFeatures(features, {
+          extractAttributes: true
+      });
+
+      var blob = new Blob([kmlString], {type: 'application/vnd.google-earth.kml+xml;charset=utf-8'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+
+      a.href = url;
+      a.download = 'medicao-webmap-tropicalia.kml';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });  
+
+    document.getElementById('icone_regua').addEventListener('click', () => {
+      var imgElement = document.getElementById('iconeReguaImg');
+      var medicoesDiv = document.getElementById('medicoes');
+      var medicoesCamDiv = document.getElementById('medicoes-cam');    
+      if (drawInteraction) {
+          map.removeInteraction(drawInteraction);
+          drawInteraction = null;
+          vectorSource.clear();
+          document.getElementById('medicoes-resultado').innerText = '-';
+          imgElement.src = 'images/icone_regua_white.png';
+          medicoesDiv.style.display = 'none'; 
+          medicoesCamDiv.style.display = 'none'; 
+      } else {
+          addInteraction(currentMeasurementType);
+          imgElement.src = 'images/icone_regua_xred.png';
+          medicoesDiv.style.display = 'block'; // 
+          medicoesCamDiv.style.display = 'block'; 
+      }
+    });
+
+    document.getElementById('icone_kml').addEventListener('click', function() {
+      var imgElementKml = document.getElementById('iconeKmlImg');
+      var atributoskmlDiv = document.getElementById('atributos-kml');
+      var atributoskmlCamDiv = document.getElementById('atributos-kml-cam');    
+      if (kmlLayer) {
+          map.removeLayer(kmlLayer);
+          kmlLayer = null;
+          vectorSource.clear();
+          document.getElementById('atributos-kml').innerText = '';
+          document.getElementById('file-input').value = '';
+          imgElementKml.src = 'images/icone_kml_v2.png';
+          atributoskmlDiv.style.display = 'none'; 
+          atributoskmlCamDiv.style.display = 'none'; 
+      } else {
+          document.getElementById('file-input').click();
+          imgElementKml.src = 'images/icone_kml_xred.png';
+          atributoskmlDiv.style.display = 'block'; // 
+          atributoskmlCamDiv.style.display = 'block'; 
+      }
+    });  
+
+    document.getElementById('file-input').addEventListener('change', function(event) {
+      var file = event.target.files[0];
+      if (file) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+              var format = new ol.format.KML({
+              });          
+              var features = format.readFeatures(e.target.result, {
+                featureProjection: map.getView().getProjection()
+              });          
+              var vectorSource = new ol.source.Vector({
+                features: features
+              });
+              if (kmlLayer) {
+                  kmlLayer.setSource(vectorSource);
+              } else {
+                  kmlLayer = new ol.layer.Vector({
+                      source: vectorSource
+                  });
+                  map.addLayer(kmlLayer);
+              }
+              map.getView().fit(vectorSource.getExtent(), { duration: 1000 });
+              exibirLinksFeicoes(features);
+          };
+          reader.readAsText(file);
+        }
+    });  
+    
+    document.getElementById('icone_centralizar').addEventListener('click', function() {
+      map.getView().setCenter([-39.8, -13.578]); 
+      map.getView().setZoom(9.47);
+     });
+  
+    const headers = document.querySelectorAll('.relatorios h6');
+
+    headers.forEach(header => {
+      header.addEventListener('click', () => {      
+        const content = header.nextElementSibling;        
+        if (content.style.display === 'none' || content.style.display === '') {
+          content.style.display = 'block';
+        } else {
+          content.style.display = 'none';
+        }
+      });
+    });
+
+    fetchLayerTitles();
+    updateLegend(); 
+    carregarPrevisaoDoTempo(-13.8626,-40.0846);  
+  }
   </script>
 </body>
 </html>
