@@ -136,11 +136,11 @@
       </div>
       <div id="camadas_alertas" class="camadas">
         <h6><b>&nbsp;&nbsp;<span class="link-text" id="alertas-toggle"> > Alertas</span></b></h6>  
-        <div class="expand-content" style="display: none;" id="alertas-content">
+        <div class="expand-content" style="display: yes;" id="alertas-content">
           <div id="alertas">
             <div id="fogo">
               <b><span class="link-text" id="fogo-toggle">> Fogo</span></b><br>
-              <div class="expand-content" style="display: none;" id="fogo-content">
+              <div class="expand-content" style="display: yes;" id="fogo-content">
                 &nbsp;&nbsp;&nbsp;<input type="checkbox" id="frenteDeFogo-checkbox" value='frenteDeFogo' checked>&nbsp;&nbsp;Frentes de fogo 24h (Painel do Fogo)<br>
                 &nbsp;&nbsp;&nbsp;<input type="checkbox" id="modisFires72h-checkbox" value='modisFires72h'>&nbsp;&nbsp;MODIS 72h (NASA FIRMS)<br>
                 &nbsp;&nbsp;&nbsp;<input type="checkbox" id="NPPFires72h-checkbox" value='NPPFires72h'>&nbsp;&nbsp;VIIRS S-NPP 72h (NASA FIRMS)<br>
@@ -189,9 +189,9 @@
             <div id="imoveisrurais">
               <b><span class="link-text" id="imoveisrurais-toggle">> Imóveis rurais</span></b><br>
               <div class="expand-content" style="display: none;" id="imoveisrurais-content">
-                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Área do imóvel(CAR)<br>
-                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Reserva Legal(CAR)<br>
-                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;APP (CAR)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="imoveis_rurais_car-checkbox" value='imoveis_rurais_car' >&nbsp;&nbsp;Área do imóvel (CAR)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="reserva_legal_car-checkbox" value='reserva_legal_car' >&nbsp;&nbsp;Reserva Legal (CAR)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="app_car-checkbox" value='app_car' >&nbsp;&nbsp;APP (CAR)<br>
                 &nbsp;&nbsp;&nbsp;<input type="checkbox" id="imoveis_rurais_sigef-checkbox" value='imoveis_rurais_sigef' >&nbsp;&nbsp;Área do imóvel (SIGEF)<br>
               </div>
             </div>
@@ -210,28 +210,20 @@
         <div class="expand-content" style="display: none;" id="basemaps-content">
           <div id="basemaps">
             <input type="radio" id="osm-basemap-radio" name='baseLayerRadioButton' value='osm_basemap' checked>&nbsp;&nbsp;Open Street Maps<br>
-            <input type="radio" id="bing-basemap-radio" name='baseLayerRadioButton' value='bing_basemap'>&nbsp;&nbsp;Satélite (Bing Maps) <br>
-            <input type="radio" id="satellite-planet-2021-radio" name='baseLayerRadioButton' value='satellite-planet-2021' >&nbsp;&nbsp;Satélite (Planet jul/2021)<br>
-            <input type="radio" id="satellite-planet-2023-radio" name='baseLayerRadioButton' value='satellite-planet-2023' >&nbsp;&nbsp;Satélite (Planet jul/2023)<br>
-            <input type="radio" id="ortofoto-radio" name='baseLayerRadioButton' value='ortofoto' >&nbsp;&nbsp;Ortofoto (2019)<br>
-            <input type="radio" id="cberswpm-radio" name='baseLayerRadioButton' value='cberswpm' >&nbsp;&nbsp;Satélite (INPE)<br>
+            <input type="radio" id="bing-basemap-radio" name='baseLayerRadioButton' value='bing_basemap'>&nbsp;&nbsp;Bing Maps (Satélite) <br>
+            <input type="radio" id="satellite-planet-2021-radio" name='baseLayerRadioButton' value='satellite-planet-2021' >&nbsp;&nbsp;Planet DOVE 3m (jul/2021)<br>
+            <input type="radio" id="satellite-planet-2023-radio" name='baseLayerRadioButton' value='satellite-planet-2023' >&nbsp;&nbsp;Planet DOVE 3m (jul/2023)<br>
+            <input type="radio" id="cbers_4a_wpm-radio" name='baseLayerRadioButton' value='cbers_4a_wpm' >&nbsp;&nbsp;CBERS 4A WPM 2m (2023)<br>
           </div>
         </div>                 
       </div>      
       <div id="busca_torres" class="busca">
-        <h6><b>&nbsp;&nbsp;<span class="link-text" id="buscatorres-toggle"><img src="images/icone_lupa.png" style="height: 16px; width: auto;">  Buscar</span></b></h6>
+        <h6><b>&nbsp;&nbsp;<span class="link-text" id="buscatorres-toggle"><img src="images/icone_lupa.png" style="height: 16px; width: auto;">  Buscar torre</span></b></h6>
         <div class="expand-content" style="display: yes;" id="buscatorres-content">
-          <nav>
-          <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-buscatorres-tab" data-bs-toggle="tab" data-bs-target="#nav-buscatorres" type="button" role="tab" aria-controls="nav-buscatorres" aria-selected="true">Torres</button>
-            <button class="nav-link" id="nav-buscacadastro-tab" data-bs-toggle="tab" data-bs-target="#nav-buscacadastro" type="button" role="tab" aria-controls="nav-buscacadastro" aria-selected="false">Cadastro</button>
-          </div>
-          </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-buscatorres" role="tabpanel" aria-labelledby="nav-buscatorres-tab">
             <div class="form-group">
-              <form id="search-form"><br>
-                <b>&nbsp;&nbsp;Atributo:</b><br>
+              <form id="search-form">
                   <select class="custom-dropdown" name="atributo" id="atributo">
                     <option value="torreseq">ID (sequencial)</option>
                     <option value="torrekm">ID (km)</option>
@@ -247,31 +239,7 @@
               </form>   
               <br>  
             </div>
-          </div>
-          <div class="tab-pane fade" id="nav-buscacadastro" role="tabpanel" aria-labelledby="nav-buscacadastro-tab">          
-            <div class="form-group">
-              <form id="search-form"><br>
-                <b>&nbsp;&nbsp;Atributo:</b><br>
-                  <select class="custom-dropdown" name="atributo" id="atributo">
-                    <option value="referencia">Referência</option>
-                    <option value="projeto">Projeto</option>
-                    <option value="torres">Torres</option>
-                    <option value="descricao">Status de Negociação</option>
-                    <option value="proprietario">Proprietário</option>
-                    <option value="telefone">Telefone</option>
-                    <option value="municipio">Município</option>
-                  </select>
-                <input type="text" class="custom-input" name="valor" id="valor" list="auto-preenchimento">
-                <datalist id="auto-preenchimento"></datalist>                
-                  <p style="text-align: left;">
-                  <button class="custom-button-send" type="submit">
-                  Buscar</button>
-              </form>   
-              <br>  
-            </div>        
-          </div>                
-          <br>
-          <br>         
+          </div> 
         </div>
       </div>       
   </div>
@@ -306,17 +274,13 @@
           <button class="nav-link active" id="nav-camadas-tab" data-bs-toggle="tab" data-bs-target="#nav-camadas" type="button" role="tab" aria-controls="nav-camadas" aria-selected="true">Camadas</button>
           <button class="nav-link" id="nav-torres-tab" data-bs-toggle="tab" data-bs-target="#nav-torres" type="button" role="tab" aria-controls="nav-torres" aria-selected="false">Torres</button>
           <button class="nav-link" id="nav-cadastro-tab" data-bs-toggle="tab" data-bs-target="#nav-cadastro" type="button" role="tab" aria-controls="nav-cadastro" aria-selected="false">Cadastro</button>
+          <button class="nav-link" id="nav-imovelrural-tab" data-bs-toggle="tab" data-bs-target="#nav-imovelrural" type="button" role="tab" aria-controls="nav-imovelrural" aria-selected="false">Imóvel rural</button>
         </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-camadas" role="tabpanel" aria-labelledby="nav-camadas-tab">
             <div id="camadas_tab">                        
-              <div id="resultados">
-                <br>
-                <i>Clique em alguma feição ativa para verificar se existem atributos associados.</i>
-                <br>
-                <br>
-              </div>
+              <div id="resultados"><br><i>Clique em alguma feição ativa para verificar se existem atributos associados.</i><br><br></div>
             </div>
           </div>
           <div class="tab-pane fade" id="nav-torres" role="tabpanel" aria-labelledby="nav-torres-tab">
@@ -324,24 +288,12 @@
               <div id="resultados">
                 <table class="table custom-table-width rounded-table small-table">                
                   <tbody>
-                    <tr id="referenciaRow">
-                      <td class="small-font"><b>ID (sequencial):</b> -</td>
-                    </tr>
-                    <tr id="projetoRow">
-                      <td class="small-font"><b>ID (km):</b> -</td>
-                    </tr>   
-                    <tr id="torresRow">
-                      <td class="small-font"><b>Tipo:</b> -</td>
-                    </tr>  
-                    <tr id="statusnegociacaoRow">
-                      <td class="small-font"><b>Descrição:</b> -</td>
-                    </tr>  
-                    <tr id="proprietarioRow">
-                      <td class="small-font"><b>Observação:</b> -</td>
-                    </tr>
-                    <tr id="municipioRow">
-                      <td class="small-font"><b>Município:</b> -</td>
-                    </tr>
+                    <tr><td class="small-font"><b>ID (sequencial):</b> -</td></tr>
+                    <tr><td class="small-font"><b>ID (km):</b> -</td></tr>   
+                    <tr><td class="small-font"><b>Tipo:</b> -</td></tr>  
+                    <tr><td class="small-font"><b>Descrição:</b> -</td></tr>  
+                    <tr><td class="small-font"><b>Observação:</b> -</td></tr>
+                    <tr><td class="small-font"><b>Município:</b> -</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -353,33 +305,65 @@
               <div id="resultados">
                 <table class="table custom-table-width rounded-table small-table">                
                   <tbody>
-                    <tr id="referenciaRow">
-                      <td class="small-font"><b>Referência:</b> -</td>
-                    </tr>
-                    <tr id="projetoRow">
-                      <td class="small-font"><b>Projeto:</b> -</td>
-                    </tr>   
-                    <tr id="torresRow">
-                      <td class="small-font"><b>Torres:</b> -</td>
-                    </tr>  
-                    <tr id="statusnegociacaoRow">
-                      <td class="small-font"><b>Status de Negociação:</b> -</td>
-                    </tr>  
-                    <tr id="proprietarioRow">
-                      <td class="small-font"><b>Proprietário:</b> -</td>
-                    </tr>
-                    <tr id="telefoneRow">
-                      <td class="small-font"><b>Telefone:</b> -</td>
-                    </tr>
-                    <tr id="municipioRow">
-                      <td class="small-font"><b>Município:</b> -</td>
-                    </tr>
+                    <tr><td class="small-font"><b>Referência:</b> -</td></tr>
+                    <tr><td class="small-font"><b>Projeto:</b> -</td></tr>   
+                    <tr><td class="small-font"><b>Torres:</b> -</td></tr>  
+                    <tr><td class="small-font"><b>Status de Negociação:</b> -</td></tr>  
+                    <tr><td class="small-font"><b>Proprietário:</b> -</td></tr>
+                    <tr><td class="small-font"><b>Telefone:</b> -</td></tr>
+                    <tr><td class="small-font"><b>Município:</b> -</td></tr>
                   </tbody>
                 </table>
               </div>
               <div id="paginacao"></div>
             </div>
           </div>
+          <div class="tab-pane fade" id="nav-imovelrural" role="tabpanel" aria-labelledby="nav-imovelrural-tab">
+            <div id="imovelrural_tab">                        
+              <div id="resultados">
+                <b><span class="link-text" id="car_imoveis-toggle"><br> > Cadastro Ambiental Rural (CAR)<br></span></b><br>
+                <div class="expand-content" style="display: none;" id="car_imoveis-content">
+                  <div id="car_imoveis_detalhes">
+                  <table class="table custom-table-width rounded-table small-table">                
+                    <tbody>
+                      <tr><td class="small-font"><b>Registro CAR:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Área do imóvel (ha):</b> -</td></tr>   
+                      <tr><td class="small-font"><b>Módulos fiscais:</b> -</td></tr>  
+                      <tr><td class="small-font"><b>Situação do cadastro:</b> -</td></tr>  
+                      <tr><td class="small-font"><b>Condição do cadastro:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Vegetação nativa (ha):</b> -</td></tr>
+                      <tr><td class="small-font"><b>Reserva Legal proposta(ha):</b> -</td></tr>
+                      <tr><td class="small-font"><b>APP (ha):</b> -</td></tr>
+                    </tbody>
+                  </table>
+                </div>         
+                </div>
+                <b><span class="link-text" id="sigef_imoveis-toggle">> Sistema de Gestão Fundiária (SIGEF)<br></span></b><br>
+                <div class="expand-content" style="display: none;" id="sigef_imoveis-content">
+                  <div id="sigef_imoveis_detalhes">
+                  <table class="table custom-table-width rounded-table small-table">                
+                    <tbody>
+                      <tr><td class="small-font"><b>Código da parcela:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Situação:</b> -</td></tr>   
+                      <tr><td class="small-font"><b>Código do imóvel:</b> -</td></tr>  
+                      <tr><td class="small-font"><b>Número de registro do imóvel:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Matrícula do imóvel:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Data de submissão:</b> -</td></tr>  
+                      <tr><td class="small-font"><b>Data de aprovação:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Nome do imóvel:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Área do imóvel (ha):</b> -</td></tr>
+                      <tr><td class="small-font"><b>Titular do imóvel:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Endereço:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Distrito:</b> -</td></tr>
+                      <tr><td class="small-font"><b>CEP:</b> -</td></tr>
+                      <tr><td class="small-font"><b>Município:</b> -</td></tr>
+                    </tbody>
+                  </table>
+                </div>         
+                </div>
+              </div>
+            </div>
+          </div>        
         </div>
       </div>          
     </div>
@@ -1276,6 +1260,26 @@
       }
     })
 
+    const info_imoveisrurais_car = new ol.source.TileWMS({
+      ratio: 1,
+      url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+      params: {'VERSION': '1.1.0',  
+            "STYLES": '',
+            "LAYERS": 'tropicalia:tropicalia_imoveis_rurais ',
+            "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+    })
+
+    const info_imoveisrurais_sigef = new ol.source.TileWMS({
+      ratio: 1,
+      url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+      params: {'VERSION': '1.1.0',  
+            "STYLES": '',
+            "LAYERS": 'tropicalia:tropicalia_sigef ',
+            "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+    })
+
     const faixa_servidao_cadastro = new ol.layer.Tile({
       source: new ol.source.TileWMS({
         url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
@@ -1692,6 +1696,19 @@
       title: 'ps_map_rf_2023'
     });
 
+    const cbers_4a_wpm = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {'VERSION': '1.1.0',  
+        "STYLES": '',
+        "LAYERS": 'tropicalia:CBERS_4A_WPM_2023_L4_2m_400m ',
+        "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+      }),
+      visible: false,
+      title: 'cbers_4a_wpm'
+    });
+
     const imoveis_rurais_car = new ol.layer.Tile({
       source: new ol.source.TileWMS({
         url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
@@ -1703,6 +1720,32 @@
       }),
       visible: false,
       title: 'imoveis_rurais_car'
+    });
+
+    const reserva_legal_car = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {'VERSION': '1.1.0',  
+        "STYLES": '',
+        "LAYERS": 'tropicalia:reservalegal ',
+        "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+      }),
+      visible: false,
+      title: 'reserva_legal_car'
+    });
+
+    const app_car = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {'VERSION': '1.1.0',  
+        "STYLES": '',
+        "LAYERS": 'tropicalia:appcar ',
+        "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+      }),
+      visible: false,
+      title: 'app_car'
     });
 
     const imoveis_rurais_sigef = new ol.layer.Tile({
@@ -1818,13 +1861,13 @@
 
     const checkboxGroup = new ol.layer.Group({
       layers: [
-      tropicalia_municipios, ps_map_rf_2021, ps_map_rf_2023, altitude, declividade, obras_supressao, uf, biomas, ucs_pi, ucs_us, estab_agropecuario_censo, estab_outrasfinalidades_censo, domi_particular_censo, imoveis_rurais_car, imoveis_rurais_sigef, torres, erosoes, edificacoes, estab_religioso_censo, estab_educacao_censo, estab_saude_censo, desapropriados, faixa_servidao_cadastro, eixo, osm_roads_ba, hidrografia, cidades, nucleosvilaspovoados, sinalizadoresavifauna, comunidades, acessos, noaa21Fires72h, NPPFires72h, viirsFires72h, modisFires72h, frenteDeFogo, linhasdetransmissao
+      tropicalia_municipios, ps_map_rf_2021, ps_map_rf_2023, altitude, declividade, obras_supressao, uf, biomas, ucs_pi, ucs_us, estab_agropecuario_censo, estab_outrasfinalidades_censo, domi_particular_censo, app_car, reserva_legal_car, imoveis_rurais_car, imoveis_rurais_sigef, torres, erosoes, edificacoes, estab_religioso_censo, estab_educacao_censo, estab_saude_censo, desapropriados, faixa_servidao_cadastro, eixo, osm_roads_ba, hidrografia, cidades, nucleosvilaspovoados, sinalizadoresavifauna, comunidades, acessos, noaa21Fires72h, NPPFires72h, viirsFires72h, modisFires72h, frenteDeFogo, linhasdetransmissao
       ]
     });
 
     const baseLayerGroup = new ol.layer.Group({
       layers: [
-      bing_basemap, osm_basemap, satelite_planet_jul2021, satelite_planet_jul2023
+      bing_basemap, osm_basemap, cbers_4a_wpm, satelite_planet_jul2021, satelite_planet_jul2023
       ]
     })
   
@@ -1854,6 +1897,7 @@
     edificacoes.set('layerId', 'edificacoesLayer');
     altitude.set('layerId', 'altitudeLayer');
     declividade.set('layerId', 'declividadeLayer');
+    cbers_4a_wpm.set('layerId', 'cbers_4a_wpmLayer');
     ps_map_rf_2021.set('layerId', 'ps_map_rf_2021Layer');
     ps_map_rf_2023.set('layerId', 'ps_map_rf_2023Layer');
     frenteDeFogo.set('layerId', 'frenteDeFogoLayer');    
@@ -1862,6 +1906,8 @@
     noaa21Fires72h.set('layerId', 'noaa21Fires72hLayer');         
     NPPFires72h.set('layerId', 'NPPFires72h');       
     imoveis_rurais_car.set('layerId', 'imoveis_rurais_carLayer');
+    reserva_legal_car.set('layerId', 'reserva_legal_car');    
+    app_car.set('layerId', 'app_car');   
     imoveis_rurais_sigef.set('layerId', 'imoveis_rurais_sigefLayer');
     ucs_pi.set('layerId', 'ucs_piLayer');
     ucs_us.set('layerId', 'ucs_usLayer');    
@@ -1892,13 +1938,16 @@
     map.addLayer(edificacoes);
     map.addLayer(altitude);
     map.addLayer(declividade);
+    map.addLayer(cbers_4a_wpm);
     map.addLayer(ps_map_rf_2021);
     map.addLayer(ps_map_rf_2023);
     map.addLayer(frenteDeFogo); 
     map.addLayer(modisFires72h);
     map.addLayer(viirsFires72h);       
     map.addLayer(noaa21Fires72h);    
-    map.addLayer(NPPFires72h);            
+    map.addLayer(NPPFires72h);
+    map.addLayer(reserva_legal_car);   
+    map.addLayer(app_car); 
     map.addLayer(imoveis_rurais_car);
     map.addLayer(imoveis_rurais_sigef);
     map.addLayer(ucs_pi);
@@ -1912,12 +1961,14 @@
     // Selecção dos radio buttons (basemaps)
     const osmBasemapRadio = document.getElementById("osm-basemap-radio");
     const bing_basemapRadio = document.getElementById("bing-basemap-radio");
+    const cbers_4a_wpmRadio = document.getElementById("cbers_4a_wpm-radio");
     const satellite2021Radio = document.getElementById("satellite-planet-2021-radio");
     const satellite2023Radio = document.getElementById("satellite-planet-2023-radio");
   
     // Adiciona eventos de mudança aos radio buttons para alternar entre as camadas de basemaps
     osmBasemapRadio.addEventListener("change", () => {
       if (osmBasemapRadio.checked) {
+        cbers_4a_wpm.setVisible(false);
         osm_basemap.setVisible(true);
         bing_basemap.setVisible(false);
         satelite_planet_jul2021.setVisible(false);
@@ -1927,6 +1978,7 @@
 
     bing_basemapRadio.addEventListener("change", () => {
       if (bing_basemapRadio.checked) {
+        cbers_4a_wpm.setVisible(false);
         osm_basemap.setVisible(false);
         bing_basemap.setVisible(true);
         satelite_planet_jul2021.setVisible(false);
@@ -1934,8 +1986,19 @@
       }
     });
 
+    cbers_4a_wpmRadio.addEventListener("change", () => {
+      if (cbers_4a_wpmRadio.checked) {
+        cbers_4a_wpm.setVisible(true);
+        osm_basemap.setVisible(false);
+        bing_basemap.setVisible(false);
+        satelite_planet_jul2021.setVisible(false);
+        satelite_planet_jul2023.setVisible(false);
+      }
+    });
+
     satellite2021Radio.addEventListener("change", () => {
       if (satellite2021Radio.checked) {
+        cbers_4a_wpm.setVisible(false);
         osm_basemap.setVisible(false);
         bing_basemap.setVisible(false);
         satelite_planet_jul2021.setVisible(true);
@@ -1945,6 +2008,7 @@
 
     satellite2023Radio.addEventListener("change", () => {
       if (satellite2023Radio.checked) {
+        cbers_4a_wpm.setVisible(false);
         osm_basemap.setVisible(false);
         bing_basemap.setVisible(false);
         satelite_planet_jul2021.setVisible(false);
@@ -2364,6 +2428,26 @@
             'propertyName': 'geom,referencia,projeto,torres,statusnegociacao,proprietario,telefone,municipio',
             'exclude_nodata_result': 'true'
         });
+
+        const urlImovelRuralCar = info_imoveisrurais_car.getFeatureInfoUrl(
+          evt.coordinate,
+          viewResolution,
+          'EPSG:4326',
+          {
+              'INFO_FORMAT': 'application/json',
+              'propertyName': 'geom,cod_imovel,num_area,num_modulo,situacao,condicao_cadastro,area_remanescente_vegetacao_nativa,area_reserva_legal_proposta,area_preservacao_permanente',
+              'exclude_nodata_result': 'true'
+          });
+
+        const urlImovelRuralSigef = info_imoveisrurais_sigef.getFeatureInfoUrl(
+          evt.coordinate,
+          viewResolution,
+          'EPSG:4326',
+          {
+              'INFO_FORMAT': 'application/json',
+              'propertyName': 'geom,parcela_co,situacao_i,codigo_imo,nrimovel,registro_mat,data_submi,data_aprov,denominacao,area_ha,titular,endereco,distrito,cep,municipio',
+              'exclude_nodata_result': 'true'
+          });
       
       const lat = coordinate[1].toFixed(4);
       const lon = coordinate[0].toFixed(4);
@@ -2409,24 +2493,12 @@
                   <div id="resultados">
                   <table class="table custom-table-width rounded-table small-table">                
                           <tbody>
-                              <tr id="referenciaRow">
-                                  <td class="small-font"><b>ID (sequencial):</b> ${TorreSeq}</td>
-                              </tr>
-                              <tr id="projetoRow">
-                                  <td class="small-font"><b>ID (km):</b> ${TorreKm}</td>
-                              </tr>   
-                              <tr id="torresRow">
-                                  <td class="small-font"><b>Tipo:</b> ${Tipo}</td>
-                              </tr>  
-                              <tr id="statusnegociacaoRow">
-                                  <td class="small-font"><b>Descrição:</b> ${Desc}</td>
-                              </tr>  
-                              <tr id="proprietarioRow">
-                                  <td class="small-font"><b>Observação:</b> ${Obs}</td>
-                              </tr>
-                              <tr id="municipioRow">
-                                  <td class="small-font"><b>Município:</b> ${NM_Mun}</td>
-                              </tr>
+                              <tr><td class="small-font"><b>ID (sequencial):</b> ${TorreSeq}</td></tr>
+                              <tr><td class="small-font"><b>ID (km):</b> ${TorreKm}</td></tr>   
+                              <tr><td class="small-font"><b>Tipo:</b> ${Tipo}</td></tr>  
+                              <tr><td class="small-font"><b>Descrição:</b> ${Desc}</td></tr>  
+                              <tr><td class="small-font"><b>Observação:</b> ${Obs}</td></tr>
+                              <tr><td class="small-font"><b>Município:</b> ${NM_Mun}</td></tr>
                           </tbody>
                       </table>
                   </div>
@@ -2438,24 +2510,12 @@
               <div id="resultados">
                 <table class="table custom-table-width rounded-table small-table">                
                         <tbody>
-                            <tr id="referenciaRow">
-                                <td class="small-font"><b>ID (sequencial):</b> - </td>
-                            </tr>
-                            <tr id="projetoRow">
-                                <td class="small-font"><b>ID (km):</b> - </td>
-                            </tr>   
-                            <tr id="torresRow">
-                                <td class="small-font"><b>Tipo:</b> - </td>
-                            </tr>  
-                            <tr id="statusnegociacaoRow">
-                                <td class="small-font"><b>Descrição:</b> - </td>
-                            </tr>  
-                            <tr id="proprietarioRow">
-                                <td class="small-font"><b>Observação:</b> - </td>
-                            </tr>
-                            <tr id="municipioRow">
-                                <td class="small-font"><b>Município:</b> - </td>
-                            </tr>
+                            <tr><td class="small-font"><b>ID (sequencial):</b> - </td></tr>
+                            <tr><td class="small-font"><b>ID (km):</b> - </td></tr>
+                            <tr><td class="small-font"><b>Tipo:</b> - </td></tr>
+                            <tr><td class="small-font"><b>Descrição:</b> - </td></tr>  
+                            <tr><td class="small-font"><b>Observação:</b> - </td></tr>
+                            <tr><td class="small-font"><b>Município:</b> - </td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -2484,27 +2544,13 @@
           <div id="resultados">        
           <table class="table custom-table-width rounded-table small-table">                
                   <tbody>
-                      <tr id="referenciaRow">
-                          <td class="small-font"><b>Referência:</b> ${Referencia}</td>
-                      </tr>
-                      <tr id="projetoRow">
-                          <td class="small-font"><b>Projeto:</b> ${Projeto}</td>
-                      </tr>   
-                      <tr id="torresRow">
-                          <td class="small-font"><b>Torres:</b> ${Torres}</td>
-                      </tr>  
-                      <tr id="statusnegociacaoRow">
-                          <td class="small-font"><b>Status de Negociação:</b> ${StatusNegociacao}</td>
-                      </tr>  
-                      <tr id="proprietarioRow">
-                        <td class="small-font"><b>Proprietário:</b> ${Proprietario}</td>
-                    </tr>
-                      <tr id="telefoneRow">
-                          <td class="small-font"><b>Telefone:</b> ${Telefone}</td>
-                      </tr>
-                      <tr id="municipioRow">
-                          <td class="small-font"><b>Município:</b> ${Municipio}</td>
-                      </tr>
+                      <tr><td class="small-font"><b>Referência:</b> ${Referencia}</td></tr>
+                      <tr><td class="small-font"><b>Projeto:</b> ${Projeto}</td></tr>   
+                      <tr><td class="small-font"><b>Torres:</b> ${Torres}</td></tr>  
+                      <tr><td class="small-font"><b>Status de Negociação:</b> ${StatusNegociacao}</td></tr>  
+                      <tr><td class="small-font"><b>Proprietário:</b> ${Proprietario}</td></tr>
+                      <tr><td class="small-font"><b>Telefone:</b> ${Telefone}</td></tr>
+                      <tr><td class="small-font"><b>Município:</b> ${Municipio}</td></tr>
                   </tbody>
               </table>
               </div>
@@ -2516,35 +2562,137 @@
           <div id="resultados">        
             <table class="table custom-table-width rounded-table small-table">                
                     <tbody>
-                        <tr id="referenciaRow">
-                            <td class="small-font"><b>Referência:</b> -</td>
-                        </tr>
-                        <tr id="projetoRow">
-                            <td class="small-font"><b>Projeto:</b> -</td>
-                        </tr>   
-                        <tr id="torresRow">
-                            <td class="small-font"><b>Torres:</b> -</td>
-                        </tr>  
-                        <tr id="statusnegociacaoRow">
-                            <td class="small-font"><b>Status de Negociação:</b> -</td>
-                        </tr>  
-                        <tr id="proprietarioRow">
-                          <td class="small-font"><b>Proprietário:</b> -</td>
-                      </tr>
-                        <tr id="telefoneRow">
-                            <td class="small-font"><b>Telefone:</b> -</td>
-                        </tr>
-                        <tr id="municipioRow">
-                            <td class="small-font"><b>Município:</b> -</td>
-                        </tr>
+                        <tr><td class="small-font"><b>Referência:</b> -</td></tr>
+                        <tr><td class="small-font"><b>Projeto:</b> -</td></tr>   
+                        <tr><td class="small-font"><b>Torres:</b> -</td></tr>  
+                        <tr><td class="small-font"><b>Status de Negociação:</b> -</td></tr>  
+                        <tr><td class="small-font"><b>Proprietário:</b> -</td></tr>
+                        <tr><td class="small-font"><b>Telefone:</b> -</td></tr>
+                        <tr><td class="small-font"><b>Município:</b> -</td></tr>
                     </tbody>
                 </table>
                 </div>
                 <div id="paginacao">
               </div>
             `;
-      }
+          }
         });
+
+        fetch(urlImovelRuralCar)
+        .then((resp) => resp.json())
+        .then(function(resposta) {
+            const features = resposta['features'];
+            if (features && features.length > 0) {
+                const feature = features[0];
+                const properties = feature['properties'];
+                const CodImovel = properties['cod_imovel'] || 'N/A';
+                const AreaImovelHa = properties['num_area'] || 'N/A';
+                const NumModulo = properties['num_modulo'] || 'N/A';
+                const Situacao = properties['situacao'] || 'N/A';
+                const CondicaoCadastro = properties['condicao_cadastro'] || 'N/A';
+                const AreaVegNativa = properties['area_remanescente_vegetacao_nativa'] || 'N/A';   
+                const AreaRL = properties['area_reserva_legal_proposta'] || 'N/A';
+                const AreaAPP = properties['area_preservacao_permanente'] || 'N/A';
+            
+                car_imoveis_detalhes.innerHTML = `
+                <table class="table custom-table-width rounded-table small-table">                
+                    <tbody>
+                        <tr><td class="small-font"><b>Registro CAR:</b> ${CodImovel}</td></tr>
+                        <tr><td class="small-font"><b>Área do imóvel (ha):</b> ${AreaImovelHa}</td></tr>   
+                        <tr><td class="small-font"><b>Módulos fiscais:</b> ${NumModulo}</td></tr>  
+                        <tr><td class="small-font"><b>Situação do cadastro:</b> ${Situacao}</td></tr>  
+                        <tr><td class="small-font"><b>Condição do cadastro:</b> ${CondicaoCadastro}</td></tr>
+                        <tr><td class="small-font"><b>Vegetação nativa (ha):</b> ${AreaVegNativa}</td></tr>
+                        <tr><td class="small-font"><b>Reserva Legal proposta (ha):</b> ${AreaRL}</td></tr>
+                        <tr><td class="small-font"><b>APP (ha):</b> ${AreaAPP}</td></tr>
+                    </tbody>
+                  </table>
+            `        
+           } else {
+            car_imoveis_detalhes.innerHTML = `
+                <table class="table custom-table-width rounded-table small-table">                
+                  <tbody>
+                    <tr><td class="small-font"><b>Registro CAR:</b> -</td></tr>
+                    <tr><td class="small-font"><b>Área do imóvel (ha):</b> -</td></tr>   
+                    <tr><td class="small-font"><b>Módulos fiscais:</b> -</td></tr>  
+                    <tr><td class="small-font"><b>Situação do cadastro:</b> -</td></tr>  
+                    <tr><td class="small-font"><b>Condição do cadastro:</b> -</td></tr>
+                    <tr><td class="small-font"><b>Vegetação nativa (ha):</b> -</td></tr>
+                    <tr><td class="small-font"><b>Reserva Legal proposta(ha):</b> -</td></tr>
+                    <tr><td class="small-font"><b>APP (ha):</b> -</td></tr>
+                  </tbody>
+                </table>                 
+              `;
+            }
+          });
+
+          fetch(urlImovelRuralSigef)
+        .then((resp) => resp.json())
+        .then(function(resposta) {
+            const features = resposta['features'];
+            if (features && features.length > 0) {
+                const feature = features[0];
+                const properties = feature['properties'];
+                const Parcela = properties['parcela_co'] || 'N/A';
+                const Situacao = properties['situacao_i'] || 'N/A';
+                const CodImovel = properties['codigo_imo'] || 'N/A';
+                const NrImovel = properties['nrimovel'] || 'N/A';
+                const RegistroMat = properties['registro_mat'] || 'N/A';
+                const DataSub = properties['data_submi'] || 'N/A';   
+                const DataAprov = properties['data_aprov'] || 'N/A';
+                const Denominacao = properties['denominacao'] || 'N/A';
+                const AreaHa = properties['area_ha'] || 'N/A';
+                const Titular = properties['titular'] || 'N/A';
+                const Endereco = properties['endereco'] || 'N/A';
+                const Distrito = properties['distrito'] || 'N/A';
+                const Cep = properties['cep'] || 'N/A';
+                const Municipio = properties['municipio'] || 'N/A';
+            
+                sigef_imoveis_detalhes.innerHTML = `
+                <table class="table custom-table-width rounded-table small-table">                
+                  <tbody>
+                    <tr><td class="small-font"><b>Código da parcela:</b> ${Parcela}</td></tr>
+                    <tr><td class="small-font"><b>Situação:</b> ${Situacao}</td></tr>   
+                    <tr><td class="small-font"><b>Código do imóvel:</b> ${CodImovel}</td></tr>  
+                    <tr><td class="small-font"><b>Número de registro do imóvel:</b> ${NrImovel}</td></tr>
+                    <tr><td class="small-font"><b>Matrícula do imóvel:</b> ${RegistroMat}</td></tr>
+                    <tr><td class="small-font"><b>Data de submissão:</b> ${DataSub}</td></tr>  
+                    <tr><td class="small-font"><b>Data de aprovação:</b> ${DataAprov}</td></tr>
+                    <tr><td class="small-font"><b>Nome do imóvel:</b> ${Denominacao}</td></tr>
+                    <tr><td class="small-font"><b>Área do imóvel (ha):</b> ${AreaHa}</td></tr>
+                    <tr><td class="small-font"><b>Titular do imóvel:</b> ${Titular}</td></tr>
+                    <tr><td class="small-font"><b>Endereço:</b> ${Endereco}</td></tr>
+                    <tr><td class="small-font"><b>Distrito:</b> ${Distrito}</td></tr>
+                    <tr><td class="small-font"><b>CEP:</b> ${Cep}</td></tr>
+                    <tr><td class="small-font"><b>Município:</b> ${Municipio}</td></tr>
+                  </tbody>
+                </table>
+            `        
+           } else {
+            sigef_imoveis_detalhes.innerHTML = `
+              <table class="table custom-table-width rounded-table small-table">                
+                <tbody>
+                  <tr><td class="small-font"><b>Código da parcela:</b> -</td></tr>
+                  <tr><td class="small-font"><b>Situação:</b> -</td></tr>   
+                  <tr><td class="small-font"><b>Código do imóvel:</b> -</td></tr>  
+                  <tr><td class="small-font"><b>Número de registro do imóvel:</b> -</td></tr>
+                  <tr><td class="small-font"><b>Matrícula do imóvel:</b> -</td></tr>
+                  <tr><td class="small-font"><b>Data de submissão:</b> -</td></tr>  
+                  <tr><td class="small-font"><b>Data de aprovação:</b> -</td></tr>
+                  <tr><td class="small-font"><b>Nome do imóvel:</b> -</td></tr>
+                  <tr><td class="small-font"><b>Área do imóvel (ha):</b> -</td></tr>
+                  <tr><td class="small-font"><b>Titular do imóvel:</b> -</td></tr>
+                  <tr><td class="small-font"><b>Endereço:</b> -</td></tr>
+                  <tr><td class="small-font"><b>Distrito:</b> -</td></tr>
+                  <tr><td class="small-font"><b>CEP:</b> -</td></tr>
+                  <tr><td class="small-font"><b>Município:</b> -</td></tr>
+                </tbody>
+              </table>          
+              `;
+            }
+          });
+
+         
       
         let innerHTMLCamadas = '<table class="table custom-table-width rounded-table small-table"><tbody>';
         
@@ -2764,6 +2912,14 @@
     const infraestruturaToggle = document.getElementById("infraestrutura-toggle");
     const infraestruturaContent = document.getElementById("infraestrutura-content");
 
+    // Seleciona o elemento "Cadastro Ambiental Rural (CAR)" e a div de conteúdo
+    const car_imoveisToggle = document.getElementById("car_imoveis-toggle");
+    const car_imoveisContent = document.getElementById("car_imoveis-content");
+
+    // Seleciona o elemento "Sistema de Gestão Fundiária (SIGEF)" e a div de conteúdo
+    const sigef_imoveisToggle = document.getElementById("sigef_imoveis-toggle");
+    const sigef_imoveisContent = document.getElementById("sigef_imoveis-content");
+
     // Seleciona o elemento "Reposição Florestal" e a div de conteúdo
     const reposicaoflorestalToggle = document.getElementById("resposicaoflorestal-toggle");
     const reposicaoflorestalContent = document.getElementById("resposicaoflorestal-content");
@@ -2847,6 +3003,26 @@
         infraestruturaContent.style.display = "none";
       }
     });
+
+    // Adiciona um evento de clique ao elemento "Cadastro Ambiental Rural (CAR)"
+    car_imoveisToggle.addEventListener("click", () => {      
+      // Altera a propriedade display da div de conteúdo
+      if (car_imoveisContent.style.display === "none") {
+        car_imoveisContent.style.display = "block";
+      } else {
+        car_imoveisContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento "Sistema de Gestão Fundiária (SIGEF)"
+    sigef_imoveisToggle.addEventListener("click", () => {      
+      // Altera a propriedade display da div de conteúdo
+      if (sigef_imoveisContent.style.display === "none") {
+        sigef_imoveisContent.style.display = "block";
+      } else {
+        sigef_imoveisContent.style.display = "none";
+      }
+    });    
 
     // Adiciona um evento de clique ao elemento "Projetos"
     projetosToggle.addEventListener("click", () => {  
@@ -3001,6 +3177,8 @@
     const noaa21Fires72hCheckbox = document.getElementById("noaa21Fires72h-checkbox");       
     const NPPFires72hCheckbox = document.getElementById("NPPFires72h-checkbox");         
     const imoveis_rurais_carCheckbox = document.getElementById("imoveis_rurais_car-checkbox");
+    const reserva_legal_carCheckbox= document.getElementById("reserva_legal_car-checkbox");
+    const app_carCheckbox= document.getElementById("app_car-checkbox");
     const imoveis_rurais_sigefCheckbox = document.getElementById("imoveis_rurais_sigef-checkbox");
     const ucs_piCheckbox = document.getElementById("ucs_pi-checkbox");
     const ucs_usCheckbox = document.getElementById("ucs_us-checkbox");
@@ -3038,7 +3216,9 @@
     const viirsFires72hLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'viirsFires72h');          
     const noaa21Fires72hLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'noaa21Fires72h');    
     const NPPFires72hLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'NPPFires72h');      
-    const imoveis_rurais_carLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'imoveis_rurais_car'); 
+    const imoveis_rurais_carLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'imoveis_rurais_car');
+    const app_carLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'app_car');  
+    const reserva_legal_carLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'reserva_legal_car');     
     const imoveis_rurais_sigefLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'imoveis_rurais_sigef'); 
     const ucs_piLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'ucs_pi'); 
     const ucs_usLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'ucs_us'); 
@@ -3200,6 +3380,16 @@
       imoveis_rurais_carLayer.setVisible(imoveis_rurais_carCheckbox.checked);
       updateLegend();
     });
+
+    app_carCheckbox.addEventListener("change", () => {
+      app_carLayer.setVisible(app_carCheckbox.checked);
+      updateLegend();
+    });    
+
+    reserva_legal_carCheckbox.addEventListener("change", () => {
+      reserva_legal_carLayer.setVisible(reserva_legal_carCheckbox.checked);
+      updateLegend();
+    });    
 
     imoveis_rurais_sigefCheckbox.addEventListener("change", () => {
       imoveis_rurais_sigefLayer.setVisible(imoveis_rurais_sigefCheckbox.checked);
