@@ -116,20 +116,25 @@
             <input type="checkbox" class="camada-checkbox" id="obras_supressao-checkbox" value='obras_supressao' >&nbsp;&nbsp;Obra (supressão)<br>
             <input type="checkbox" class="camada-checkbox" id="torres-checkbox" value='torres' >&nbsp;&nbsp;Torres<br>
             <input type="checkbox" id="sinalizadoresavifauna-checkbox" value='sinalizadoresavifauna' >&nbsp;&nbsp;Sinalizadores de avifauna<br>
-            <input type="checkbox" class="camada-checkbox" id="ps_map_rf_2021-checkbox" value='ps_map_rf_2021' >&nbsp;&nbsp;Uso do solo (2021)<br>
-            <input type="checkbox" class="camada-checkbox" id="ps_map_rf_2023-checkbox" value='ps_map_rf_2023' checked>&nbsp;&nbsp;Uso do solo (2023)<br>
+            <b><span class="link-text" id="mapeamentos-toggle">> Mapeamentos</span></b><br>
+            <div class="expand-content" style="display: none;" id="mapeamentos-content">
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="ps_map_rf_2021-checkbox" value='ps_map_rf_2021' >&nbsp;&nbsp;Uso do solo (2021)<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="ps_map_rf_2023-checkbox" value='ps_map_rf_2023' checked>&nbsp;&nbsp;Uso do solo (2023)<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="conversao_areaurboanv-checkbox" value='conversao_areaurboanv'>&nbsp;&nbsp;Conversão p/ área urbana e outras áreas não vegetadas<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="conversao_areaantropica-checkbox" value='conversao_areaantropica'>&nbsp;&nbsp;Conversão de nativo p/ área antrópica<br>
+            </div>
             <b><span class="link-text" id="projetos-toggle">> Projetos</span></b><br>
             <div class="expand-content" style="display: none;" id="projetos-content">
               &nbsp;&nbsp;&nbsp;<input type="checkbox" id="comunidades-checkbox" value='comunidades' >&nbsp;&nbsp;Comunidades visitadas (PEA/PCS)<br>
-              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;PEA<br>
-              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;ESG<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="projetos_pea-checkbox" value='projetos_pea' >&nbsp;&nbsp;PEA<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="projetos_esg-checkbox" value='projetos_esg' >&nbsp;&nbsp;ESG<br>
             </div>
             <b><span class="link-text" id="resposicaoflorestal-toggle">> Reposição Florestal</span></b><br>
             <div class="expand-content" style="display: none;" id="resposicaoflorestal-content">
-              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Parna Pau Brasil<br>
-              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Rocado Grande<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="incendio-checkbox" value='incendio' >&nbsp;&nbsp;Incêndio<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="parna_paubrasil-checkbox" value='parna_paubrasil' >&nbsp;&nbsp;Parna Pau Brasil<br>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="rocado_grande-checkbox" value='rocado_grande' >&nbsp;&nbsp;Rocado Grande<br>
               &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Ubaíra<br>
-              &nbsp;&nbsp;&nbsp;<input type="checkbox" class="camada-checkbox" id="edificacoes-checkbox" value='edificacoes' >&nbsp;&nbsp;Incêndio<br>
             </div>
           </div>
         </div>
@@ -138,6 +143,13 @@
         <h6><b>&nbsp;&nbsp;<span class="link-text" id="alertas-toggle"> > Alertas</span></b></h6>  
         <div class="expand-content" style="display: yes;" id="alertas-content">
           <div id="alertas">
+            <div id="usodosolo">
+              <b><span class="link-text" id="usodosolo-toggle">> Uso do solo</span></b><br>
+              <div class="expand-content" style="display: yes;" id="usodosolo-content">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="alertas_urboanv-checkbox" value='alertas_urboanv' checked>&nbsp;&nbsp;Urbanização/áreas não vegetadas (2021/2023)<br>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" id="alertas_antropizacao-checkbox" value='alertas_antropizacao'>&nbsp;&nbsp;Antropização (2021/2023)<br>
+              </div>
+            </div>
             <div id="fogo">
               <b><span class="link-text" id="fogo-toggle">> Fogo</span></b><br>
               <div class="expand-content" style="display: yes;" id="fogo-content">
@@ -1165,7 +1177,7 @@
     // Openlayers  
   
     const view = new ol.View({
-      center: [-39.8, -13.578],
+      center: [-39.6, -13.578],
       zoom: 9.47,
       projection: 'EPSG:4326', 
     });
@@ -1376,6 +1388,66 @@
       visible: false,
       title: 'NPPFires72h',
     });
+
+    const alertas_urboanv = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:alertas_urboanv',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
+      }),
+      visible: true,
+      title: 'alertas_urboanv'
+    });
+
+    const conversao_areaurboanv = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:conversao_areaurboanv',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
+      }),
+      visible: true,
+      title: 'conversao_areaurboanv'
+    });
+
+    const alertas_antropizacao = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:alertas_antropizacao',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
+      }),
+      visible: false,
+      title: 'alertas_antropizacao'
+    });
+
+    const conversao_areaantropica = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {
+          'LAYERS': 'tropicalia:conversao_areaantropica',
+          'VERSION': '1.1.0',
+          'FORMAT': 'image/png',
+          'TILED': true,
+        },
+        serverType: 'geoserver',
+      }),
+      visible: false,
+      title: 'conversao_areaantropica'
+    });    
     
     const erosoes = new ol.layer.Tile({
       source: new ol.source.TileWMS({
@@ -1552,6 +1624,72 @@
       visible: false,
       title: 'comunidades'
     });
+
+    const projetos_pea = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {'VERSION': '1.1.0',  
+        "STYLES": '',
+        "LAYERS": 'tropicalia:projetos_pea',
+        "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+      }),
+      visible: false,
+      title: 'projetos_pea'
+    });
+
+    const projetos_esg = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {'VERSION': '1.1.0',  
+        "STYLES": '',
+        "LAYERS": 'tropicalia:projetos_esg',
+        "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+      }),
+      visible: false,
+      title: 'projetos_esg'
+    });
+
+    const incendio = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {'VERSION': '1.1.0',  
+        "STYLES": '',
+        "LAYERS": 'tropicalia:incendio',
+        "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+      }),
+      visible: false,
+      title: 'incendio'
+    });
+
+    const rocado_grande = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {'VERSION': '1.1.0',  
+        "STYLES": '',
+        "LAYERS": 'tropicalia:rocado_grande',
+        "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+      }),
+      visible: false,
+      title: 'rocado_grande'
+    });
+
+    const parna_paubrasil = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: `http://${GEOSERVER}/geoserver/tropicalia/wms`,
+        params: {'VERSION': '1.1.0',  
+        "STYLES": '',
+        "LAYERS": 'tropicalia:parna_paubrasil',
+        "exceptions": 'application/vnd.ogc.se_inimage',
+      }
+      }),
+      visible: false,
+      title: 'parna_paubrasil'
+    });
+
 
     const sinalizadoresavifauna = new ol.layer.Tile({
       source: new ol.source.TileWMS({
@@ -1861,7 +1999,7 @@
 
     const checkboxGroup = new ol.layer.Group({
       layers: [
-      tropicalia_municipios, ps_map_rf_2021, ps_map_rf_2023, altitude, declividade, obras_supressao, uf, biomas, ucs_pi, ucs_us, estab_agropecuario_censo, estab_outrasfinalidades_censo, domi_particular_censo, app_car, reserva_legal_car, imoveis_rurais_car, imoveis_rurais_sigef, torres, erosoes, edificacoes, estab_religioso_censo, estab_educacao_censo, estab_saude_censo, desapropriados, faixa_servidao_cadastro, eixo, osm_roads_ba, hidrografia, cidades, nucleosvilaspovoados, sinalizadoresavifauna, comunidades, acessos, noaa21Fires72h, NPPFires72h, viirsFires72h, modisFires72h, frenteDeFogo, linhasdetransmissao
+      tropicalia_municipios, ps_map_rf_2021, ps_map_rf_2023, altitude, declividade, alertas_antropizacao, alertas_urboanv, conversao_areaurboanv, conversao_areaantropica, obras_supressao, uf, biomas, ucs_pi, ucs_us, estab_agropecuario_censo, estab_outrasfinalidades_censo, domi_particular_censo, app_car, reserva_legal_car, imoveis_rurais_car, imoveis_rurais_sigef, torres, erosoes, edificacoes, estab_religioso_censo, estab_educacao_censo, estab_saude_censo, desapropriados, faixa_servidao_cadastro, eixo, osm_roads_ba, hidrografia, cidades, nucleosvilaspovoados, sinalizadoresavifauna, projetos_pea, projetos_esg, incendio, parna_paubrasil, rocado_grande, comunidades, acessos, noaa21Fires72h, NPPFires72h, viirsFires72h, modisFires72h, frenteDeFogo, linhasdetransmissao
       ]
     });
 
@@ -1876,6 +2014,10 @@
     tropicalia_municipios.set('layerId', 'tropicalia_municipiosLayer');
     faixa_servidao_cadastro.set('layerId', 'faixa_servidao_cadastroLayer');
     erosoes.set('layerId', 'erosoesLayer');
+    conversao_areaurboanv.set('layerId', 'conversao_areaurboanv');
+    conversao_areaantropica.set('layerId', 'conversao_areaantropica');
+    alertas_urboanv.set('layerId', 'alertas_urboanvLayer');
+    alertas_antropizacao.set('layerId', 'alertas_antropizacaoLayer');
     obras_supressao.set('layerId', 'obras_supressaoLayer');
     estab_saude_censo.set('layerId', 'estab_saude_censoLayer');
     estab_educacao_censo.set('layerId', 'estab_educacao_censoLayer');
@@ -1886,7 +2028,12 @@
     eixo.set('layerId', 'eixoLayer');
     torres.set('layerId', 'torresLayer');
     acessos.set('layerId', 'acessosLayer');
+    projetos_esg.set('layerId', 'projetos_esgÇLayer');
+    projetos_pea.set('layerId', 'projetos_peaLayer');
+    incendio.set('layerId', 'incendioLayer');
     comunidades.set('layerId', 'comunidadesLayer');
+    rocado_grande.set('layerId', 'rocado_grandeLayer');
+    parna_paubrasil.set('layerId', 'parna_paubrasilLayer');
     sinalizadoresavifauna.set('layerId', 'sinalizadoresavifaunaLayer');
     desapropriados.set('layerId', 'desapropriados');
     nucleosvilaspovoados.set('layerId', 'nucleosvilaspovoadosLayer');
@@ -1917,6 +2064,10 @@
     // Carregar as camadas ao mapa OpenLayers  
     map.addLayer(faixa_servidao_cadastro);
     map.addLayer(erosoes);
+    map.addLayer(alertas_urboanv);
+    map.addLayer(conversao_areaurboanv);
+    map.addLayer(conversao_areaantropica);     
+    map.addLayer(alertas_antropizacao);
     map.addLayer(obras_supressao);
     map.addLayer(estab_saude_censo);
     map.addLayer(estab_educacao_censo);
@@ -1928,6 +2079,11 @@
     map.addLayer(torres);
     map.addLayer(acessos);
     map.addLayer(comunidades);
+    map.addLayer(projetos_esg);
+    map.addLayer(projetos_pea);
+    map.addLayer(incendio);
+    map.addLayer(rocado_grande);
+    map.addLayer(parna_paubrasil);
     map.addLayer(sinalizadoresavifauna);
     map.addLayer(desapropriados);
     map.addLayer(nucleosvilaspovoados);
@@ -2598,13 +2754,13 @@
                 <table class="table custom-table-width rounded-table small-table">                
                     <tbody>
                         <tr><td class="small-font"><b>Registro CAR:</b> ${CodImovel}</td></tr>
-                        <tr><td class="small-font"><b>Área do imóvel (ha):</b> ${AreaImovelHa}</td></tr>   
+                        <tr><td class="small-font"><b>Área do imóvel (ha):</b> ${AreaImovelHa.toFixed(2)}</td></tr>   
                         <tr><td class="small-font"><b>Módulos fiscais:</b> ${NumModulo}</td></tr>  
                         <tr><td class="small-font"><b>Situação do cadastro:</b> ${Situacao}</td></tr>  
                         <tr><td class="small-font"><b>Condição do cadastro:</b> ${CondicaoCadastro}</td></tr>
-                        <tr><td class="small-font"><b>Vegetação nativa (ha):</b> ${AreaVegNativa}</td></tr>
-                        <tr><td class="small-font"><b>Reserva Legal proposta (ha):</b> ${AreaRL}</td></tr>
-                        <tr><td class="small-font"><b>APP (ha):</b> ${AreaAPP}</td></tr>
+                        <tr><td class="small-font"><b>Vegetação nativa (ha):</b> ${AreaVegNativa.toFixed(2)}</td></tr>
+                        <tr><td class="small-font"><b>Reserva Legal proposta (ha):</b> ${AreaRL.toFixed(2)}</td></tr>
+                        <tr><td class="small-font"><b>APP (ha):</b> ${AreaAPP.toFixed(2)}</td></tr>
                     </tbody>
                   </table>
             `        
@@ -2659,7 +2815,7 @@
                     <tr><td class="small-font"><b>Data de submissão:</b> ${DataSub}</td></tr>  
                     <tr><td class="small-font"><b>Data de aprovação:</b> ${DataAprov}</td></tr>
                     <tr><td class="small-font"><b>Nome do imóvel:</b> ${Denominacao}</td></tr>
-                    <tr><td class="small-font"><b>Área do imóvel (ha):</b> ${AreaHa}</td></tr>
+                    <tr><td class="small-font"><b>Área do imóvel (ha):</b> ${AreaHa.toFixed(2)}</td></tr>
                     <tr><td class="small-font"><b>Titular do imóvel:</b> ${Titular}</td></tr>
                     <tr><td class="small-font"><b>Endereço:</b> ${Endereco}</td></tr>
                     <tr><td class="small-font"><b>Distrito:</b> ${Distrito}</td></tr>
@@ -2690,9 +2846,7 @@
               </table>          
               `;
             }
-          });
-
-         
+          });         
       
         let innerHTMLCamadas = '<table class="table custom-table-width rounded-table small-table"><tbody>';
         
@@ -2928,6 +3082,14 @@
     const projetosToggle = document.getElementById("projetos-toggle");
     const projetosContent = document.getElementById("projetos-content");
 
+    // Seleciona o elemento "Projetos" e a div de conteúdo
+    const mapeamentosToggle = document.getElementById("mapeamentos-toggle");
+    const mapeamentosContent = document.getElementById("mapeamentos-content");
+
+    // Seleciona o elemento "Uso do solo" e a div de conteúdo
+    const usodosoloToggle = document.getElementById("usodosolo-toggle");
+    const usodosoloContent = document.getElementById("usodosolo-content");
+
     // Seleciona o elemento "Censo 2022" e a div de conteúdo
     const censo2022Toggle = document.getElementById("censo2022-toggle");
     const censo2022Content = document.getElementById("censo2022-content");
@@ -3022,7 +3184,17 @@
       } else {
         sigef_imoveisContent.style.display = "none";
       }
-    });    
+    });
+
+    // Adiciona um evento de clique ao elemento "Mapeamentos"
+    mapeamentosToggle.addEventListener("click", () => {  
+      // Altera a propriedade display da div de conteúdo
+      if (mapeamentosContent.style.display === "none") {
+        mapeamentosContent.style.display = "block";
+      } else {
+        mapeamentosContent.style.display = "none";
+      }
+    });
 
     // Adiciona um evento de clique ao elemento "Projetos"
     projetosToggle.addEventListener("click", () => {  
@@ -3031,6 +3203,16 @@
         projetosContent.style.display = "block";
       } else {
         projetosContent.style.display = "none";
+      }
+    });
+
+    // Adiciona um evento de clique ao elemento "Uso do solo"
+    usodosoloToggle.addEventListener("click", () => {  
+      // Altera a propriedade display da div de conteúdo
+      if (usodosoloContent.style.display === "none") {
+        usodosoloContent.style.display = "block";
+      } else {
+        usodosoloContent.style.display = "none";
       }
     });
 
@@ -3148,6 +3330,10 @@
         
     const faixa_servidao_cadastroCheckbox = document.getElementById("faixa_servidao_cadastro-checkbox");
     const erosoesCheckbox = document.getElementById("erosoes-checkbox");
+    const alertas_urboanvCheckbox = document.getElementById("alertas_urboanv-checkbox");    
+    const conversao_areaantropicaCheckbox = document.getElementById("conversao_areaantropica-checkbox");    
+    const conversao_areaurboanvCheckbox = document.getElementById("conversao_areaurboanv-checkbox");    
+    const alertas_antropizacaoCheckbox = document.getElementById("alertas_antropizacao-checkbox");
     const obras_supressaoCheckbox = document.getElementById("obras_supressao-checkbox");
     const estab_saude_censoCheckbox = document.getElementById("estab_saude_censo-checkbox");
     const estab_educacao_censoCheckbox = document.getElementById("estab_educacao_censo-checkbox");
@@ -3162,6 +3348,11 @@
     const desapropriadosCheckbox = document.getElementById("desapropriados-checkbox");
     const acessosCheckbox = document.getElementById("acessos-checkbox");
     const comunidadesCheckbox = document.getElementById("comunidades-checkbox");
+    const projetos_esgCheckbox = document.getElementById("projetos_esg-checkbox");
+    const projetos_peaCheckbox = document.getElementById("projetos_pea-checkbox");
+    const incendioCheckbox = document.getElementById("incendio-checkbox");
+    const rocado_grandeCheckbox = document.getElementById("rocado_grande-checkbox");
+    const parna_paubrasilCheckbox = document.getElementById("parna_paubrasil-checkbox");
     const sinalizadoresavifaunaCheckbox = document.getElementById("sinalizadoresavifauna-checkbox");
     const nucleosvilaspovoadosCheckbox = document.getElementById("nucleosvilaspovoados-checkbox");
     const cidadesCheckbox = document.getElementById("cidades-checkbox");
@@ -3185,7 +3376,10 @@
     const tropicalia_municipiosCheckbox = document.getElementById("tropicalia_municipios-checkbox");
     const ufCheckbox = document.getElementById("uf-checkbox");
     const biomasCheckbox = document.getElementById("biomas-checkbox");
-
+    const alertas_urboanvLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'alertas_urboanv');    
+    const conversao_areaantropicaLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'conversao_areaantropica');   
+    const conversao_areaurboanvLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'conversao_areaurboanv');    
+    const alertas_antropizacaoLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'alertas_antropizacao');
     const faixa_servidao_cadastroLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'faixa_servidao_cadastro');
     const erosoesLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'erosoes');
     const obras_supressaoLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'obras_supressao');
@@ -3200,6 +3394,11 @@
     const hidrografiaLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'hidrografia');
     const acessosLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'acessos');
     const comunidadesLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'comunidades');
+    const projetos_peaLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'projetos_pea');
+    const projetos_esgLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'projetos_esg');
+    const incendioLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'incendio');
+    const parna_paubrasilLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'parna_paubrasil');
+    const rocado_grandeLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'rocado_grande');
     const sinalizadoresavifaunaLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'sinalizadoresavifauna');
     const desapropriadosLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'desapropriados');
     const nucleosvilaspovoadosLayer = map.getLayers().getArray().find(layer => layer.get('title') === 'nucleosvilaspovoados');
@@ -3240,6 +3439,26 @@
       obras_supressaoLayer.setVisible(obras_supressaoCheckbox.checked);
       updateLegend();
     });
+
+    alertas_urboanvCheckbox.addEventListener("change", () => {
+      alertas_urboanvLayer.setVisible(alertas_urboanvCheckbox.checked);
+      updateLegend();
+    });
+
+    conversao_areaurboanvCheckbox.addEventListener("change", () => {
+      conversao_areaurboanvLayer.setVisible(conversao_areaurboanvCheckbox.checked);
+      updateLegend();
+    });
+
+    conversao_areaantropicaCheckbox.addEventListener("change", () => {
+      conversao_areaantropicaLayer.setVisible(conversao_areaantropicaCheckbox.checked);
+      updateLegend();
+    });
+
+    alertas_antropizacaoCheckbox.addEventListener("change", () => {
+      alertas_antropizacaoLayer.setVisible(alertas_antropizacaoCheckbox.checked);
+      updateLegend();
+    });    
 
     estab_saude_censoCheckbox.addEventListener("change", () => {
       estab_saude_censoLayer.setVisible(estab_saude_censoCheckbox.checked);
@@ -3288,6 +3507,31 @@
 
     comunidadesCheckbox.addEventListener("change", () => {
       comunidadesLayer.setVisible(comunidadesCheckbox.checked);
+      updateLegend();
+    });
+
+    projetos_esgCheckbox.addEventListener("change", () => {
+      projetos_esgLayer.setVisible(projetos_esgCheckbox.checked);
+      updateLegend();
+    });
+
+    projetos_peaCheckbox.addEventListener("change", () => {
+      projetos_peaLayer.setVisible(projetos_peaCheckbox.checked);
+      updateLegend();
+    });
+
+    incendioCheckbox.addEventListener("change", () => {
+      incendioLayer.setVisible(incendioCheckbox.checked);
+      updateLegend();
+    });
+
+    parna_paubrasilCheckbox.addEventListener("change", () => {
+      parna_paubrasilLayer.setVisible(parna_paubrasilCheckbox.checked);
+      updateLegend();
+    });
+
+    rocado_grandeCheckbox.addEventListener("change", () => {
+      rocado_grandeLayer.setVisible(rocado_grandeCheckbox.checked);
       updateLegend();
     });
 
@@ -3564,7 +3808,7 @@
     });  
     
     document.getElementById('icone_centralizar').addEventListener('click', function() {
-      map.getView().setCenter([-39.8, -13.578]); 
+      map.getView().setCenter([-39.6, -13.578]); 
       map.getView().setZoom(9.47);
      });
   
